@@ -47,3 +47,11 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Some of the files produced by Sweave
+*.log
+*.nav
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
