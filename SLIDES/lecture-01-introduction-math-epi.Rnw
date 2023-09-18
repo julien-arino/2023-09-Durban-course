@@ -1414,7 +1414,12 @@ Some models have unbounded solutions but they are rare and will need to be consi
 If we had instead considered an incidence of the form $f(S,I,N)=\beta SI/N$ and, say, demography with $b(N)=bN$, then some discussion might have been needed if $b<d$
 \end{frame}
 
-\begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (1)}
+
+\begin{frame}{To simplify or not to simplify}
+
+\end{frame}
+
+\begin{frame}{Invariance of $\mathbb{R}_+^3$ under the flow (1)}
 Let us start by assuming that $I=0$. Then \eqref{sys:SIS_analysis} reduces to the scalar equation
 $$
 S' = bN-dS=0
@@ -1426,7 +1431,7 @@ It follows that the axis $\{I=0\}$ is invariant and any solution initiated in th
 This implies that a solution with $S(0)>0$ and $I(0)>0$ cannot reach the axis $\{I=0\}$  
 \end{frame}
 
-\begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (2)} 
+\begin{frame}{Invariance of $\mathbb{R}_+^3$ under the flow (2)} 
 \begin{quote}
   This implies that a solution with $S(0)>0$ and $I(0)>0$ cannot reach the axis $\{I=0\}$  
 \end{quote}
