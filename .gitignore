@@ -49,6 +49,7 @@ po/*~
 rsconnect/
 
 # Some of the files produced by Sweave
+*-concordance.tex
 *.log
 *.nav
 *.snm
