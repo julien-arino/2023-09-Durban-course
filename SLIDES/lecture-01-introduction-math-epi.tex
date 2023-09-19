@@ -1,24 +1,16 @@
 \documentclass[aspectratio=43]{beamer}
 \usepackage{Sweave}
 
-%\documentclass[handout]{beamer}
-%% To make 4 per page
-%\usepackage{pgfpages}
-%\mode<handout>{\setbeamercolor{background canvas}{bg=white}}
-%\pgfpagesuselayout{4 on 1}[letterpaper,landscape]%,border shrink=5mm]
-
 \include{slides_setup_nonLightBoard_whiteBG.tex}
-
 
 \title{Introduction to mathematical epidemiology}
 \subtitle{Lecture 01}
 \author{Julien Arino}
 \date{September 2023}
 
-
 \begin{document}
 \input{lecture-01-introduction-math-epi-concordance}
-%\stretchon
+
 
 % The title page
 \begin{frame}[noframenumbering,plain]
@@ -200,7 +192,7 @@ A few pointers:
 
 \begin{frame}
     \centering
-    \includegraphics[height=\textheight]{../FIGS/gr1_lrg.jpg}
+    \includegraphics[height=\textheight]{FIGS/gr1_lrg.jpg}
 % "https://doi.org/10.1016/S0140-6736(20)31027-8"
 \end{frame}
 
@@ -223,7 +215,7 @@ $\implies$ $I(t)$ in an epidemiological model is \textbf{prevalence}, not \textb
 
 
 \begin{frame}{The different stages of propagation}
-        \includegraphics[width=\textwidth]{../FIGS/Difference_between_outbreak,_endemic,_epidemic_and_pandemic-en.png}
+        \includegraphics[width=\textwidth]{FIGS/Difference_between_outbreak,_endemic,_epidemic_and_pandemic-en.png}
 \end{frame}
         
 
@@ -238,13 +230,13 @@ $\implies$ $I(t)$ in an epidemiological model is \textbf{prevalence}, not \textb
 
 
 \begin{frame}
-    \includegraphics[width=\textwidth]{../FIGS/41591_2020_1092_Fig1_HTML.png}
+    \includegraphics[width=\textwidth]{FIGS/41591_2020_1092_Fig1_HTML.png}
 %"https://doi.org/10.1038/s41591-020-1092-0"
 \end{frame}
 
 
 \begin{frame}
-    \includegraphics[width=\textwidth]{../FIGS/371_27_f1.jpeg}
+    \includegraphics[width=\textwidth]{FIGS/371_27_f1.jpeg}
 % "https://doi.org/10.1126/science.abf8832")
 \end{frame}
 
@@ -262,7 +254,7 @@ $\implies$ $I(t)$ in an epidemiological model is \textbf{prevalence}, not \textb
 
 \begin{frame}{Where? \href{https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak}{1854 cholera outbreak}}
     \begin{minipage}{0.5\textwidth}
-    \includegraphics[width=\textwidth]{../FIGS/Snow-cholera-map.jpg}
+    \includegraphics[width=\textwidth]{FIGS/Snow-cholera-map.jpg}
     \end{minipage}
     \begin{minipage}{0.45\textwidth}
         Cholera outbreak near Broad Street, London (UK)
@@ -321,7 +313,7 @@ Period & Phase & Description \\
 \end{frame}
 
 \begin{frame}
-    \includegraphics[width=\textwidth]{../FIGS/1280px-World_Health_Organisation_regional_offices.png}
+    \includegraphics[width=\textwidth]{FIGS/1280px-World_Health_Organisation_regional_offices.png}
 \end{frame}
 
 
@@ -368,7 +360,7 @@ At the time, *herd immunity* was not understood so this was for personal protect
 <div style = "position: relative; top: -55%; padding-bottom:60px; font-size:40px">
 Measles cases in the USA
 </div>
-\includegraphics[width=\textwidth]{../FIGS/measles_US_1944_2019.png}
+\includegraphics[width=\textwidth]{FIGS/measles_US_1944_2019.png}
 \end{frame}
 
 
@@ -387,7 +379,7 @@ Measles cases in the USA
 \subsection{The early years}
 \begin{frame}{Daniel Bernoulli (1760)}
 \begin{minipage}{0.5\textwidth}
-    \includegraphics[width=\textwidth]{../FIGS/Bernoulli-1760-first_page.jpg}
+    \includegraphics[width=\textwidth]{FIGS/Bernoulli-1760-first_page.jpg}
 \end{minipage}
 \begin{minipage}{0.47\textwidth}
 - \href{https://gallica.bnf.fr/ark:/12148/bpt6k3558n/f220.item}{BNF scan} or \href{https://julien-arino.github.io/assets/pdf/Bernoulli-1760.pdf}{pdf}
@@ -401,7 +393,7 @@ Measles cases in the USA
 
 \begin{frame}{Ross (early 1900)}
 \begin{minipage}{0.5\textwidth}
-    \includegraphics[width=\textwidth]{../FIGS/RonaldRoss_WellcomeCollection.jpg}
+    \includegraphics[width=\textwidth]{FIGS/RonaldRoss_WellcomeCollection.jpg}
 \end{minipage}
 \begin{minipage}{0.47\textwidth}
 - On 20 August 1897, observed malaria parasites in the gut of a mosquito fed several days earlier on a malaria positive human
@@ -740,7 +732,7 @@ This model is typically called the Kermack-McKendrick (KMK) SIR model
   Trajectories of \eqref{sys:KMK_2d} in $(S,I)$-space, normalised, with IC $(S_0,1-S_0)$ and $\beta/\gamma=2.5$
   \vfill
 \begin{center}
-  \includegraphics[width=\textwidth]{../FIGS/KMK_planar_trajectories.png}
+  \includegraphics[width=\textwidth]{FIGS/KMK_planar_trajectories.png}
 \end{center}
 \end{frame}
 
@@ -816,7 +808,7 @@ main = TeX("Kermack-McKendrick SIR, $R_0=1.5$"),
 xlab = "Time (days)", ylab = "Prevalence")
 \end{lstlisting}
 \begin{center}
-\includegraphics[width=\textwidth]{lecture-01-introduction-math-epi-KMK_R0eq1dot5}
+\includegraphics[width=\textwidth]{FIGS/lecture-01-introduction-math-epi-KMK_R0eq1dot5}
 \end{center}
 \end{frame}
 
@@ -1077,14 +1069,14 @@ text(x = S_inf$root, y = 0, labels = "S_inf", adj = c(-0.25,-1))
 
 \begin{frame}{$\R_0=0.8$}
 \begin{center}
-  \includegraphics[width=\textwidth]{../FIGS/KMK_final_size_R0_0p8}
+  \includegraphics[width=\textwidth]{FIGS/KMK_final_size_R0_0p8}
 \end{center}
 \end{frame}
 
 
 \begin{frame}{$\R_0=2.4$}
   \begin{center}
-    \includegraphics[width=\textwidth]{../FIGS/KMK_final_size_R0_2p4}
+    \includegraphics[width=\textwidth]{FIGS/KMK_final_size_R0_2p4}
   \end{center}
 \end{frame}
 
@@ -1113,7 +1105,7 @@ levelplot(taux_attaque ~ R_0*I0, data = values,
 
 \begin{frame}{Attack rate (in \%)}
   \begin{center}
-    \includegraphics[width=\textwidth]{../FIGS/KMK_taux_attaque}
+    \includegraphics[width=\textwidth]{FIGS/KMK_taux_attaque}
   \end{center}
 \end{frame}
 
@@ -1649,7 +1641,7 @@ Denote
 
 \begin{frame}{}
   \begin{center}
-    \includegraphics[width=\textwidth]{../FIGS/sol_endemic_SIS_R015.png}
+    \includegraphics[width=\textwidth]{FIGS/sol_endemic_SIS_R015.png}
   \end{center}
 \end{frame}
 
@@ -1662,7 +1654,7 @@ Let us make things a bit better. See the \href{https://raw.githubusercontent.com
 
 \begin{frame}{}
   \begin{center}
-    \includegraphics[width=\textwidth]{../FIGS/ODE_SIS_multiple_solutions_blackBG.png}
+    \includegraphics[width=\textwidth]{FIGS/ODE_SIS_multiple_solutions_blackBG.png}
   \end{center}
 \end{frame}
 
@@ -1676,7 +1668,7 @@ We saw that when $\R_0<1$, $I\to 0$, whereas when $\R_0>1$, $I\to (1-1/\R_0)N$. 
 
 \begin{frame}
   \begin{center}
-    \includegraphics[width=\textwidth]{../FIGS/endemic_SIS_EE_vs_R0_blackBG}
+    \includegraphics[width=\textwidth]{FIGS/endemic_SIS_EE_vs_R0_blackBG}
   \end{center}
 \end{frame}
 

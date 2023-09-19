@@ -1,0 +1,17 @@
+\documentclass[aspectratio=43]{beamer}
+\usepackage{Sweave}
+
+\include{slides_setup_nonLightBoard_whiteBG.tex}
+
+\title{Taking complex processes into account: advanced models}
+\subtitle{Lecture 05}
+\author{Julien Arino}
+\date{September 2023}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{prefix.string = FIGS/lecture-05}
+
+
+\end{document}

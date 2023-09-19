@@ -1,0 +1,18 @@
+\documentclass[aspectratio=43]{beamer}
+\usepackage{Sweave}
+
+\include{slides_setup_nonLightBoard_whiteBG.tex}
+
+\title{Stochastic models}
+\subtitle{Lecture 03}
+\author{Julien Arino}
+\date{September 2023}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{prefix.string = FIGS/lecture-03}
+
+
+
+\end{document}

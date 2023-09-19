@@ -1,0 +1,18 @@
+\documentclass[aspectratio=43]{beamer}
+\usepackage{Sweave}
+
+\include{slides_setup_nonLightBoard_whiteBG.tex}
+
+\title{Examples of single location, single population models using ordinary differential equations}
+\subtitle{Lecture 02}
+\author{Julien Arino}
+\date{September 2023}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{prefix.string = FIGS/lecture-02}
+
+
+
+\end{document}

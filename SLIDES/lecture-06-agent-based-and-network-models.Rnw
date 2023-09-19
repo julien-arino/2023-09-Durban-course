@@ -1,0 +1,17 @@
+\documentclass[aspectratio=43]{beamer}
+\usepackage{Sweave}
+
+\include{slides_setup_nonLightBoard_whiteBG.tex}
+
+\title{Agent-based and network models}
+\subtitle{Lecture 06}
+\author{Julien Arino}
+\date{September 2023}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{prefix.string = FIGS/lecture-06}
+
+
+\end{document}

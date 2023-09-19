@@ -1,0 +1,18 @@
+\documentclass[aspectratio=43]{beamer}
+\usepackage{Sweave}
+
+\include{slides_setup_nonLightBoard_whiteBG.tex}
+
+\title{Models incorporating a spatial component}
+\subtitle{Lecture 04}
+\author{Julien Arino}
+\date{September 2023}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{prefix.string = FIGS/lecture-04}
+
+
+
+\end{document}
