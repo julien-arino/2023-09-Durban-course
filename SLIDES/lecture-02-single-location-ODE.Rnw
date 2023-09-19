@@ -13,6 +13,26 @@
 \SweaveOpts{concordance=TRUE}
 \SweaveOpts{prefix.string = FIGS/lecture-02}
 
+% The title page
+\begin{frame}[noframenumbering,plain]
+  \titlepage
+\end{frame}
+\addtocounter{page}{-1}
+
+\begin{frame}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+\addtocounter{page}{-1}
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+
 
 
 \end{document}

@@ -13,5 +13,672 @@
 \SweaveOpts{concordance=TRUE}
 \SweaveOpts{prefix.string = FIGS/lecture-06}
 
+% The title page
+\begin{frame}[noframenumbering,plain]
+  \titlepage
+\end{frame}
+\addtocounter{page}{-1}
+
+\begin{frame}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+\addtocounter{page}{-1}
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\section{Agent-based models (ABM)}
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\subsection{What are agent-based models}
+
+\begin{frame}{ABM $\neq$ IBM}
+Early in the life of these models, they were called IBM (individual-based models)
+\vfill
+Over the years, a ``philosophical'' distinction has emerged:
+\begin{itemize}
+\item IBM are mathematical models that consider individuals as the units; e.g., DTMC, CTMC, branching processes, etc.
+\item ABM are computational models whose study is, for the most part, only possible numerically 
+\end{itemize}
+\end{frame} 
+
+\begin{frame}{ABM vs Network models}
+Network models endow vertices with simple systems and couple them through graphs
+\vfill
+Can be ABM, but some networks can also be studied analytically
+\end{frame} 
+
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\subsection{When to use ABM}
+
+\begin{frame}{ABM are very useful to decipher contact processes}
+Classic mathematical models capture contact by using approximations of what contact could be like
+\vfill
+Classic models allow some flexibility (see section about incidence functions in Lecture X but they remain limited
+\vfill
+ABM can model actual trajectories of individuals, so given a definition of what a contact is (how close do you need to be for a contact to take place), can count them efficaciously
+\end{frame} 
+
+\begin{frame}{ABM are very useful to understand behavioural responses}
+\end{frame} 
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\subsection{When not to use ABM}
+
+\begin{frame}{As with \emph{all} tools, beware!}
+There is a law of large numbers effects happening often: if you have many units, unless some emergent behaviour arises, you get the same results using ODEs...
+\vfill
+With this specific tool, beware!
+\vfill
+There is a certain tendency in CS people to create \emph{yet another} system and seek \emph{adoption} by users
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\subsection{Some examples}
+
+\begin{frame}{Antibiotic resistance in hospitals}
+D’Agata, Magal, Olivier, Ruan \& Webb. \href{https://doi.org/10.1016/j.jtbi.2007.08.011}{Modeling antibiotic resistance in hospitals: The impact of minimizing treatment duration}, Journal of Theoretical Biology (2007)
+\end{frame} 
+
+
+\begin{frame}{An IBM that's almost an ABM}
+This work is a good illustration of the ``cultural proximity'' between IBM and ABM
+\vfill
+Model is stochastic and individual-based, in good enough form that approximating ODE can be derived
+\vfill
+Allows for very specific tracking of the status of individuals through the process (almost an ABM in this sense)
+\end{frame} 
+
+
+\begin{frame}{The setup}
+Three processes:
+\begin{enumerate}
+\item admission and exit of patients
+\item infection of patients by HCW (health care workers) 
+\item contamination of HCW by patients
+\end{enumerate}
+
+\vfill
+Contamination of HCW is "transient": they are carriers, if they wash their hands properly, they become OK
+\vfill
+Each day has 3 shifts of 8h for HCW
+\vfill
+Patients are put in contact by visits of HCW
+\vfill
+Rules for contaminations per unit time
+\end{frame} 
+
+
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//Dagata_etal_patients_profiles.jpg)
+% 
+% <!-- Patient–HCW contact diagram for four patients and one HCW during one shift. Patient status: uninfected (green), infected with the non-resistant strain (yellow), infected with the resistant strain (red). HCW status: uncontaminated (______ ), contaminated with the non-resistant strain (………), contaminated with the resistant strain (- - - - - ) -->
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//Dagata_etal_comparisons.jpg)
+% 
+% <!-- The left (respectively the right) figure corresponds to 1 trajectory (respectively the average over 80 trajectories) of the IBM during one shift, with no exit and admission of patients, and no changes in the infection status of patients -->
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}{Effectiveness of contact tracing}
+% 
+% Tian, Osgood, Al-Azem & Hoeppner. [Evaluating the Effectiveness of Contact Tracing on Tuberculosis Outcomes in Saskatchewan Using Individual-Based Modeling](https://doi-org.uml.idm.oclc.org/10.1177%2F1090198113493910), Health Education & Behavior (2013)
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% Evaluation of contact tracing in TB
+% 
+% 
+% \end{frame} 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_TB_CT.jpeg)
+% \end{frame} 
+% 
+% \begin{frame}
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_state_flow_agent.jpeg)
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_model_CT.jpeg)
+% \end{frame} 
+% 
+% 
+% 
+% \begin{frame}
+% They can then formulate scenarios
+% 
+% ![height:60%](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_scenarios.jpeg)
+% 
+% They then run these scenarios and compare results
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_scenario_results.jpeg)
+% \end{frame} 
+% 
+% 
+% \begin{frame}{Contacts during Hajj}
+% Tofighi, Asgary, Tofighi, Najafabadi, Arino, Amiche, Rahman, McCarthy, Bragazzi, Thommes,  Coudeville, Grunnill, Bourouiba and Wu. [Estimating Social Contacts in Mass Gatherings for Disease Outbreak Prevention and Management (Case of Hajj Pilgrimage)](http://dx.doi.org/10.2139/ssrn.3678581), Tropical Diseases, Travel Medicine and Vaccines
+% \end{frame} 
+% 
+% \begin{frame}{Contacts during Hajj}
+% 
+% - In a mass gathering event like Hajj, lots of people come together originating from many countries
+% - So if propagation occurs during the event, this has the capacity to spread infection far and wide when individuals (pilgrims here) return home
+% - Contacts during part of the event are really specific in their configuration
+% 
+% <div style = "position: relative; bottom: -20%; font-size:20px;">
+% 
+% Tofighi, Asgary, Tofighi, Najafabadi, Arino, Amiche, Rahman, McCarthy, Bragazzi, Thommes,  Coudeville, Grunnill, Bourouiba and Wu. [Estimating Social Contacts in Mass Gatherings for Disease Outbreak Prevention and Management (Case of Hajj Pilgrimage)](http://dx.doi.org/10.2139/ssrn.3678581), Tropical Diseases, Travel Medicine and Vaccines
+% </div>
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+%  The setup
+% 
+% - Word of warning: I am quite fuzzy on the specifics :)
+% - Pilgrims enter Masjid al-Haram mosque through several gates
+% - Proceed to Mataaf (area around Kaaba), circle the Kaaba 7 times counterclockwise (process is the *Tawaf*)
+% - Then do seven trips between Safa and Marwah (process is the *Sa'ee*)
+% 
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Great_Mosque_of_Mecca.jpg/1280px-Great_Mosque_of_Mecca.jpg)
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+%  Tawaf in pre-COVID-19 times
+% 
+% <iframe width="800" height="450" src="https://www.youtube.com/embed/L-YyR1oN66w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+%  Tawaf - Socially distanced version
+% 
+% <iframe width="800" height="450" src="https://www.youtube.com/embed/Rl8a0wQePCo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+%  Sa'ee in pre-COVID-19 times
+% 
+% <iframe width="800" height="450" src="https://www.youtube.com/embed/r1qM-mHj2d0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+%  Sa'ee - Socially distanced version
+% 
+% <iframe width="800" height="450" src="https://www.youtube.com/embed/JVges7Q2Mow" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% - As you can gather from this:
+%   - Typically high density crowds
+%   - Very specific mixing patterns
+% - Opportunities for transmission are very high
+% - However, control mechanisms are also available
+% 
+% $\implies$ understanding contact patterns and frequency would help
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//ABM_Hajj_MAH_3Dmodel.png)
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//ABM_Hajj_setup.png)
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//ABM_Hajj_config_tawaf.png)
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% <iframe width="800" height="450" src="https://www.youtube.com/embed/_oOf4uNIghw?loop=1&modestbranding=1&origin=https://julien-arino.github.io/&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; loop" allowfullscreen>
+% </iframe>
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% <iframe width="800" height="450" src="https://www.youtube.com/embed/qcWBi17qKnU?start=9&loop=1&modestbranding=1&origin=https://julien-arino.github.io/&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; loop" allowfullscreen>
+% </iframe>
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Network models}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Why use network models}
+
+% \begin{frame}
+% 
+%  Comprendre les processus de contact
+% 
+% - Les modèles classiques permettent une certaine flexibilité (voir par exemple la section dans le [Cours 04](https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-04-modeles-SIS-SIR.html) sur les fonctions d'incidence ou le [Cours 11](https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-11-modeles-groupes.html) sur les modèles de groupes), mais cela reste limité et une approximation
+% - De la même manière que les modèles agents ([Cours 18](https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-18-modeles-agents.html)), les modèles en réseaux sont considérés pour rendre plus réaliste la description des processus de contact dans la transmission des agents pathogènes
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+%  La vie humaine s'organise en réseaux
+% 
+% - Famille
+% - Cercles d'amis
+% - Réseau professionel
+% - ...
+% - Théorie des réseaux sociaux existe et est utilisée depuis des années, par exemple dans le cadre professionnel (e.g., comment fluidifier les interactions dans une entreprise)
+% 
+% \end{frame} 
+% 
+% \subsection{Les réseaux sociaux}
+% 
+% \begin{frame}
+% 
+% - Avant de considérer des épidémies dans des réseaux, quelques notions de réseaux sociaux, parce que c'est utile de façon générale pour comprendre les réseaux
+% - Les méthodes en réseaux sociaux introduisent des mesures qui permettent d'évaluer certaines propriétés des graphes et qui sont utiles à connaître
+% - Un réseau est un graphe (mathématique), orienté ou non, dans lequel les arcs représentent les connections (quelles qu'elles soient) entre les individus, qui sont les nœuds du graphe
+% 
+% \end{frame} 
+% 
+% 
+% 
+% \begin{frame}
+% 
+%  Contexte
+% 
+% - $\mathcal{G}(\mathcal{V},\mathcal{E})$ un graphe non orienté
+% - $\mathcal{D}(\mathcal{V},\mathcal{A})$ un digraphe (graphe orienté)
+% - $\mathcal{V}$ l'ensemble des nœuds (*vertices* en anglais)
+% - $\mathcal{E}$ l'ensemble des arcs dans le cas non orienté (*edges* en anglais)
+% - $\mathcal{A}$ l'ensemble des arcs dans le graphe orienté (*arcs* en anglais)
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+%  Exemple du réseau de transport aérien
+% 
+% - Je vais illustrer avec des données du réseau de transport aérien mondial
+% - Données assez bonnes (très bonnes parfois), et un avantage flagrant:
+%   - Quand un avion part de quelque part et arrive ailleurs, c'est quelque chose d'assez .. déterministe
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/petit-cours-epidemio-mathematique/main/FIGS/world_graph-degree.png)
+% 
+% 
+% \end{frame} 
+% 
+% 
+% \begin{frame}
+% 
+% ![bg contain](https://raw.githubusercontent.com/julien-arino/petit-cours-epidemio-mathematique/main/FIGS/Manitoba_network_schema_planar_oriented.png)
+% 
+% 
+% \end{frame} \begin{frame}
+% 
+%  Densité du graphe
+% 
+% Un graph (resp. digraphe) est **complet** si toute paire de nœuds est connecté (resp. est connecté par un arc dans chaque direction)
+% 
+% S'il y a $n=|\mathcal{V}|$ nœeuds dans le graphe, alors il y a $n(n-1)/2$ (resp. $n(n-1)$) arcs dans le graphe (resp. digraphe) complet
+% 
+% (On ne compte pas les connections d'un nœud sur lui même)
+% 
+% Densité de $\mathcal{G}$ (graphe non orienté)
+% $$
+% \mathsf{dens}_\mathcal{G}=\frac{2\ |\mathcal{E}|}{n(n-1)}
+% $$
+% Densité de $\mathcal{D}$ (graphe orienté)
+% $$
+% \mathsf{dens}_\mathcal{D}=\frac{|\mathcal{A}|}{n(n-1)}
+% $$
+% 
+% \end{frame} \begin{frame}
+% 
+%  Densité des digraphes considérés
+% 
+% | Digraphe |  nœuds |  arcs | densité |
+% |\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}-|:\end{frame} \begin{frame}\end{frame} \begin{frame}-:|:\end{frame} \begin{frame}\end{frame} \begin{frame}:|:\end{frame} \begin{frame}\end{frame} \begin{frame}-:|
+% | Manitoba | 24 | 64 | 0.1159 |
+% | Canada | 222 | 804 | 0.0164 |
+% | Amérique du Nord | 934 | 7,814 | 0.009 |
+% | Global | 3403 | 32,576 | 0.0028 |
+% 
+% \end{frame} \begin{frame}
+% 
+%  Degré
+% 
+% **Degré** $d_\mathcal{G}(v)$ du nœud $v\in\mathcal{V}$ dans $\mathcal{G}$: nombre d'arcs incidents à $v$
+% 
+% **Degré entrant** $d^-_\mathcal{D}(v)$ du nœud $v\in\mathcal{V}$ dans $\mathcal{D}$: nombre d'arcs avec tête $v$
+% 
+% **Degré sortant** $d^+_\mathcal{D}(v)$ du nœud $v\in\mathcal{V}$ dans $\mathcal{D}$: nombre d'arcs avec queue $v$
+% 
+% **Degré** $d_\mathcal{D}(v)$ du nœud $v\in\mathcal{V}$ dans $\mathcal{D}(\mathcal{V},\mathcal{A})$: nombre d'arcs incidents à $v$ dans le graphe non orienté sous-jacent $\mathcal{G}$ de $\mathcal{D}$ (où tout arc est considérée comme un arc "bidirectionnel")
+% 
+% \end{frame} \begin{frame}
+% 
+%  Degré entrant global du réseau de transport aérien
+% 
+% | Ville | Pays | Degré entrant | Rang |
+% |\end{frame} \begin{frame}\end{frame} \begin{frame}|\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}|:\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}-:|:\end{frame} \begin{frame}-:| 
+% | Londres | GB | 365 | 1 |
+% | Paris | France | 294 | 2 |
+% | Frankfurt | Allemagne | 287 | 3 |
+% | Atlanta | USA | 249 | 4 |
+% | New York | USA | 241 | 5 |
+% | Moscou | Russie | 225 | 6 |
+% | Amsterdam | Pays-Bas | 204 | 7 |
+% | Chicago | USA | 203 | 8 |
+% | Munich | Allemagne | 200 | 9 |
+% | Milan | Italie | 181 | 10 |
+% 
+% \end{frame} \begin{frame}
+% 
+%  Le degré change pendant l'année 
+% 
+% Les graphes sont dynamiques !
+% 
+% ![bg right:72%](https://raw.githubusercontent.com/julien-arino/petit-cours-epidemio-mathematique/main/FIGS/IATA_outdegree_YEA_2005_to_2010.png)
+% 
+% 
+% \end{frame} \begin{frame}
+% 
+%  Plus court chemin
+% 
+% Soit $\mathcal{D}$ un digraphe. Le (ou les) plus court(s) chemin(s) de $i$ à $j$ dans $\mathcal{V}$:
+% $$
+% d_\mathcal{D}(i,j)=\min_{p\in\mathcal{P}(i,j)} f(p)
+% $$
+% où $\mathcal{P}(i,j)$ est l'ensemble des chemins de $i$ à $j$ et $f(p)$ est un valuation des arcs dans le chemin $p$. On définit $d_\mathcal{D}(i,j)=\infty$ s'il n'existe pas de chemin de $i$ à $j$ 
+% 
+% $f(p)$ peut être
+% - le nombre d'arcs dans $p$ de $i$ à $j$ (**distance géodésique**)
+% - Distance du grand cercle des arcs de $p$
+% - durée des vols des arcs de $p$
+% 
+% \end{frame} \begin{frame}
+% 
+%  Excentricité
+% 
+% **Excentricité** (ou **nombre de Köonig**) du nœud $v\in\mathcal{V}$ dans $\mathcal{G}(\mathcal{V},\mathcal{E})$
+% $$
+% e(v)=\max_{v'\in\mathcal{V}}d_\mathcal{D}(v,v')
+% $$
+% **Excentricité entrante** du nœud $v\in\mathcal{V}$ dans $\mathcal{D}(\mathcal{V},\mathcal{A})$
+% $$
+% e^-(v)=\max_{v'\in\mathcal{V}}d_\mathcal{D}(v',v)
+% $$
+% **Excentricité sortante** du nœud $v\in\mathcal{V}$ dans $\mathcal{D}(\mathcal{V},\mathcal{A})$
+% $$
+% e^+(v)=\max_{v'\in\mathcal{V}}d_\mathcal{D}(v,v')
+% $$
+% 
+% \end{frame} \begin{frame}
+% 
+% | Graphe | $e^-(YWG)$ | $e^+(YWG)$ |
+% |\end{frame} \begin{frame}\end{frame} \begin{frame}--|\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}|\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}|
+% | Manitoba | 2 | 3 (Lynn Lake) |
+% | Canada | 7 $^{(*)}$ | 7 $^{(*)}$ |
+% | Amérique du Nord | 7 $^{(**)}$| 8 (Stony River) |
+% | Global | 7 $^{(***)}$ | 8 (Stony River) |
+% 
+% | <!-- --> | <!-- --> |
+% |\end{frame} \begin{frame}|\end{frame} \begin{frame}|
+% | ( * ) | Peawanuck (ON), Port Hope Simpson (NL) |
+% ( ** ) | ( * ) + Lopez Island, Kwethluk, Chuathbaluk |
+% ( *** ) | ( ** ) + Hooker Creek, Birdsville, Beni, Balalae, Thargomindah |
+% 
+% \end{frame} \begin{frame}
+% 
+%  Rayon
+% 
+% **Rayon** de $\mathcal{G}$
+% $$
+% \rho_\mathcal{G}=\min_{v\in\mathcal{V}}e(v)
+% $$
+% **Rayon entrant** de $\mathcal{D}$
+% $$
+% \rho_\mathcal{D}^-=\min_{v\in\mathcal{V}}e^-(v)
+% $$
+% **Rayon sortant** de $\mathcal{D}$
+% $$
+% \rho_\mathcal{D}^+=\min_{v\in\mathcal{V}}e^+(v)
+% $$
+% 
+% rayon = $\min(\max(\cdot))$ $\rightarrow$ directionalité
+% 
+% \end{frame} \begin{frame}
+% 
+%  Rayon du réseau de transport aérien
+% 
+% | Graphe | $\rho^-$ | $\rho^+$ |
+% |\end{frame} \begin{frame}\end{frame} \begin{frame}--|\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}-|\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}-|
+% | Manitoba | 2 | 3 |
+% | Canada | 6 | 6 |
+% | Amérique du Nord | 6 | 7 |
+% | Global | 7 | 7 |
+% 
+% 
+% \end{frame} \begin{frame}
+% 
+%  Centre d'un graphe
+% 
+% **Centre** de $\mathcal{D}$:
+% $$
+% \mathcal{C}_\mathcal{D}=\left\{v\in\mathcal{V}:e(v)=\rho_\mathcal{D}\right\}
+% $$
+% 
+% \end{frame} \begin{frame}
+% 
+%  Centre du réseau de transport aérien
+% 
+% | Graphe | $\mathcal{C}^-$ | $\\\|\mathcal{C}^-\\\|$ | $\mathcal{C}^+$ | $\\\|\mathcal{C}^+\\\|$ |
+% |\end{frame} \begin{frame}|\end{frame} \begin{frame}|\end{frame} \begin{frame}|\end{frame} \begin{frame}|\end{frame} \begin{frame}|
+% | Manitoba | 2 | 1 (YWG) | 3 | 7 |
+% | Canada | 6 | 1 (YTO) | 6 | 1 (YTO) |
+% | Amérique du Nord | 6 | 1 (YTO) | 7 | 18 |
+% | Global | 7 | 131 | 7 | 20 |
+% 
+% $\{$YYC,YEA,Halifax,Kelowna,Moncton,YMQ,YOW,Quebec,St John's,YTO,YVR, Victoria,YWG$\}\subset\mathcal{C}^-$
+% 
+% $\{$Toronto,Vancouver$\}\subset\mathcal{C}^+$
+% 
+% \end{frame} \begin{frame}
+% 
+%  Diamètre
+% 
+% **Diamètre** de $\mathcal{D}$
+% $$
+% \mathsf{diam}_\mathcal{D}=\max_{v\in\mathcal{V}}e(v)
+% $$
+% 
+% diamètre = max(max(.)) $\rightarrow$ pas de directionalité
+% 
+% \end{frame} \begin{frame}
+% 
+% 
+% Graphe | Diamètre |
+% |\end{frame} \begin{frame}\end{frame} \begin{frame}|:\end{frame} \begin{frame}\end{frame} \begin{frame}--:|
+% | Manitoba | 5 |
+% | Canada | 12 |
+% | Amérique du Nord | 13 |
+% | Global | 13 |
+% 
+% 
+% \end{frame} \begin{frame}
+% 
+%  Péripherie d'un graphe
+% 
+% **Péripherie** de $\mathcal{D}$ 
+% $$
+% \mathcal{P}_\mathcal{D}=\left\{v\in\mathcal{V}:e(v)=\mathsf{diam}_\mathcal{D}\right\}
+% $$
+% 
+% \end{frame} \begin{frame}
+% 
+% | Graphe | Péripherie entrante | Péripherie sortante |
+% |\end{frame} \begin{frame}\end{frame} \begin{frame}--|\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}|\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}\end{frame} \begin{frame}|
+% | Manitoba | Lynn Lake | Cross Lake, Red Sucker Lake, Brandon |
+% | Canada | Peawanuck | Peawanuck, Port Hope Simpson | Port Hope Simpson |
+% | Amérique du Nord | Stony River | Peawanuck, Port Hope Simpson |
+% | Global | Stony River, Hooker Creek, Peawanuck | Hooker Creek, Beni, Peawanuck, Port Hope Simpson |
+% 
+% \end{frame} \begin{frame}
+% 
+%  Bien d'autres mesures
+% 
+% - betweenness
+% - closeness
+% - $k$-cores
+% - $\ldots$
+% 
+% \end{frame} \begin{frame}
+% 
+% <!-- _backgroundImage: "linear-gradient(to bottom, #f1c40f, 20%, white)" -->
+%  <!--fit-->Cadre général des modèles en réseaux
+% 
+% \end{frame} \begin{frame}
+% 
+% - Voir par exemple 
+%   - Newman. [Spread of epidemic disease on networks](https://doi.org/10.1103/PhysRevE.66.016128), 2002
+%   - Keeling & Eames. [Networks and epidemic models](https://doi.org/10.1098/rsif.2005.0051), 2005
+%   - Meyers, Pourbohloul, Newman, Skowronski & Brunham. [Network theory and SARS: predicting outbreak diversity](https://doi.org/10.1016/j.jtbi.2004.07.026), 2005
+%   - Meyers, Newman & Pourohloul. [Predicting epidemics on directed contact networks](https://doi.org/10.1016/j.jtbi.2005.10.004), 2006
+%   - Bansal, Read, Pourbohloul & Meyers. [The dynamic nature of contact networks in infectious disease epidemiology](https://doi.org/10.1080/17513758.2010.503376), 2010 
+% 
+% 
+% \end{frame} \begin{frame}
+% 
+% - Typiquement, on considère un graphe (ou digraphe selon les cas) dans lequel:
+%   - chaque nœud est un individu 
+%   - l'existence d'un arc de $i$ vers $j$ indique que $i$ est en contact avec $j$ et peut lui transmettre l'infection
+%   - dans le cas non orienté, l'existence d'un arc de $i$ vers $j$ implique celle d'un arc (le même) de $j$ vers $i$ et établit que les deux individus sont connectés
+% - La connexion n'est pas permanente, mais décrit plutôt la possibilité d'une connexion: $i$ et $j$ entrent en contact de façon régulière
+% 
+% \end{frame} \begin{frame}
+% 
+%  Matrice d'adjacence
+% 
+% On utilisera souvent la **matrice d'adjacence** $A=[a_{ij}]$, dans laquelle $a_{ij}=1$ si le nœud $i$ a un lien vers le nœud $j$ et $a_{ij}=0$ sinon
+% 
+% On écrit parfois $A(\mathcal{D})$ pour indiquer que $A$ est la matrice d'adjacence du digraphe $\mathcal{D}$, et dans l'autre sens, $\mathcal{D}(A)$ pour indiquer que le graphe est construit en utilisant la matrice d'adjacence
+% 
+% Si le graphe est non orienté, alors $A$ est symmétrique
+% 
+% \end{frame} \begin{frame}
+% 
+%  Nature du réseau
+% 
+% - Parfois on dispose de données précises sur les liens entre individus (sondages, etc.)
+% - Souvent on idéalise des réseaux, on choisit des réseaux avec des propriétés données
+% 
+% \end{frame} \begin{frame}
+% 
+%  La distribution des degrés du (di)graphe
+% 
+% La **transmissibilité** $T$ d'une maladie dans un graphe est la probabilité moyenne qu'un individu infectieux transmette la maladie à un individu susceptible avec qui il/elle est en contact
+% 
+% Dans un réseau non corrélé,
+% $$
+% T_c = \frac{\langle k\rangle}{\langle k^2\rangle-\langle k\rangle}
+% $$
+% où $\langle k\rangle$ et $\langle k^2\rangle$ sont le degré moyen et la moyenne du carré du degré
+% 
+% Il est nécessaire que $T>T_c$ pour qu'un *outbreak* devienne une épidémie majeure
+% 
+% \end{frame} \begin{frame}
+% 
+% <!-- _backgroundImage: "linear-gradient(to bottom, #f1c40f, 20%, white)" -->
+%  <!--fit-->La librairie EpiModel
+% 
+% <div style = "text-align: justify; position: relative; bottom: -35%; font-size:18px;">
+% 
+% Jenness SM, Goodreau SM and Morris M. [EpiModel: An R Package for Mathematical Modeling of Infectious Disease over Networks](https://doi.org/10.18637%2Fjss.v084.i08). Journal of Statistical Software. 2018; 84(8): 1-47
+% </div>
+% \end{frame} 
+
+
+\begin{frame}{EpiModel}
+\code{R} library providing tools to simulate and analyse network epidemiological models
+\vfill
+Provides two types of approaches
+\begin{itemize}
+\item Simulation of ODE compartmental models (not so interesting)
+\item Simulation of network models
+\end{itemize}
+\vfill
+Their \href{https://www.epimodel.org}{website} has several useful tutorials
+\vfill
+Part of the \href{http://statnet.org/}{statnet} meta-library
+\end{frame}
 
 \end{document}
