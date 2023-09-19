@@ -1,24 +1,16 @@
 \documentclass[aspectratio=43]{beamer}
 \usepackage{Sweave}
 
-%\documentclass[handout]{beamer}
-%% To make 4 per page
-%\usepackage{pgfpages}
-%\mode<handout>{\setbeamercolor{background canvas}{bg=white}}
-%\pgfpagesuselayout{4 on 1}[letterpaper,landscape]%,border shrink=5mm]
-
 \include{slides_setup_nonLightBoard_whiteBG.tex}
 
-
-\title{MATH 8xxx -- Lecture 01}
-\subtitle{Epidemiology \& A brief history of Mathematical Epidemiology}
+\title{Introduction to mathematical epidemiology}
+\subtitle{Lecture 01}
 \author{Julien Arino}
 \date{September 2023}
 
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
-%\stretchon
 
 % The title page
 \begin{frame}[noframenumbering,plain]
@@ -785,6 +777,27 @@ This model is typically called the Kermack-McKendrick (KMK) SIR model
   \end{theorem}
 \end{frame}
 
+<<eval=TRUE,echo=FALSE>>=
+library(deSolve)
+rhs_SIR_KMK <- function(t, x, p) {
+  with(as.list(c(x, p)), {
+    dS = - beta * S * I
+    dI = beta * S * I - gamma * I
+    dR = gamma * I
+    return(list(c(dS, dI, dR)))
+  })
+}
+# Initial condition for S (to compute R_0)
+S0 = 1000
+gamma = 1/14
+# Set beta so that R_0 = 1.5
+beta = 1.5 * gamma / S0 
+params = list(gamma = gamma, beta = beta)
+IC = c(S = S0, I = 1, R = 0)
+times = seq(0, 365, 1)
+sol <- ode(IC, times, rhs_SIR_KMK, params)  
+@
+
 \begin{frame}[fragile]{}
 \begin{lstlisting}
 rhs_SIR_KMK <- function(t, x, p) {
@@ -795,7 +808,7 @@ rhs_SIR_KMK <- function(t, x, p) {
     return(list(c(dS, dI, dR)))
   })
 }
-# Condition initiale pour S (pour calculer R_0)
+# Initial condition for S (to compute R_0)
 S0 = 1000
 gamma = 1/14
 # Set beta so that R_0 = 1.5
@@ -807,6 +820,13 @@ sol <- ode(IC, times, rhs_SIR_KMK, params)
 \end{lstlisting}
 \end{frame}
 
+<<KMK_R0eq1dot5,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=4,include=FALSE>>=
+library(latex2exp)
+plot(sol[, "time"], sol[, "I"], 
+     type = "l", lwd = 2,
+     main = TeX("Kermack-McKendrick SIR, $R_0=1.5$"),
+     xlab = "Time (days)", ylab = "Prevalence")
+@
 
 \begin{frame}[fragile]{}
 \begin{lstlisting}
@@ -815,9 +835,10 @@ main = TeX("Kermack-McKendrick SIR, $R_0=1.5$"),
 xlab = "Time (days)", ylab = "Prevalence")
 \end{lstlisting}
 \begin{center}
-  \includegraphics[width=\textwidth]{../FIGS/sol_SIR_KMK_R015}
+\includegraphics[width=\textwidth]{lecture-01-introduction-math-epi-KMK_R0eq1dot5}
 \end{center}
 \end{frame}
+
 
 \begin{frame}{The basic reproduction number $\R_0$}
 \bbullet Indicator often used in epidemiology. Verbally
@@ -1012,6 +1033,13 @@ Thus, we seek the zeros of the function $T(S_\infty)$
   $\implies$ there exists a unique $S_\infty\in (0,S_0]$ s.t. $T(S_\infty)=0$. More precisely, in this case, $S_\infty\in(0,S_0/\R_0)$
 \end{frame}
 
+<<eval=TRUE,echo=FALSE>>=
+final_size_eq = function(S_inf, S0 = 999, I0 = 1, R_0 = 2.5) {
+  OUT = S0*(log(S0)-log(S_inf)) - (S0+I0-S_inf)*R_0
+  return(OUT)
+}
+@
+
 
 \begin{frame}[fragile]{}
 We solve numerically. We need a function
@@ -1022,7 +1050,7 @@ final_size_eq = function(S_inf, S0 = 999, I0 = 1, R_0 = 2.5) {
 }
 \end{lstlisting}
 and solve easily using \code{uniroot}, here with the values by default that we have set for the function
-\begin{lstlisting}  
+\begin{lstlisting}
 uniroot(f = final_size_eq, interval = c(0.05, 999))
 $root
 [1] 106.8819
@@ -1179,7 +1207,7 @@ To make $\R_0^{\text{v}}$ less than 1
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
-\section{The endemic SIR model}
+\section{The endemic SIRS model with demography}
 
 
 \begin{frame}{Two potential variations on the Kermack-McKendrick model}
@@ -1192,58 +1220,49 @@ To make $\R_0^{\text{v}}$ less than 1
 
 \begin{frame}{Potential variations}
 \def\skip{*1.5}
+\def\yskip{*-2.5}
 \begin{center}
   \begin{tikzpicture}[scale=1.25, transform shape]
     %% Regular nodes
-    \node [circle, fill=green!50, text=black] at (0\skip,0) (S) {$S$};
-    \node [circle, fill=red!90, text=black] at (1\skip,0) (I) {$I$};
-    \node [circle, fill=blue!90, text=black] at (2\skip,0) (R) {$R$};
+    \node [circle, fill=green!50, text=black] at (0\skip,0) (S1) {$S$};
+    \node [circle, fill=red!90, text=black] at (1\skip,0) (I1) {$I$};
+    \node [circle, fill=blue!90, text=black] at (2\skip,0) (R1) {$R$};
     %% Fake nodes for arrows
-    \node [left=1cm of S] (birth) {};
-    \node [below=0.5cm of S] (dS) {};
-    \node [below=0.5cm of I] (dI) {};
-    \node [below=0.5cm of R] (dR) {};
+    \node [left=1cm of S1] (birth1) {};
+    \node [below=0.5cm of S1] (dS1) {};
+    \node [below=0.5cm of I1] (dI1) {};
+    \node [below=0.5cm of R1] (dR1) {};
     %% Flows
-    \path [line, very thick] (birth) to node [midway, above] (TextNode) {$b(N)$} (S);
-    \path [line, very thick] (S) to node [midway, right] (TextNode) {$dS$} (dS);
-    \path [line, very thick] (I) to node [midway, right] (TextNode) {$dI$} (dI);
-    \path [line, very thick] (R) to node [midway, right] (TextNode) {$dR$} (dR);
-    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta SI$} (I);
-    \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I$} (R);
-  \end{tikzpicture}    
-\end{center}
-\vfill
-\begin{center}
-  \begin{tikzpicture}[scale=1.25, transform shape]
-    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
-    \node [circle, fill=red!90, text=black] at (1\skip,0) (I) {$I$};
-    \node [circle, fill=blue!90, text=black] at (2\skip,0) (R) {$R$};
+    \path [line, very thick] (birth1) to node [midway, above] (TextNode) {$b(N)$} (S1);
+    \path [line, very thick] (S1) to node [midway, right] (TextNode) {$dS$} (dS1);
+    \path [line, very thick] (I1) to node [midway, right] (TextNode) {$dI$} (dI1);
+    \path [line, very thick] (R1) to node [midway, right] (TextNode) {$dR$} (dR1);
+    \path [line, very thick] (S1) to node [midway, above] (TextNode) {$\beta SI$} (I1);
+    \path [line, very thick] (I1) to node [midway, above] (TextNode) {$\gamma I$} (R1);
+    \node [circle, fill=green!50, text=black] at (0,1\yskip) (S2) {$S$};
+    \node [circle, fill=red!90, text=black] at (1\skip,1\yskip) (I2) {$I$};
+    \node [circle, fill=blue!90, text=black] at (2\skip,1\yskip) (R2) {$R$};
     %% Flows
-    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta SI$} (I);
-    \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I$} (R);
-    \draw [>=latex,->, thick, rounded corners] (R) -- (2\skip,0.75) -- (0,0.75) node[sloped, midway, above] {$\nu R$} -- (S);
-  \end{tikzpicture}    
-\end{center}
-\vfill
-\begin{center}
-  \begin{tikzpicture}[scale=1.25, transform shape]
+    \path [line, very thick] (S2) to node [midway, above] (TextNode) {$\beta SI$} (I2);
+    \path [line, very thick] (I2) to node [midway, above] (TextNode) {$\gamma I$} (R2);
+    \draw [>=latex,->, thick, rounded corners] (R2) -- (2\skip,0.75\yskip) -- (0,0.75\yskip) node[sloped, midway, above] {$\nu R$} -- (S2);
     %% Regular nodes
-    \node [circle, fill=green!50, text=black] at (0\skip,0) (S) {$S$};
-    \node [circle, fill=red!90, text=black] at (1\skip,0) (I) {$I$};
-    \node [circle, fill=blue!90, text=black] at (2\skip,0) (R) {$R$};
+    \node [circle, fill=green!50, text=black] at (0\skip,2\yskip) (S3) {$S$};
+    \node [circle, fill=red!90, text=black] at (1\skip,2\yskip) (I3) {$I$};
+    \node [circle, fill=blue!90, text=black] at (2\skip,2\yskip) (R3) {$R$};
     %% Fake nodes for arrows
-    \node [left=1cm of S] (birth) {};
-    \node [below=0.5cm of S] (dS) {};
-    \node [below=0.5cm of I] (dI) {};
-    \node [below=0.5cm of R] (dR) {};
+    \node [left=1cm of S3] (birth3) {};
+    \node [below=0.5cm of S3] (dS3) {};
+    \node [below=0.5cm of I3] (dI3) {};
+    \node [below=0.5cm of R3] (dR3) {};
     %% Flows
-    \path [line, very thick] (birth) to node [midway, above] (TextNode) {$b(N)$} (S);
-    \path [line, very thick] (S) to node [midway, right] (TextNode) {$dS$} (dS);
-    \path [line, very thick] (I) to node [midway, right] (TextNode) {$dI$} (dI);
-    \path [line, very thick] (R) to node [midway, right] (TextNode) {$dR$} (dR);
-    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta SI$} (I);
-    \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I$} (R);
-    \draw [>=latex,->, thick, rounded corners] (R) -- (2\skip,0.75) -- (0,0.75) node[sloped, midway, above] {$\nu R$} -- (S);
+    \path [line, very thick] (birth3) to node [midway, above] (TextNode) {$b(N)$} (S3);
+    \path [line, very thick] (S3) to node [midway, right] (TextNode) {$dS$} (dS3);
+    \path [line, very thick] (I3) to node [midway, right] (TextNode) {$dI$} (dI3);
+    \path [line, very thick] (R3) to node [midway, right] (TextNode) {$dR$} (dR3);
+    \path [line, very thick] (S3) to node [midway, above] (TextNode) {$\beta SI$} (I3);
+    \path [line, very thick] (I3) to node [midway, above] (TextNode) {$\gamma I$} (R3);
+    \draw [>=latex,->, thick, rounded corners] (R3) -- (2\skip,1.75\yskip) -- (0,1.75\yskip) node[sloped, midway, above] {$\nu R$} -- (S3);
   \end{tikzpicture}    
 \end{center}
 \end{frame}
@@ -1415,71 +1434,71 @@ If we had instead considered an incidence of the form $f(S,I,N)=\beta SI/N$ and,
 \end{frame}
 
 
-\begin{frame}{To simplify or not to simplify}
-
-\end{frame}
-
 \begin{frame}{Invariance of $\mathbb{R}_+^3$ under the flow (1)}
-Let us start by assuming that $I=0$. Then \eqref{sys:SIS_analysis} reduces to the scalar equation
-$$
-S' = bN-dS=0
-$$
-since $S=N-I=N$ here
+Let us start by assuming that $I(0)=I_0=0$. Then \eqref{sys:SIRS_dI} remains $I'=0$, meaning that the $SR$-plane (i.e., the set $\{I=0\}$) is positively invariant under the flow of \eqref{sys:SIRS}
 \vfill
-It follows that the axis $\{I=0\}$ is invariant and any solution initiated in this set is constant
+On that plane, \eqref{sys:SIRS} reduce to
+\begin{subequations}\label{sys:SIRS_on_Ieq0}
+\begin{align}
+S' &= b+\nu R-dS \\
+R' &= -(d+\nu)R
+\end{align}    
+\end{subequations}
 \vfill
-This implies that a solution with $S(0)>0$ and $I(0)>0$ cannot reach the axis $\{I=0\}$  
+$\implies$ a solution with $I_0>0$ cannot enter the plane $\{I=0\}$. Indeed, suppose that $I_0>0$ but $\exists t_\star>0$ such that $I(t_\star)=0$. Then at $(S(t_\star),I(t_\star)=0,R(t_\star))$, there are two solutions to \eqref{sys:SIRS}: the one we just generated as well as the one governed by \eqref{sys:SIRS_on_Ieq0}
+\vfill
+This contradicts uniqueness of solutions to \eqref{sys:SIRS}
 \end{frame}
 
-\begin{frame}{Invariance of $\mathbb{R}_+^3$ under the flow (2)} 
-\begin{quote}
-  This implies that a solution with $S(0)>0$ and $I(0)>0$ cannot reach the axis $\{I=0\}$  
-\end{quote}
-\vfill
-Suppose that $S(0)=S_0>0$ and $I(0)=I_0>0$ and that there exists $t_\star>0$ such that $S(t_\star)=S_\star$ and $I(t_\star)=0$
-\begin{center}
-  \tikzset{
-  clockwise arrows/.style={
-    postaction={
-      decorate,
-      decoration={
-        markings,
-        mark=between positions 0.1 and 0.9 step 40pt with {\arrow{>}},
-   }}}}
-  \begin{tikzpicture}
-    \draw[->,very thick] (0,0)--(4.5,0) node[below]{\large $S$};
-    \draw[->,very thick] (0,0)--(0,4) node[left]{\large $I$};
-    %
-    \draw (0.5,3) node {\textbullet};
-    \draw (3.5,0) node {\textbullet};
-    %
-    \node  [color=white] at (0.1,2.95) [anchor=north west] {$(S_0,I_0)$};
-    \node  at (2.2,0) [anchor=south west] {$(S_\star,I_\star)$};
-    %Hobby package  
-    \draw [ultra thick, clockwise arrows] (0.5,3) to [ curve through ={(1,3.5) . . (2,2) . . (3.5,1)}] (3.5,0);% curve 
-  \end{tikzpicture}
-\end{center}
-\end{frame}
+% \begin{frame}{Invariance of $\mathbb{R}_+^3$ under the flow (2)} 
+% \begin{quote}
+%   This implies that a solution with $S(0)>0$ and $I(0)>0$ cannot reach the axis $\{I=0\}$  
+% \end{quote}
+% \vfill
+% Suppose that $S(0)=S_0>0$ and $I(0)=I_0>0$ and that there exists $t_\star>0$ such that $S(t_\star)=S_\star$ and $I(t_\star)=0$
+% \begin{center}
+%   \tikzset{
+%   clockwise arrows/.style={
+%     postaction={
+%       decorate,
+%       decoration={
+%         markings,
+%         mark=between positions 0.1 and 0.9 step 40pt with {\arrow{>}},
+%    }}}}
+%   \begin{tikzpicture}
+%     \draw[->,very thick] (0,0)--(4.5,0) node[below]{\large $S$};
+%     \draw[->,very thick] (0,0)--(0,4) node[left]{\large $I$};
+%     %
+%     \draw (0.5,3) node {\textbullet};
+%     \draw (3.5,0) node {\textbullet};
+%     %
+%     \node  [color=white] at (0.1,2.95) [anchor=north west] {$(S_0,I_0)$};
+%     \node  at (2.2,0) [anchor=south west] {$(S_\star,I_\star)$};
+%     %Hobby package  
+%     \draw [ultra thick, clockwise arrows] (0.5,3) to [ curve through ={(1,3.5) . . (2,2) . . (3.5,1)}] (3.5,0);% curve 
+%   \end{tikzpicture}
+% \end{center}
+% \end{frame}
+% 
+% \begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (3)} 
+% However, in $S=S_\star$ and $I=0$, another solution is present, the one such that $S(0)=S_\star$ and $I(0)=0$ 
+% \vfill
+% Indeed, with these IC, we have $S(t)=S_\star$ and $I(t)=0$ for all $t\geq 0$
+% \vfill
+% This contradicts uniqueness of solutions 
+% \vfill
+% $\Rightarrow$ $I(t)>0$ if $I(0)>0$
+% \end{frame}
 
-\begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (3)} 
-However, in $S=S_\star$ and $I=0$, another solution is present, the one such that $S(0)=S_\star$ and $I(0)=0$ 
-\vfill
-Indeed, with these IC, we have $S(t)=S_\star$ and $I(t)=0$ for all $t\geq 0$
-\vfill
-This contradicts uniqueness of solutions 
-\vfill
-$\Rightarrow$ $I(t)>0$ if $I(0)>0$
-\end{frame}
-
-\begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (4)} 
+\begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (2)} 
 We saw that $I(t)>0$ if $I(0)>0$
 \vfill
-Suppose now that $S=0$. Equation \eqref{sys:SIS_analysis_dS} is then
+Suppose now that $S=0$. Equation \eqref{sys:SIRS_dS} is then
 $$
-S' = dN+\gamma I>0
+S' = b+\nu R>0
 $$
 \vfill
-So if $S(0)>0$, then $S(t)>0$ for all $t$. If, on the other hand, $S(0)=0$, then $S(t)>0$ for $t>0$ small; from what we just saw, this is then also true for all $t>0$
+So if $S(0)=S_0>0$, then $S(t)>0$ for all $t$. If, on the other hand, $S_0=0$, then $S(t)>0$ for $t>0$ small; from what we just saw, this is then also true for all $t>0$
 \vfill
 We say the vector field points \emph{inward}
 \vfill
@@ -1502,214 +1521,123 @@ This reasoning has its place in an MSc of PhD manuscript: you need to demonstrat
 In a research paper, this is not really necessary and actually often superfluous; \emph{it is easy to show that solutions exist uniquely and that the positive orthant is invariant under the flow of the system} is typically sufficient
 \end{frame}
 
-\begin{frame}{Boundedness}
-It follows from what we just saw that the positive quadrant $\mathbb{R}_+^2$ is (positively) invariant under the flow of \eqref{sys:SIS_analysis}
+
+\begin{frame}{The total population is asymptotically constant}
+Since $b(N)=b$, the total population equation \eqref{eq:total_pop_general} takes the form
+\[
+N' = b-dN
+\]
+This equation has a unique equilbrium $N^\star=b/d$ and it is very easy to check that this equilibrium is GAS: this is a scalar autonomous equation, so solutions are monotone; they increase to $N^\star$ if $N_0<N^\star$ and decrease to $N^\star$ if $N_0>N^\star$
 \vfill
-From invariance and boundedness (constance) of the total population $N$, we deduce that solutions of \eqref{sys:SIS_analysis} are bounded
+So we can work at the limit $N^\star$ where $R=N^\star-(S+I)$ and thus drop the equation for $R$
 \end{frame}
 
-\begin{frame}{Seeking equilibria (1)}
-We find equilibria of the system by seeking values of $S$ and $I$ such that $S'=I'=0$
+
+\begin{frame}{Boundedness}
+It follows from what we just saw that the positive cone $\mathbb{R}_+^3$ is (positively) invariant under the flow of \eqref{sys:SIRS}
 \vfill
-To do that, we set $S'=I'=0$ and solve for $S$ and $I$
-\vfill
-At an EP, \eqref{sys:SIS_base} becomes
-\begin{subequations}\label{sys:SIS_DFE}
-  \begin{align}
-    0 &= d(N-S)-\beta\frac{SI}{N}+\gamma I 
-    \label{sys:SIS_DFE_S} \\
-    0 &= \left(\beta \frac SN-(d+\gamma)\right)I 
-    \label{sys:SIS_DFE_I}
-  \end{align}
+Since $N(t)\to N^\star$, we deduce that solutions of \eqref{sys:SIRS} are bounded
+\end{frame}
+
+
+\begin{frame}{Seeking equilibria}
+We seek $S=S^\star, I=I^\star, R=R^\star$ such that
+\begin{subequations} \label{sys:SIRS_EP}
+\begin{align}
+0 &= b+\nu R-dS-\beta SI \label{sys:SIRS_EP_dS} \\
+0 &= \beta SI-(d+\gamma) I \label{sys:SIRS_EP_dI} \\
+0 &= \gamma I-(d+\nu)R \label{sys:SIRS_EP_dR}
+\end{align}    
 \end{subequations}
+\vfill
+From \eqref{sys:SIRS_EP_dI}, either $I^\star=0$ or $\beta S-(d+\gamma)=0$, i.e., $S^\star=(d+\gamma)/\beta$
+\vfill
+When $I^\star=0$, substituting $I^\star=0$ into \eqref{sys:SIRS_EP_dR} implies that $R^\star=0$ and, in turn, substituting $I^\star=R^\star=0$ into \eqref{sys:SIRS_EP_dR} gives $S^\star=b/d$. This gives the disease-free equilibrium (DFE)
+\begin{equation}\label{eq:SIRS_DFE}
+(S^\star,I^\star,R^\star)=
+\left(\frac bd, 0, 0\right)
+\end{equation}
 \end{frame}
 
 \begin{frame}{Seeking equilibria (2)}
-We consider
-\begin{align}
-0 &= d(N-S)-\beta\frac{SI}{N}+\gamma I 
-\tag{\ref{sys:SIS_DFE_S}} \\
-0 &= \left(\beta \frac SN-(d+\gamma)\right)I 
-\tag{\ref{sys:SIS_DFE_I}}
-\end{align}
+Now consider the second EP, where $S^\star=(d+\gamma)/\beta$. First, write \eqref{sys:SIRS_EP_dR} as $I^\star=(d+\nu)R/\gamma$
 \vfill
-From \eqref{sys:SIS_DFE_I}, we deduce that either
-\[
-\beta\frac SN -(d+\gamma)=0
-\iff S=\frac{d+\gamma}\beta N
-\]
-or $I=0$
-\vfill
-Substituting $I=0$ in \eqref{sys:SIS_DFE_S} gives $d(N-S)=0$, i.e, $S=N$. This is the disease-free equilibrium (DFE)
-\begin{equation}
-\label{eq:SIS_DFE}
-E_0 : (S,I)=(N,0)
-\end{equation}
-\end{frame}
-
-\begin{frame}{Seeking equilibria (3)}
-From 
-$$
-S=\frac{d+\gamma}\beta N
-$$
-we deduce the endemic equilibrium (EEP) $E_\star$: substituting this value of $S$ into \eqref{sys:SIS_DFE_S},
+Substitute $S^\star=(d+\gamma)/\beta$ and $I^\star=(d+\nu)R/\gamma$ into \eqref{sys:SIRS_EP_dS}, giving
 \begin{align*}
-0 &= d\left(N-\frac{d+\gamma}\beta N\right)
--\beta \frac{\frac{d+\gamma}\beta NI}{N}+\gamma I \\
-&=dN\left(1-\frac{d+\gamma}{\beta}\right)
--(d+\gamma)I+\gamma I \\
-&=dN\left(1-\frac{d+\gamma}{\beta}\right)-dI
+0 &= b+\nu R^\star-d\frac{d+\gamma}{\beta}
+-\beta\frac{d+\gamma}{\beta}\frac{d+\nu}{\gamma}R^\star \\
+&= b-d\frac{d+\gamma}{\beta}
+-\frac{(d+\gamma)(d+\nu)-\gamma\nu}{\gamma}R^\star
 \end{align*}
-whence
-$$
-I=\left(1-\frac{d+\gamma}{\beta}\right)N
-$$
+Thus
+\begin{equation}\label{eq:SIRS_R_star}
+R^\star =
+\left(b-d\frac{d+\gamma}{\beta}\right)
+\frac{\gamma}{(d+\gamma)(d+\nu)-\gamma\nu}
+\end{equation}
+\vfill
+We return to \eqref{eq:SIRS_R_star} later
 \end{frame}
 
-\begin{frame}{Seeking equilibria (4)}
-As a consequence, the EEP is 
-\[
-E_\star :(S,I)
-=\left(
-  \frac{d+\gamma}\beta N, 
-  1-\frac{d+\gamma}\beta N
-\right)
-\]
-\vfill
-Define, as previously, the basic reproduction number by \eqref{eq:SIS_R0} and noting that $(d+\gamma)/\beta=1/\R_0$, it follows that
-\begin{equation}
-\label{eq:SIS_EEP}
-E_\star :(S,I)
-=\left(
-  \frac{1}{\R_0}N, 
-  \left(1-\frac{1}{\R_0}\right)N
-\right)
-\end{equation}
-\end{frame}
+
 
 \begin{frame}{Classic method for computing $\R_0$}
 $\R_0$ is the surface in parameter space where the DFE loses its LAS
 \vfill
 To find $\R_0$, we therefore study the LAS of the DFE
 \vfill
-In an arbitrary $(S,I)$, the Jacobian matrix of \eqref{sys:SIS_base} takes the form
+In an arbitrary $(S,I,R)$, the Jacobian matrix of \eqref{sys:SIRS} takes the form
 \begin{equation}
-\label{eq:SIS_Jacobian_SI}
-J_{(S,I)} =
+\label{eq:SIRS_Jacobian}
+J_{(S,I,R)} =
 \begin{pmatrix}
--d -\beta \frac IN & \gamma-\beta\frac SN \\
-\beta \frac IN & \beta\frac SN-(d+\gamma)
+-d-\beta I & -\beta S & \nu \\
+\beta I & \beta S-(d+\gamma) & 0 \\
+0 & \gamma & -(d+\nu)
 \end{pmatrix}
 \end{equation}
 \end{frame}
 
 \begin{frame}
-The LAS of the DFE depends on the sign of the real parts of the eigenvalues of \eqref{eq:SIS_Jacobian_SI}at that equilibrium point, so we evaluate
-$$
+The LAS of the DFE depends on the sign of the real parts of the eigenvalues of \eqref{eq:SIRS_Jacobian} at that equilibrium point, so we evaluate
+\begin{equation}
+\label{eq:SIRS_Jacobian_DFE}
 J_{E_0} =
 \begin{pmatrix}
--d & \gamma-\beta \\
-0 & \beta-(d+\gamma)
+-d & -\beta S^\star & \nu \\
+0 & \beta S^\star-(d+\gamma) & 0 \\
+0 & \gamma & -(d+\nu)
 \end{pmatrix}
-$$
-\vfill
-Triangular matrix $\implies$ eigenvalues are $-d<0$ and $\beta-(d+\gamma)$ 
-\vfill
-$\implies$ LAS of the DFE determined by sign of $\beta-(d+\gamma)$, giving \eqref{eq:SIS_R0}
-\end{frame}
-
-\begin{frame}{A faster way to compute $\R_0$}
-
-Diekmann \& Heesterbeek, caracterised in the ODE case by PvdD \& Watmough (2002)
-\vfill
-We only consider compartments with \emph{infected} individuals and write
-$$
-x'=\mathcal{F}-\mathcal{V}
-$$
-\vfill
-\bbullet $\mathcal{F}$ entry into infected compartments because of new infections
-\vfill
-\bbullet $\mathcal{V}$ contains all other flows (beware the $-$ sign)
-\end{frame}
-
-\begin{frame}
-Compute the (Fréchet) derivatives $F=D\mathcal{F}$ and $V=D\mathcal{V}$ with respect to the infected variables $x$ (the Jacobian matrices) and evaluate at the DFE
-\vfill
-Then
-\begin{equation}\label{eq:R0}
-  \R_0=\rho(FV^{-1})
 \end{equation}
-where $\rho$ is the spectral radius
+\vfill
+Block upper triangular matrix $\implies$ eigenvalues are $-d<0$, $-(d+\nu)<0$ and $\beta S^\star-(d+\gamma)$ 
+\vfill
+$\implies$ LAS of the DFE determined by sign of $\beta S^\star-(d+\gamma)$
 \end{frame}
 
-\begin{frame}{A result of PvdD \& Watmough (2002)}
 
-\begin{theorem}\label{th:PvdDWatmough2002}
-Suppose a DFE exists and denote  
-\begin{equation}\tag{\ref{eq:R0}}
-  \R_0=\rho(FV^{-1})
+\begin{frame}{Sign of $\beta S^\star-(d+\gamma)$}
+Recall that at the DFE \eqref{eq:SIRS_DFE}, $S^\star=b/d$, so
+\[
+\text{sign}(\beta S^\star-(d+\gamma))
+=\text{sign}\left(
+\beta\frac{b}{d} -(d+\gamma)
+\right)
+\]
+So the DFE is LAS if
+\[
+\beta\frac bd < d+\gamma
+\iff \frac\beta{d+\gamma}\ \frac bd <1
+\]
+Denote
+\begin{equation}\label{eq:SIRS_R0}
+\R_0 = \frac\beta{d+\gamma}\ \frac bd
 \end{equation}
-where matrices $F$ and $V$ are obtained as indicated. Suppose that conditions (A1) to (A5) are satisfied. Then
-\begin{itemize}
-  \item if $\R_0<1$, then the DFE is LAS
-  \item if $\R_0>1$, then the DFE is unstable
-\end{itemize}
-\end{theorem}
 \vfill
-(Conditions (A1)-(A5) are made explicit in \href{https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-07-etapes-R0-final-size.html}{Lecture XY}; we discuss why it is important to check these conditions in \href{https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-11-plus-de-modelisation.html}{Lecture XY})
+(We sometimes emphasise that $b/d=N^\star$, the total population, and thus write $\R_0=\beta N^\star/(d+\gamma)$)
 \end{frame}
 
-\begin{frame}{Using the next generation method here}
-This computation replaces the one involving the Jacobian matrix. Once the DFE has been found, consider only the infected variables in \eqref{sys:SIS_base}, i.e., $I$, and its corresponding equation \eqref{sys:SIS_base_dI}: 
-\[
-I' = \beta \frac{SI}N-(d+\gamma)I
-\]
-\vfill
-We write this equation in the form
-$$
-x'=\mathcal{F}-\mathcal{V}
-$$
-with $x=I$, $\mathcal{F}$ the new infections, i.e.,
-$$
-\mathcal{F}=\beta \frac{SI}N
-$$
-and $\mathcal{V}$ all other flows, being careful about the $-$ sign:
-\[
-\mathcal{V}=(d+\gamma)I
-\]
-\end{frame}
 
-\begin{frame}
-Compute the Jacobian matrices $\mathcal{F}$ and $\mathcal{V}$ (scalars here since $\mathcal{F}$ and $\mathcal{V}$ are scalar)
-\[
-D\mathcal{F}=\frac{\partial}{\partial I}\mathcal{F}
-=\beta\frac SN
-\]
-and
-\[
-D\mathcal{V}=\frac{\partial}{\partial I}\mathcal{V}
-=d+\gamma
-\]
-We obtain $F$ and $V$ by evaluating these derivatives at the DFE,
-\[
-F=D\mathcal{F}_{E_0} = \beta \frac SN=\beta,
-\qquad
-V=D\mathcal{V}_{E_0} = d+\gamma
-\]
-Finally, invert $V$, i.e., here, $V^{-1}=1/(d+\gamma)$
-The conditions (A1)-(A5) of Theorem~\ref{th:PvdDWatmough2002} are verified, so we also get LAS of the DFE
-\end{frame}
-
-\begin{frame}
-Thus, just like \eqref{eq:SIS_R0},
-$$
-\R_0 =\rho(FV^{-1})
-=\rho\left(\frac{\beta}{d+\gamma}\right)
-=\frac{\beta}{d+\gamma}
-$$
-\vfill
-The benefit here is not necessarily obvious, but we will see later that this method can greatly simplify computations
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1779,169 +1707,129 @@ We saw that when $\R_0<1$, $I\to 0$, whereas when $\R_0>1$, $I\to (1-1/\R_0)N$. 
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{A little more about stability}
-
-\begin{frame}{I ``cheated'' a bit...}
-  \begin{center}
-    \includegraphics[width=0.5\textwidth]{../FIGS/endemic_SIS_EE_vs_R0_blackBG}
-  \end{center}
-\vfill
-In the second analysis, all we showed is LAS/instability of the DFE
-\vfill
-In the present case, Analysis V1.0 tells us everything (Theorem~\ref{th:first_result_SIS_2})
-\vfill
-But in a model without explicit solutions, we may want to think about global stability properties
-\end{frame}
-
-\begin{frame}{What remains to be done (2nd analysis)}
-
-- LAS of EEP when it is biologically relevant
-\vfill
-- GAS of DFE when $\R_0\leq 1$
-\vfill
-- GAS of EEP when $\R_0>1$
-\end{frame}
-
-\begin{frame}{Biologically relevant EP}
-Remember we had found
-\begin{equation}\tag{\ref{eq:SIS_EEP}}
-  E_\star :(S,I)
-=\left(
-  \frac{1}{\R_0}N, 
-  \left(1-\frac{1}{\R_0}\right)N
-\right)
-\end{equation}
-\vfill
-Here, the value of $I_\star$ only has meaning as the EP of a compartmental model if $I_\star\geq 0$, i.e., if $\R_0\geq 1$
-\vfill
-In this case, we say the EEP is \defword{biologically relevant}
-\vfill
-Otherwise the EEP is \defword{not biologically relevant} and by abuse of language, we often say it \textbf{does not exist}
-\end{frame}
-
-\begin{frame}{LAS of EEP when biologically relevant}
-
-Additionally to the EEP
-\begin{equation}\tag{\ref{eq:SIS_EEP}}
-E_\star :(S,I)
-=\left(
-  \frac{1}{\R_0}N, 
-  \left(1-\frac{1}{\R_0}\right)N
-\right)
-\end{equation}
-we had also computed the Jacobian matrix \eqref{eq:SIS_Jacobian_SI} at an arbitrary point 
-\begin{equation}\tag{\ref{eq:SIS_Jacobian_SI}}
-J_{(S,I)} =
-\begin{pmatrix}
--d -\beta \frac IN & \gamma-\beta\frac SN \\
-\beta \frac IN & \beta\frac SN-(d+\gamma)
-\end{pmatrix}
-\end{equation}
-\end{frame}
-
-\begin{frame}
-Evaluate $J$ at $E_\star$:
-\begin{align*}
-J_{E_\star} &=
-\begin{pmatrix}
--d -\beta \frac {\left(1-\frac{1}{\R_0}\right)N}{N} & \gamma-\beta\frac {\frac{1}{\R_0}N}{N} \\
-\beta \frac {\left(1-\frac{1}{\R_0}\right)N}{N} & \beta\frac {\frac{1}{\R_0}N}{N}-(d+\gamma)
-\end{pmatrix} \\
- &=
-\begin{pmatrix}
--d -\beta \left(1-\frac{1}{\R_0}\right) & \gamma-\frac{\beta}{\R_0} \\
-\beta \left(1-\frac{1}{\R_0}\right) & \frac{\beta}{\R_0}-(d+\gamma)
-\end{pmatrix}
-\end{align*}
-\vfill
-Find eigenvalues $-d<0$ and $2\beta/\R_0-(\beta+d+\gamma)$, i.e., since $\R_0=\beta/(d+\gamma)$, $d+\gamma-\beta$
-\vfill
-The second eigenvalue is therefore $<0$ when $\R_0>1$, so $E_\star$ is LAS when it is biologically relevant
-\end{frame}
-
-\begin{frame}{GAS of the DFE when $\R_0<1$}
-We use a very simple trick: take $L(S,I)=I$ as a Lyapunov function. From invariance of $\IR_+^2$ under the flow of \eqref{sys:SIS_analysis}, $L(S,I)>0$ unless $I=0$. We have
-$$
-I' = \left(\beta \frac SN-(d+\gamma)\right)I
-$$
-Note that $S/N\leq 1$ and as a consequence
-$$
-I' \leq \left(\beta-(d+\gamma)\right)I
-$$
-If $I(0)>0$ and $\R_0<1$, we therefore have, for all $t>0$,
-$$
-I'<0
-$$
-and $L(S,I)=I$ is a Lyapunov function for system \eqref{sys:SIS_analysis} $\implies$ DFE is GAS when $\R_0<1$
-\end{frame}
-
-\begin{frame}{Case $\R_0=1$}
-When $\R_0=1$, reasoning as previously, we only have
-$$
-I'\leq 0
-$$
-Note, however, that if $I(0)>0$, then $I(t)>0$ for all $t$ and as a consequence, we actually have $S/N<1$, whence 
-$$
-I'<(\beta-(d+\gamma))I=0 \text{ when }\R_0=1
-$$
-so $L(S,I)=I$ is still a Lyapunov function
-\end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{An SIR model with vaccination}
 
 \begin{frame}{An SIR model with vaccination}
-  Take SIR model and assume the following
-  \vfill
-- Vaccination takes susceptible individuals and moves them directly into the recovered compartment, without them ever becoming infected/infectious
-\vfill
-- Birth = death
-\vfill
-- A fraction $p$ is vaccinated at birth
-\vfill
-- $f(S,I,N)=\beta SI$
-
-%![width:600px center](https://raw.githubusercontent.com/julien-arino/omni-course-part1/main/FIGS/SIR_simple_vacc_blackBG.png)
+Take SIRS model \eqref{sys:SIRS} and assume the following
+\begin{itemize}
+\item Vaccination takes newborn individuals and moves them directly into the removed compartment, without them becoming infected/infectious
+\item A fraction $p$ is vaccinated at birth
+\end{itemize}
 \end{frame}
 
-
-\begin{frame}{}
-  %![bg left:30% width:350px](https://raw.githubusercontent.com/julien-arino/omni-course-part1/main/FIGS/SIR_simple_vacc_vertical_blackBG.png)
-
-  \begin{subequations}\label{sys:SIR_demog_vacc}
-    \begin{align}
-      S' &= (1-p)dN-dS-\beta SI \label{sys:SIR_demog_vacc_dS}\\
-      I' &= \beta SI -(d+\gamma)I \label{sys:SIR_demog_vacc_dI}\\
-      R' &= pdN+\gamma I-dR \label{sys:SIR_demog_vacc_dR}
-      \end{align}        
+\begin{frame}{The model}
+\begin{minipage}{0.25\textwidth}
+  \def\skip{*-1.5}
+  \begin{tikzpicture}[scale=1, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
+    \node [circle, fill=blue!90, text=black] at (0,2\skip) (R) {$R$};
+    %% Fake nodes for arrows
+    \node [above=1cm of S] (birthS) {};
+    \node [below=1cm of R] (birthR) {};
+    \node [left=0.5cm of S] (dS) {};
+    \node [left=0.5cm of I] (dI) {};
+    \node [left=0.5cm of R] (dR) {};
+    %% Flows
+    \path [line, very thick, red] (birthS) to node [midway, right] (TextNode) {$(1-p)b$} (S);
+    \path [line, very thick, red] (birthR) to node [midway, right] (TextNode) {$pb$} (R);
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (I) to node [midway, above] (TextNode) {$dI$} (dI);
+    \path [line, very thick] (R) to node [midway, above] (TextNode) {$dR$} (dR);
+    \path [line, very thick] (S) to node [midway, right] (TextNode) {$\beta SI$} (I);
+    \path [line, very thick] (I) to node [midway, right] (TextNode) {$\gamma I$} (R);
+    \draw [>=latex,->, thick, rounded corners] (R) -- (0.8,2\skip) -- (0.8,0) node[midway, right] {$\nu R$} -- (S);
+    \end{tikzpicture}    
+\end{minipage}
+\begin{minipage}{0.7\textwidth}
+  \begin{subequations} \label{sys:SIR_vacc}
+  \begin{align}
+    S' &= (1-p)b+\nu R-dS-\beta SI \label{sys:SIR_vacc_dS} \\
+    I' &= \beta SI-(d+\gamma) I \label{sys:SIR_vacc_dI} \\
+    R' &= bp+\gamma I-(d+\nu)R \label{sys:SIR_vacc_dR}
+  \end{align}    
   \end{subequations}
+  \vskip1cm
+  Consider the initial value problem consisting in \eqref{sys:SIR_vacc} to which we couple initial conditions $S(0)=S_0\geq 0$, $I(0)=I_0\geq 0$ and $R(0)=R_0\geq 0$
+  \vskip1cm
+  Typically, we assume $N_0=S_0+I_0+R_0>0$ to avoid a trivial case
+  \end{minipage}
 \end{frame}
 
-\begin{frame}{Computation of $\R_0$}
-  - DFE, SIR: 
-  $$
-  E_0:=(S,I,R)=(N,0,0)
-  $$
-  - DFE, SIR with vaccination
-  $$
-  E_0^v:=(S,I,R)=
-  \left((1-p)N,0,pN\right)
-  $$
-  
-  Thus,
-  - In SIR case
-  $$
-  \mathcal{R}_0=\frac{\beta N}{d+\gamma}
-  $$
-  - In SIR with vaccination case, denote $\R_0^{\text{v}}$ and
-  $$
-  \R_0^{\text{v}}=(1-p)\mathcal{R}_0
-  $$    
+\begin{frame}{This modification doesn't change much}
+Equation \eqref{eq:total_pop_general} for the total population is unchanged
+\vfill
+The Jacobian \eqref{eq:SIRS_Jacobian} at arbitrary point is also unchanged
+\vfill 
+The DFE is affected, though; as a consequence, so is the reproduction number
 \end{frame}
 
+\begin{frame}{The DFE for the SIRS vaccination model}
+Considering \eqref{sys:SIR_vacc} at equilibrium and substituting $I^\star=0$ into this system gives
+\begin{align*}
+0 &= (1-p)b+\nu R^\star-dS^\star \\
+0 &= bp-(d+\nu)R^\star
+\end{align*}
+which we rewrite as the linear system
+\[
+\begin{pmatrix}
+d & -\nu \\ 0 & d+\nu
+\end{pmatrix}
+\begin{pmatrix}
+S^\star \\ R^\star
+\end{pmatrix}
+=
+\begin{pmatrix}
+(1-p)b \\ bp
+\end{pmatrix}
+\]
+Thus
+\begin{align*}
+\begin{pmatrix}
+S^\star \\ R^\star
+\end{pmatrix}
+&= \frac{1}{d(d+\nu)}
+\begin{pmatrix}
+d+\nu & \nu \\ 0 & d
+\end{pmatrix}
+\begin{pmatrix}
+(1-p)b \\ pb
+\end{pmatrix} \\
+&= \frac{1}{d(d+\nu)}
+\begin{pmatrix}
+(d+\nu)(1-p)b+pb\nu \\ pbd
+\end{pmatrix}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+As a consequence, the DFE takes the form
+\begin{equation}\label{eq:SIRS_vacc_DFE}
+E_0^v := (S^\star,I^\star,R^\star) =
+\left(
+\left(1-p+\frac{p\nu}{d+\nu}\right)N^\star,0,
+\frac{pd}{d+\nu}N^\star
+\right)
+\end{equation}
+\vfill
+Substituting \eqref{eq:SIRS_vacc_DFE} into the eigenvalue that determines stability of the DFE, $\beta S^\star-(d+\gamma)$, we get
+\begin{align*}
+\beta S^\star-(d+\gamma)<0 &\iff
+\frac\beta{d+\gamma} S^\star <1 \\
+&\iff 
+\frac\beta{d+\gamma}
+\left(1-p+\frac{p\nu}{d+\nu}\right)N^\star<1
+\end{align*}
+So we define
+\begin{equation}\label{eq:SIRS_vacc_R0}
+\R_0^v =
+\frac\beta{d+\gamma}
+\left(1-p+\frac{p\nu}{d+\nu}\right)N^\star
+\end{equation}
+\end{frame}
 
 
 \begin{frame}{Herd immunity}
@@ -1964,22 +1852,32 @@ so $L(S,I)=I$ is still a Lyapunov function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Last remarks}
 
+\begin{frame}{To simplify or not to simplify?}
+\bbullet In the KMK epidemic model \eqref{sys:KMK} and the SIRS endemic model \eqref{sys:SIRS}, since the total population is constant or asymptotically constant, it is possible to omit one of the state variables since $N^\star=S+I+R$
+\vfill
+\bbullet We often use $R=N^\star-S-I$
+\vfill
+\bbullet This can greatly simplify some computations
+\vfill
+\bbullet Whether to do it or not is a matter of preference
+\end{frame}
+
 \begin{frame}{To normalise or not to normalise?}
-  \bbullet In the SIS of \href{}{Lecture 05} and here, since the total population is constant, it is possible to normalise to $N=1$
-  \vfill
-  \bbullet This can greatly simplify some computations
-  \vfill
-  \bbullet However, I am not a big fan: it is important to always have the ``sizes'' of objects in mind
-  \vfill
-  \bbullet If you do normalise, at least for a paper destined to mathematical biology, always do a ``return to biology'', i.e., interpret your results in a biological light, which often implies to return to original values
-  \end{frame}
+\bbullet In the KMK epidemic model \eqref{sys:KMK} and the SIRS endemic model \eqref{sys:SIRS}, since the total population is constant or asymptotically constant, it is possible to normalise to $N=1$
+\vfill
+\bbullet This can greatly simplify some computations
+\vfill
+\bbullet However, I am not a big fan: it is important to always have the ``sizes'' of objects in mind
+\vfill
+\bbullet If you do normalise, at least for a paper destined to mathematical biology, always do a ``return to biology'', i.e., interpret your results in a biological light, which often implies to return to original values
+\end{frame}
 
 \begin{frame}{Where we are}
-  \bbullet An \emph{endemic} SIS model in which the threshold $\R_0=1$ is such that, when $\R_0<1$, the disease goes extinct, whereas when $\R_0>1$, the disease becomes established in the population
-  \vfill
-  \bbullet An \emph{epidemic} SIR model (the KMK SIR) in which the presence or absence of an epidemic wave is characterised by the value of $\R_0$
-  \vfill
-  \bbullet The SIS and the KMK SIR have explicit solutions (in some sense). \textbf{This is an exception!}
+\bbullet An \emph{epidemic} SIR model (the KMK SIR) in which the presence or absence of an epidemic wave is characterised by the value of $\R_0$
+\vfill
+\bbullet The KMK SIR has explicit solutions (in some sense). \textbf{This is an exception!}
+\vfill
+\bbullet An \emph{endemic} SIRS model in which the threshold $\R_0=1$ is such that, when $\R_0<1$, the disease goes extinct, whereas when $\R_0>1$, the disease becomes established in the population
 \end{frame}
 
 
