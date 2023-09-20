@@ -1,3 +1,4 @@
+%\SweaveUTF8
 \documentclass[aspectratio=43]{beamer}
 \usepackage{Sweave}
 

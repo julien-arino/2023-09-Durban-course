@@ -1,3 +1,4 @@
+%\SweaveUTF8
 \documentclass[aspectratio=43]{beamer}
 \usepackage{Sweave}
 
@@ -110,7 +111,7 @@ Three processes:
 \end{enumerate}
 
 \vfill
-Contamination of HCW is "transient": they are carriers, if they wash their hands properly, they become OK
+Contamination of HCW is ``transient'': they are carriers, if they wash their hands properly, they become OK
 \vfill
 Each day has 3 shifts of 8h for HCW
 \vfill
@@ -120,186 +121,132 @@ Rules for contaminations per unit time
 \end{frame} 
 
 
-% \begin{frame}
-% 
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//Dagata_etal_patients_profiles.jpg)
-% 
-% <!-- Patient–HCW contact diagram for four patients and one HCW during one shift. Patient status: uninfected (green), infected with the non-resistant strain (yellow), infected with the resistant strain (red). HCW status: uncontaminated (______ ), contaminated with the non-resistant strain (………), contaminated with the resistant strain (- - - - - ) -->
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//Dagata_etal_comparisons.jpg)
-% 
-% <!-- The left (respectively the right) figure corresponds to 1 trajectory (respectively the average over 80 trajectories) of the IBM during one shift, with no exit and admission of patients, and no changes in the infection status of patients -->
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}{Effectiveness of contact tracing}
-% 
-% Tian, Osgood, Al-Azem & Hoeppner. [Evaluating the Effectiveness of Contact Tracing on Tuberculosis Outcomes in Saskatchewan Using Individual-Based Modeling](https://doi-org.uml.idm.oclc.org/10.1177%2F1090198113493910), Health Education & Behavior (2013)
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% Evaluation of contact tracing in TB
-% 
-% 
-% \end{frame} 
-% 
-% \begin{frame}
-% 
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_TB_CT.jpeg)
-% \end{frame} 
-% 
-% \begin{frame}
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_state_flow_agent.jpeg)
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_model_CT.jpeg)
-% \end{frame} 
-% 
-% 
-% 
-% \begin{frame}
-% They can then formulate scenarios
-% 
-% ![height:60%](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_scenarios.jpeg)
-% 
-% They then run these scenarios and compare results
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//TianOsgood_etal_scenario_results.jpeg)
-% \end{frame} 
-% 
-% 
-% \begin{frame}{Contacts during Hajj}
-% Tofighi, Asgary, Tofighi, Najafabadi, Arino, Amiche, Rahman, McCarthy, Bragazzi, Thommes,  Coudeville, Grunnill, Bourouiba and Wu. [Estimating Social Contacts in Mass Gatherings for Disease Outbreak Prevention and Management (Case of Hajj Pilgrimage)](http://dx.doi.org/10.2139/ssrn.3678581), Tropical Diseases, Travel Medicine and Vaccines
-% \end{frame} 
-% 
-% \begin{frame}{Contacts during Hajj}
-% 
-% - In a mass gathering event like Hajj, lots of people come together originating from many countries
-% - So if propagation occurs during the event, this has the capacity to spread infection far and wide when individuals (pilgrims here) return home
-% - Contacts during part of the event are really specific in their configuration
-% 
-% <div style = "position: relative; bottom: -20%; font-size:20px;">
-% 
-% Tofighi, Asgary, Tofighi, Najafabadi, Arino, Amiche, Rahman, McCarthy, Bragazzi, Thommes,  Coudeville, Grunnill, Bourouiba and Wu. [Estimating Social Contacts in Mass Gatherings for Disease Outbreak Prevention and Management (Case of Hajj Pilgrimage)](http://dx.doi.org/10.2139/ssrn.3678581), Tropical Diseases, Travel Medicine and Vaccines
-% </div>
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-%  The setup
-% 
-% - Word of warning: I am quite fuzzy on the specifics :)
-% - Pilgrims enter Masjid al-Haram mosque through several gates
-% - Proceed to Mataaf (area around Kaaba), circle the Kaaba 7 times counterclockwise (process is the *Tawaf*)
-% - Then do seven trips between Safa and Marwah (process is the *Sa'ee*)
-% 
-% 
-% \end{frame} 
-% 
-% 
+\begin{frame}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{FIGS/Dagata_etal_patients_profiles.jpg}
+\end{center}
+\vfill
+\tiny Patient–HCW contact diagram for four patients and one HCW during one shift. Patient status: uninfected (green), infected with the non-resistant strain (yellow), infected with the resistant strain (red). HCW status: uncontaminated (plain), contaminated with the non-resistant strain (dotted), contaminated with the resistant strain (dashed)
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/Dagata_etal_comparisons.jpg}
+\end{center}
+\vfill
+\tiny 
+The left (respectively the right) figure corresponds to 1 trajectory (respectively the average over 80 trajectories) of the IBM during one shift, with no exit and admission of patients, and no changes in the infection status of patients
+\end{frame}
+
+
+\begin{frame}{Effectiveness of contact tracing in TB}
+Tian, Osgood, Al-Azem \& Hoeppner. \href{https://doi-org.uml.idm.oclc.org/10.1177\%2F1090198113493910}{Evaluating the Effectiveness of Contact Tracing on Tuberculosis Outcomes in Saskatchewan Using Individual-Based Modeling}, Health Education \& Behavior (2013)
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/TianOsgood_etal_TB_CT.jpeg}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/TianOsgood_etal_state_flow_agent.jpeg}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/TianOsgood_etal_model_CT.jpeg}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}
+They can then formulate scenarios
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/TianOsgood_etal_scenarios.jpeg}
+\end{center}
+They then run these scenarios and compare results
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/TianOsgood_etal_scenario_results.jpeg}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Contacts during Hajj}
+Tofighi, Asgary, Tofighi, Najafabadi, Arino, Amiche, Rahman, McCarthy, Bragazzi, Thommes,  Coudeville, Grunnill, Bourouiba and Wu. \href{http://dx.doi.org/10.2139/ssrn.3678581}{Estimating Social Contacts in Mass Gatherings for Disease Outbreak Prevention and Management (Case of Hajj Pilgrimage)}, Tropical Diseases, Travel Medicine and Vaccines
+\end{frame}
+
+\begin{frame}{Contacts during Hajj}
+In a mass gathering event like Hajj, lots of people come together originating from many countries
+\vfill
+So if propagation occurs during the event, this has the capacity to spread infection far and wide when individuals (pilgrims here) return home
+\vfill
+Contacts during part of the event are really specific in their configuration
+\end{frame}
+
+
+\begin{frame}{The setup}
+Word of warning: I am quite fuzzy on the specifics :)
+\vfill
+Pilgrims enter Masjid al-Haram mosque through several gates
+\vfill
+Proceed to Mataaf (area around Kaaba), circle the Kaaba 7 times counterclockwise (process is the \emph{Tawaf})
+\vfill
+Then do seven trips between Safa and Marwah (process is the \emph{Sa'ee})
+\end{frame}
+
+
 % \begin{frame}
 % 
 % ![bg contain](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Great_Mosque_of_Mecca.jpg/1280px-Great_Mosque_of_Mecca.jpg)
 % 
 % \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-%  Tawaf in pre-COVID-19 times
-% 
-% <iframe width="800" height="450" src="https://www.youtube.com/embed/L-YyR1oN66w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-%  Tawaf - Socially distanced version
-% 
-% <iframe width="800" height="450" src="https://www.youtube.com/embed/Rl8a0wQePCo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-%  Sa'ee in pre-COVID-19 times
-% 
-% <iframe width="800" height="450" src="https://www.youtube.com/embed/r1qM-mHj2d0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-%  Sa'ee - Socially distanced version
-% 
-% <iframe width="800" height="450" src="https://www.youtube.com/embed/JVges7Q2Mow" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-% - As you can gather from this:
-%   - Typically high density crowds
-%   - Very specific mixing patterns
-% - Opportunities for transmission are very high
-% - However, control mechanisms are also available
-% 
-% $\implies$ understanding contact patterns and frequency would help
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//ABM_Hajj_MAH_3Dmodel.png)
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//ABM_Hajj_setup.png)
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-% ![bg contain](https://raw.githubusercontent.com/julien-arino/3MC-course-epidemiological-modelling/main/FIGS//ABM_Hajj_config_tawaf.png)
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-% <iframe width="800" height="450" src="https://www.youtube.com/embed/_oOf4uNIghw?loop=1&modestbranding=1&origin=https://julien-arino.github.io/&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; loop" allowfullscreen>
-% </iframe>
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-% <iframe width="800" height="450" src="https://www.youtube.com/embed/qcWBi17qKnU?start=9&loop=1&modestbranding=1&origin=https://julien-arino.github.io/&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; loop" allowfullscreen>
-% </iframe>
+
+\begin{frame}
+As you can gather from this:
+\begin{itemize}
+\item Typically high density crowds
+\item Very specific mixing patterns
+\end{itemize}
+\vfill
+Opportunities for transmission are very high
+\vfill
+However, control mechanisms are also available
+\vfill
+$\implies$ understanding contact patterns and frequency would help
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/ABM_Hajj_MAH_3Dmodel.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/ABM_Hajj_setup.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\includegraphics[width=\textwidth]{FIGS/ABM_Hajj_config_tawaf.png}
+\end{center}
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -311,28 +258,25 @@ Rules for contaminations per unit time
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Why use network models}
 
-% \begin{frame}
-% 
-%  Comprendre les processus de contact
-% 
-% - Les modèles classiques permettent une certaine flexibilité (voir par exemple la section dans le [Cours 04](https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-04-modeles-SIS-SIR.html) sur les fonctions d'incidence ou le [Cours 11](https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-11-modeles-groupes.html) sur les modèles de groupes), mais cela reste limité et une approximation
-% - De la même manière que les modèles agents ([Cours 18](https://julien-arino.github.io/petit-cours-epidemio-mathematique/cours-18-modeles-agents.html)), les modèles en réseaux sont considérés pour rendre plus réaliste la description des processus de contact dans la transmission des agents pathogènes
-% 
-% \end{frame} 
-% 
-% 
-% \begin{frame}
-% 
-%  La vie humaine s'organise en réseaux
-% 
-% - Famille
-% - Cercles d'amis
-% - Réseau professionel
-% - ...
-% - Théorie des réseaux sociaux existe et est utilisée depuis des années, par exemple dans le cadre professionnel (e.g., comment fluidifier les interactions dans une entreprise)
-% 
-% \end{frame} 
-% 
+\begin{frame}{Understand contact processes}
+Classic models allow a certain degree of flexibility, for instance by using specific incidence functions or group models, but this remains limited and an approximation
+\vfill
+Like ABM, network models are used to make more realistic descriptions of the transmission of pathogens
+\end{frame}
+
+
+\begin{frame}{Human life is organised in networks}
+Family
+\vfill
+Friends
+\vfill
+Workplace
+\vfill
+$\ldots$
+\vfill
+Social network theory has been used for years, e.g., in a professional context (e.g., how to fluidify interactions within a company)
+\end{frame}
+
 % \subsection{Les réseaux sociaux}
 % 
 % \begin{frame}
@@ -422,7 +366,7 @@ Rules for contaminations per unit time
 % 
 % **Degré sortant** $d^+_\mathcal{D}(v)$ du nœud $v\in\mathcal{V}$ dans $\mathcal{D}$: nombre d'arcs avec queue $v$
 % 
-% **Degré** $d_\mathcal{D}(v)$ du nœud $v\in\mathcal{V}$ dans $\mathcal{D}(\mathcal{V},\mathcal{A})$: nombre d'arcs incidents à $v$ dans le graphe non orienté sous-jacent $\mathcal{G}$ de $\mathcal{D}$ (où tout arc est considérée comme un arc "bidirectionnel")
+% **Degré** $d_\mathcal{D}(v)$ du nœud $v\in\mathcal{V}$ dans $\mathcal{D}(\mathcal{V},\mathcal{A})$: nombre d'arcs incidents à $v$ dans le graphe non orienté sous-jacent $\mathcal{G}$ de $\mathcal{D}$ (où tout arc est considérée comme un arc ``bidirectionnel'')
 % 
 % \end{frame} \begin{frame}
 % 
@@ -603,8 +547,9 @@ Rules for contaminations per unit time
 % 
 % \end{frame} \begin{frame}
 % 
-% <!-- _backgroundImage: "linear-gradient(to bottom, #f1c40f, 20%, white)" -->
-%  <!--fit-->Cadre général des modèles en réseaux
+
+\subsection{Cadre général des modèles en réseaux}
+
 % 
 % \end{frame} \begin{frame}
 % 
@@ -657,14 +602,9 @@ Rules for contaminations per unit time
 % 
 % \end{frame} \begin{frame}
 % 
-% <!-- _backgroundImage: "linear-gradient(to bottom, #f1c40f, 20%, white)" -->
-%  <!--fit-->La librairie EpiModel
-% 
-% <div style = "text-align: justify; position: relative; bottom: -35%; font-size:18px;">
-% 
-% Jenness SM, Goodreau SM and Morris M. [EpiModel: An R Package for Mathematical Modeling of Infectious Disease over Networks](https://doi.org/10.18637%2Fjss.v084.i08). Journal of Statistical Software. 2018; 84(8): 1-47
-% </div>
-% \end{frame} 
+\begin{frame}{La librairie EpiModel}
+Jenness SM, Goodreau SM and Morris M. \href{https://doi.org/10.18637\%2Fjss.v084.i08}{EpiModel: An R Package for Mathematical Modeling of Infectious Disease over Networks}. Journal of Statistical Software. 2018; 84(8): 1-47
+\end{frame} 
 
 
 \begin{frame}{EpiModel}

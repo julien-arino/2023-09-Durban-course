@@ -1,0 +1,14 @@
+#!/bin/bash
+
+for f in lecture-*.Rnw
+do
+  # Remove concordance before sweaving
+  sed -i 's/concordance\=TRUE/concordance\=FALSE/g' $f
+  # Now sweave
+  R CMD Sweave $f
+  sed -i 's/\\SweaveOpts\{concordance\=TRUE\}//g' "${f%.tex}"
+  pdflatex "${f%.tex}"
+  pdflatex "${f%.tex}"
+  # Reactivate concordance
+  sed -i 's/concordance\=FALSE/concordance\=TRUE/g' $f
+done
