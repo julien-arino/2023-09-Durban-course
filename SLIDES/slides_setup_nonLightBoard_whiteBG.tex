@@ -148,13 +148,14 @@
 % Beginning of a section
 \AtBeginSection[]{
 	{
-		\setbeamercolor{background canvas}{bg=yellow!10}
+		\setbeamercolor{background canvas}{bg=green!50}
 		\begin{frame}[noframenumbering,plain]
 			\framesubtitle{\nameofthepart Chapter \insertromanpartnumber \ -- \iteminsert{\insertpart}}
 			\tableofcontents[
 				currentsection,
 				sectionstyle=show/shaded,
-				subsectionstyle=show/show/hide]
+				subsectionstyle=show/hide/hide,
+				subsubsectionstyle=hide/hide/hide]
 		\end{frame}
 	\addtocounter{page}{-1}
 	%\addtocounter{framenumber}{-1} 
@@ -164,14 +165,31 @@
 % Beginning of a section
 \AtBeginSubsection[]{
 	{
-		\setbeamercolor{background canvas}{bg=green!10}
+		\setbeamercolor{background canvas}{bg=green!30}
 		\begin{frame}[noframenumbering,plain]
 				\framesubtitle{\nameofthepart Chapter \insertromanpartnumber \ -- \iteminsert{\insertpart}}
 				\tableofcontents[
 					currentsection,
 					sectionstyle=show/hide,
 					currentsubsection,
+					subsectionstyle=show/shaded/hide,
+					subsubsectionstyle=show/hide/hide]
+			\end{frame}
+		\addtocounter{page}{-1}
+	}
+}
+
+% Beginning of a section
+\AtBeginSubsubsection[]{
+	{
+		\setbeamercolor{background canvas}{bg=green!10}
+		\begin{frame}[noframenumbering,plain]
+				\framesubtitle{\nameofthepart Chapter \insertromanpartnumber \ -- \iteminsert{\insertpart}}
+				\tableofcontents[
+					currentsection,
+					sectionstyle=show/hide,
 					subsectionstyle=show/shaded/hide]
+					%currentsubsubsection]
 			\end{frame}
 		\addtocounter{page}{-1}
 	}

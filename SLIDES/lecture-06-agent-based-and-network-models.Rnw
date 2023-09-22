@@ -351,12 +351,12 @@ A network is a (mathematical) graph, oriented or not, in which edges/arcs repres
 %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%
-\section{Measures specific to vertices}
+\subsection{Measures specific to vertices}
 
 
 %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%
-\subsection{Centre of a graph}
+\subsubsection{Centre of a graph}
 
 \begin{frame}{Geodesic distance}
 \begin{definition}[Geodesic distance]
@@ -572,9 +572,8 @@ Radius is 3, $x_2$ is a central point (the only one) and the centre is $\{x_2\}$
 \end{frame}
 
 
-%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Centrality -- Betweenness and closeness}
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Centrality -- Betweenness and closeness}
 \begin{frame}{How \emph{central} is a vertex?}
 	\emph{Centrality} tries to answer the question: what are the most influent vertices? 
 	
@@ -792,9 +791,9 @@ In other words
 		\end{tikzpicture}
 	\end{center}
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Periphery of a graph}
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Periphery of a graph}
 \begin{frame}{Diametre and periphery of a graph}
 \begin{definition}[Diametre of a graph]
 The \textbf{diametre} of $G$ is 
@@ -866,9 +865,8 @@ Diametre is 5 and the periphery is $\{x_3,x_4\}$
 \end{frame}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Degree distribution}
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Degree distribution}
 
 \begin{frame}{Degree distribution}
 	\begin{definition}[Arc incident to a vertex]
@@ -1048,10 +1046,9 @@ Diametre is 5 and the periphery is $\{x_3,x_4\}$
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Measures at the graph level}
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Circumference \& Girth}
+\subsection{Measures at the graph level}
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Circumference \& Girth}
 
 \begin{frame}{Circumference}
 \begin{definition}[Circumference]
@@ -1121,9 +1118,8 @@ Diametre is 5 and the periphery is $\{x_3,x_4\}$
 \end{frame}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Graph density}
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Graph density}
 
 \begin{frame}{Completeness}
 	\begin{definition}[{Complete undirected graph}]
@@ -1198,9 +1194,8 @@ or
 \end{frame}
 	
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Graph connectivity}
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Graph connectivity}
 
 \begin{frame}{Connectedness}
 We have already seen connectedness (quasi- or strong in the oriented case)
@@ -1361,9 +1356,8 @@ $G=(X,U)$ is weakly connected if there is a single weak component
 \end{itemize}
 \end{frame}
 	
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Cliques}
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Cliques}
 
 \begin{frame}{Cliques}
 	\begin{definition}[Clique in undirected graphs]
@@ -1443,9 +1437,8 @@ $G=(X,U)$ is weakly connected if there is a single weak component
 \end{frame}
 	
 	
-%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%
-\subsection{$k$-cores}
+%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{$k$-cores}
 
 \begin{frame}{$k$-core}
 	\begin{definition}[$k$-core of a graph]
@@ -1864,53 +1857,50 @@ $G=(X,U)$ is weakly connected if there is a single weak component
 \end{itemize}
 \end{frame} 
 
-%\begin{frame}
-% 
-% - Typiquement, on considère un graphe (ou digraphe selon les cas) dans lequel:
-%   - chaque nœud est un individu 
-%   - l'existence d'un arc de $i$ vers $j$ indique que $i$ est en contact avec $j$ et peut lui transmettre l'infection
-%   - dans le cas non orienté, l'existence d'un arc de $i$ vers $j$ implique celle d'un arc (le même) de $j$ vers $i$ et établit que les deux individus sont connectés
-% - La connexion n'est pas permanente, mais décrit plutôt la possibilité d'une connexion: $i$ et $j$ entrent en contact de façon régulière
-% 
-% \end{frame} \begin{frame}
-% 
-%  Matrice d'adjacence
-% 
-% On utilisera souvent la **matrice d'adjacence** $A=[a_{ij}]$, dans laquelle $a_{ij}=1$ si le nœud $i$ a un lien vers le nœud $j$ et $a_{ij}=0$ sinon
-% 
-% On écrit parfois $A(\mathcal{D})$ pour indiquer que $A$ est la matrice d'adjacence du digraphe $\mathcal{D}$, et dans l'autre sens, $\mathcal{D}(A)$ pour indiquer que le graphe est construit en utilisant la matrice d'adjacence
-% 
-% Si le graphe est non orienté, alors $A$ est symmétrique
-% 
-% \end{frame} \begin{frame}
-% 
-%  Nature du réseau
-% 
-% - Parfois on dispose de données précises sur les liens entre individus (sondages, etc.)
-% - Souvent on idéalise des réseaux, on choisit des réseaux avec des propriétés données
-% 
-% \end{frame} \begin{frame}
-% 
-%  La distribution des degrés du (di)graphe
-% 
-% La **transmissibilité** $T$ d'une maladie dans un graphe est la probabilité moyenne qu'un individu infectieux transmette la maladie à un individu susceptible avec qui il/elle est en contact
-% 
-% Dans un réseau non corrélé,
-% $$
-% T_c = \frac{\langle k\rangle}{\langle k^2\rangle-\langle k\rangle}
-% $$
-% où $\langle k\rangle$ et $\langle k^2\rangle$ sont le degré moyen et la moyenne du carré du degré
-% 
-% Il est nécessaire que $T>T_c$ pour qu'un *outbreak* devienne une épidémie majeure
-% 
-% \end{frame} \begin{frame}
-% 
-\begin{frame}{La librairie EpiModel}
-Jenness SM, Goodreau SM and Morris M. \href{https://doi.org/10.18637\%2Fjss.v084.i08}{EpiModel: An R Package for Mathematical Modeling of Infectious Disease over Networks}. Journal of Statistical Software. 2018; 84(8): 1-47
+\begin{frame}
+Typically, consider a graph (or digraph, depending on the cases) in which
+\begin{itemize}
+\item Each vertex is an individual
+\item Existence of an arc from $i$ to $j$ indicates that $i$ is in contact with $j$ and can transmit the pathogen to them
+\item dans le cas non orienté, l'existence d'un arc de $i$ vers $j$ implique celle d'un arc (le même) de $j$ vers $i$ et établit que les deux individus sont connectés
+\item La connexion n'est pas permanente, mais décrit plutôt la possibilité d'une connexion: $i$ et $j$ entrent en contact de façon régulière
+\end{itemize}
 \end{frame} 
 
 
-\begin{frame}{EpiModel}
+\begin{frame}
+
+ Matrice d'adjacence
+
+On utilisera souvent la **matrice d'adjacence** $A=[a_{ij}]$, dans laquelle $a_{ij}=1$ si le nœud $i$ a un lien vers le nœud $j$ et $a_{ij}=0$ sinon
+
+On écrit parfois $A(\mathcal{D})$ pour indiquer que $A$ est la matrice d'adjacence du digraphe $\mathcal{D}$, et dans l'autre sens, $\mathcal{D}(A)$ pour indiquer que le graphe est construit en utilisant la matrice d'adjacence
+
+Si le graphe est non orienté, alors $A$ est symmétrique
+
+\end{frame} \begin{frame}
+
+ Nature du réseau
+
+- Parfois on dispose de données précises sur les liens entre individus (sondages, etc.)
+- Souvent on idéalise des réseaux, on choisit des réseaux avec des propriétés données
+\end{frame} 
+
+
+\begin{frame}{Distribution of vertex degrees}
+The \defword{transmissibility} of a disease in a graph/digraph is the average probability that an infectious individual transmits the disease to a susceptible individual they are in contact with
+\vfill
+In an uncorrelated network,
+\[
+T_c = \frac{\langle k\rangle}{\langle k^2\rangle-\langle k\rangle}
+\]
+where $\langle k\rangle$ and $\langle k^2\rangle$ are the mean and mean square degree
+\vfill
+Il est nécessaire que $T>T_c$ pour qu'un *outbreak* devienne une épidémie majeure
+\end{frame}
+
+
+\begin{frame}{The EpiModel library}
 \code{R} library providing tools to simulate and analyse network epidemiological models
 \vfill
 Provides two types of approaches
