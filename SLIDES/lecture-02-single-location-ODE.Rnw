@@ -104,6 +104,7 @@ Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0
 \end{frame}
 
 \begin{frame}{Basic reproduction number}
+We find the basic reproduction number
 \begin{equation}
 \mathcal{R}_0=S_0\beta
 \left(
