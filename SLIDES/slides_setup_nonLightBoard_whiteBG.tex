@@ -3,7 +3,6 @@
 
 
 \usecolortheme{orchid}
-
 %% Listings
 \usepackage{listings}
 \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -145,10 +144,14 @@
 }
 
 
+%% Colours for sections, subsections aand subsubsections
+\definecolor{section_colour}{RGB}{27,46,28}
+\definecolor{subsection_colour}{RGB}{52,128,56}
+\definecolor{subsubsection_colour}{RGB}{150,224,154}
 % Beginning of a section
 \AtBeginSection[]{
 	{
-		\setbeamercolor{background canvas}{bg=green!50}
+		\setbeamercolor{background canvas}{bg=section_colour}
 		\begin{frame}[noframenumbering,plain]
 			\framesubtitle{\nameofthepart Chapter \insertromanpartnumber \ -- \iteminsert{\insertpart}}
 			\tableofcontents[
@@ -165,7 +168,7 @@
 % Beginning of a section
 \AtBeginSubsection[]{
 	{
-		\setbeamercolor{background canvas}{bg=green!30}
+		\setbeamercolor{background canvas}{bg=subsection_colour}
 		\begin{frame}[noframenumbering,plain]
 				\framesubtitle{\nameofthepart Chapter \insertromanpartnumber \ -- \iteminsert{\insertpart}}
 				\tableofcontents[
@@ -182,7 +185,7 @@
 % Beginning of a section
 \AtBeginSubsubsection[]{
 	{
-		\setbeamercolor{background canvas}{bg=green!10}
+		\setbeamercolor{background canvas}{bg=subsubsection_colour}
 		\begin{frame}[noframenumbering,plain]
 				\framesubtitle{\nameofthepart Chapter \insertromanpartnumber \ -- \iteminsert{\insertpart}}
 				\tableofcontents[

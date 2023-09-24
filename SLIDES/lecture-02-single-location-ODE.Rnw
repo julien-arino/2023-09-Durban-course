@@ -67,7 +67,16 @@ and determines whether we go to the DFE $(N^\star,0)$ or to the endemic equilibr
 \end{frame}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\section{Computing $\R_0$ more efficiently}
 
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
 \section{An extension of KMK -- SLIAR models}
 
 \begin{frame}
@@ -128,5 +137,12 @@ S_0(\ln S_0-\ln S_\infty) =
 \mathcal{R}_0(S_0-S_\infty)+\frac{\mathcal{R}_0I_0}{\rho}
 \end{equation}
 \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\section{Computing the final size more efficiently}
 
 \end{document}
