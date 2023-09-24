@@ -33,6 +33,197 @@
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
+\section{Motivation -- More about incidence}
+
+\begin{frame}{Incidence function versus force of infection}
+Two different forms for the rate of movement of $S$ individuals from $S$ to whatever infected compartment they end up in:
+
+\begin{itemize}
+	\item $S'=-f(S,I,N)$ is an \defword{incidence function}
+	\item $S'=-\lambda(S,I,N)S$ is a \defword{force of infection}
+\end{itemize} 
+\vfill
+The two are of course essentially equivalent, the context tends to drive the form used. Advanced PDE models that consider for instance an age-of-infection structure need to integrate over $I(t,a)$ and thus often use force of infection, others are somewhat random..
+\end{frame}
+
+
+\begin{frame}{Interactions -- Infection}
+\bbullet Rate at which new cases appear per unit time is the \emph{incidence function}
+$$
+f(S,I,N)
+$$
+\bbullet Depends of the number $S$ of susceptible individuals, $I$ of infectious individuals and, sometimes, of the total population $N$
+\bbullet Incidence includes two main components
+\begin{itemize}
+	\item a denumeration of the number of contacts taking place
+	\item a description of the probability that such a contact, when it takes place, results in the transmission of the pathogen
+\end{itemize}
+\bbullet Choosing an appropriate function is hard and probably one of the flunkiest part of epidemic modelling
+\end{frame}
+
+\begin{frame}{Two most frequently used functions}
+The two most frequently used incidence functions are  \defword{mass action incidence}
+\[
+f(S,I, N)=\beta SI
+\]
+and \defword{standard} (or \defword{proportional}) \defword{incidence}
+\[
+f(S,I, N)=\beta\frac{SI}{N}
+\]
+\vfill
+In both cases, $\beta$ is the \emph{disease transmission coefficient}
+\end{frame}
+
+
+
+\begin{frame}{Units of $\beta$}
+Recall that if $X(t)$ is the population in compartment $X$ at time $t$, then $X'$ has units $\text{number}/\text{time}$
+\vfill
+In a differential equation, left and right hand side must have same units, so..
+\vfill
+\textbf{Mass action incidence}
+$$
+\beta SI \propto 
+\beta\times\text{number}\times\text{number}
+$$
+has units number/time if $\beta$ has units $1/(\text{number}\times\text{time})$
+\vfill
+\textbf{Standard incidence}
+$$
+\beta SI/N \propto 
+\beta\times\text{number}\times\text{number}/\text{number} \propto \beta \times\text{number}
+$$
+has units number/time if $\beta$ has units $1/\text{time}$
+\end{frame}
+
+
+\begin{frame}{Mass action incidence}
+\begin{equation}\label{eq:incidence_mass_action}
+f(S,I, N)=\beta SI
+\end{equation}
+\begin{itemize}
+\item There is homogenous mixing of susceptible and infectious individuals 
+\item Strong hypothesis: each individual potentially meets every other individual
+\end{itemize}
+\vfill
+In this case, one of the most widely accepted interpretations is that all susceptible individuals can come across all infectious individuals (hence the name, by analogy with gas dynamics in chemistry/physics) 
+\vfill
+When population is large, the hypothesis becomes unrealistic
+\end{frame}
+
+
+\begin{frame}{Standard (proportional) incidence} 
+The other form used frequently:
+\begin{equation}\label{eq:incidence_proportional}
+f(S,I,N)=\beta\frac{SI}{N}
+\end{equation}
+\vfill
+Each susceptible individual meets a fraction of the infectious individuals
+\vfill
+Or vice-versa! See, e.g., Hethcote, \href{https://doi-org.uml.idm.oclc.org/10.1016/0025-5564(76)90132-2}{Qualitative analyses of communicable disease models}, \emph{Mathematical Biosciences} (1976)
+\vfill
+Case of a larger population
+\end{frame}
+
+\begin{frame}{Constant population $\implies$ $\eqref{eq:incidence_mass_action}$ $\equiv$ $\eqref{eq:incidence_proportional}$}
+When the total population is constant, a lot of incidence function are equivalent (to units)
+\vfill
+Suppose $N(t)\equiv N_0$, then
+$$
+\beta SI = \tilde\beta\frac{SI}{N}
+\iff \tilde\beta=N_0\beta
+$$
+and if the right hand side is satisfied, then $\eqref{eq:incidence_mass_action}$ and $\eqref{eq:incidence_proportional}$ identical
+\vfill
+Keep in mind units are different, though
+\end{frame}
+
+
+\begin{frame}{General incidence}
+\begin{equation}\label{eq:general_incidence}
+f(S,I,N)=\beta S^q I^p
+\end{equation}
+These functions were introduced with data fitting in mind: fitting to data, find the $p,q$ best matching the available data
+\end{frame}
+
+
+\begin{frame}{Incidence with refuge}
+The following implements a refuge effect; it assumes that a proportion $0<q<1$ of the population is truly susceptible, because of, e.g., spatial heterogenities
+\vfill
+\begin{equation}\label{eq:incidence_with_refuge}
+f(S,I,N)=
+\begin{cases}
+\beta I\left(N-\dfrac Iq\right),&\textrm{if }I<qN \\
+0,&\textrm{if }I\geq qN
+\end{cases}
+\end{equation}
+\end{frame}
+
+
+\begin{frame}{Negative binomial incidence}
+\begin{frame}\label{eq:neg_binom_incidence}
+f(S,I,N)=kS\ln\left(1+\beta\frac Ik\right)
+\end{frame}
+\vfill
+For small values of $k$, this function describes a very concentrated infection process, while when $k\to\infty$, this function reduces to a mass action incidence
+\end{frame}
+
+
+\begin{frame}{Asymptotic contact}
+$$
+f(S,I,N)
+=\frac{N}{1-\varepsilon+\varepsilon N}
+\frac{F(S,I)}{N}
+$$
+where $F$ is one of the functions we just described
+
+When $\varepsilon=0$, contacts are proportionnal to $N$, whereas when $\varepsilon=1$, contacts are independent from $N$
+\end{frame}
+
+
+\begin{frame}{Asymptomatic transmission}
+
+$$
+f(S,I,N)
+=\beta\frac{SI}{c+S+I}
+$$
+where $c$ is a constant. E.g., 
+$$
+\frac{C(N)}N F(S,I)
+$$
+with $C(N)=N/(1-\varepsilon+\varepsilon N)$ the function describing the contact rate and $F(S,I)$ the function describing disease spread, assumed here to be of negative binomial incidence-type
+\end{frame}
+
+
+\begin{frame}{Switching incidence}
+
+Arino \& McCluskey, [Effect of a sharp change of the incidence function on the dynamics of a simple disease](https://doi.org/10.1080/17513751003793017), *Journal of Biological Dynamics* (2010)
+
+Scale population so switch occurs at $N=1$ and suppose
+$$
+F(S,I,N) = 
+\begin{cases}
+\beta SI & \textrm{if }N\leq 1 \\
+\beta \dfrac{SI}{N} & \textrm{if }N> 1
+\end{cases}
+$$
+In SIS with non-constant population
+\begin{align}
+S' &= bN-dS-F(S,I,N)+\gamma I \\
+I' &= F(S,I,N)-(d+\delta+\gamma)I
+\end{align}
+$b\neq d$ and $\delta$ disease-induced death rate, periodic solutions found
+\end{frame}
+
+
+
+\begin{frame}{Why all this mess?}
+Because contact processes are really really complicated and that describing them mathematically is \textbf{hard}!	
+\end{frame}
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 \section{Agent-based models (ABM)}
 
 %%%%%%%%%%%%%%%%%%%

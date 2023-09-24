@@ -12,6 +12,12 @@
 \SweaveOpts{concordance=TRUE}
 \SweaveOpts{prefix.string = FIGS/lecture-01}
 
+<<set-options,echo=FALSE>>=
+# Are we plotting for a dark background
+plot_blackBG = FALSE
+@
+
+
 % The title page
 \begin{frame}[noframenumbering,plain]
   \titlepage
@@ -39,16 +45,19 @@
 \begin{frame}{Among the first events recorded}
 - Epidemic events are among the first events recorded in History
 \vfill
-- Indeed their effect was devastating at a time when medicine virtually did not exist and thus easily observed
+- Indeed their effects were devastating at a time when medicine virtually did not exist and thus were easily observed
 \end{frame}
 
 \begin{frame}{First known epidemics (\href{https://en.wikipedia.org/wiki/List_of_epidemics}{from Wikipedia})}
 
-% | Event | Date | Location | Disease | Death toll (estimate) |
-% |---|---|---|---|---|
-% | Plague of Megiddo | 1350 BCE | Megiddo, land of Canaan | Unknown | Unknown | 
-% | [Plague of Athens](https://en.wikipedia.org/wiki/Plague_of_Athens) | 429–426 BCE | Greece, Libya, Egypt, Ethiopia | Possibly typhus, typhoid fever or VHF |  75,000–100,000 |
-% | [412 BCE epidemic](https://en.wikipedia.org/wiki/412_BC_epidemic) |412 BCE | Greece, Roman Republic | Possibly influenza | Unknown |
+\footnotesize
+\begin{tabular}{p{1.5cm}p{1.5cm}p{2cm}p{2cm}p{2cm}}
+Event & Date & Location & Disease & Death toll (estimate) \\
+\hline
+Plague of Megiddo & 1350 BCE & Megiddo, land of Canaan & Unknown & Unknown \\
+\href{https://en.wikipedia.org/wiki/Plague_of_Athens}{Plague of Athens} & 429–426 BCE & Greece, Libya, Egypt, Ethiopia & Possibly typhus, typhoid fever or VHF &  75,000–100,000 \\
+\href{https://en.wikipedia.org/wiki/412_BC_epidemic}{412 BCE epidemic} & 412 BCE & Greece, Roman Republic & Possibly influenza & Unknown
+\end{tabular}
 % | [Antonine Plague](https://en.wikipedia.org/wiki/Antonine_Plague) | 165–180 CE (possibly up to 190 CE) | Roman Empire | Possibly smallpox | 5–10 million |
 % | Jian'an Plague | 217 CE | Han dynasty | Possibly typhoid fever or VHF | Unknown |
 % | [Plague of Cyprian](https://en.wikipedia.org/wiki/Plague_of_Cyprian) | 250–266 CE | Europe | Possibly smallpox | Unknown |
@@ -102,11 +111,11 @@
     
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
-\subsection{Unfortunately not yet historical}
+\subsection{Unfortunately epidemics are not yet historical}
 \begin{frame}{``Forgotten'' killers}
-    - Tuberculosis (TB). In 2020, estimated 10 M cases of active TB, leading to 1.5 M deaths
-    \vfill
-    - Malaria: 229 M cases and 409 000 deaths in 2019
+\bbullet Tuberculosis (TB). In 2020, estimated 10 M cases of active TB, leading to 1.5 M deaths
+\vfill
+\bbullet Malaria: 229 M cases and 409,000 deaths in 2019
 \end{frame}
     
     
@@ -251,13 +260,13 @@ $\implies$ $I(t)$ in an epidemiological model is \textbf{prevalence}, not \textb
 
 
 \begin{frame}{Some terminology for ``where''}
-- \defword{Epidemic}: diseases that are *visited upon* a population
+\bbullet \defword{Epidemic}: diseases that are \emph{visited upon} a population
 \vfill
-- \defword{Pandemic}: (will revisit this later in the course) epidemic that has spread across a large region, e.g., multiple continents or worldwide
+\bbullet \defword{Pandemic}: (will revisit this later in the course) epidemic that has spread across a large region, e.g., multiple continents or worldwide
 \vfill
-- \defword{Endemic}: diseases that *reside within* a population
+\bbullet \defword{Endemic}: diseases that \emph{reside within} a population
 \vfill
-- We don't say "panendemic"
+\bbullet We don't say ``panendemic''
 \end{frame}
 
 
@@ -336,13 +345,13 @@ Period & Phase & Description \\
     Epidemiological information is used to plan and evaluate \defword{strategies to prevent illness} and as a guide to the \defword{management of patients} in whom disease has already developed  
 \end{quote}
 \vfill
-- Preventing illness
+\bbullet Preventing illness
 \begin{itemize}
     \item Prophylactic measures
     \item Vaccination
 \end{itemize}
 \vfill
-- Managing illness
+\bbullet Managing illness
 \begin{itemize}
     \item Prevention of further spread (e.g., in hospital) 
     \item Treatment
@@ -351,17 +360,17 @@ Period & Phase & Description \\
 
 
 \begin{frame}{Immunisation}
-- Smallpox first disease for which it was known 
+\bbullet Smallpox first disease for which it was known 
 \vfill
-- Mentioned in a 1549 Chinese book
+\bbullet Mentioned in a 1549 Chinese book
 \vfill
-- China: powdered smallpox scabs blown up noses of the healthy; variolation-induced mortality not negligible (0.5-2\%) but lower than normal (20\%)
+\bbullet China: powdered smallpox scabs blown up noses of the healthy; variolation-induced mortality not negligible (0.5-2\%) but lower than normal (20\%)
 \vfill
-- 1798:  Edward Jenner introduces safer inoculation with cowpox (vaccination)
+\bbullet 1798:  Edward Jenner introduces safer inoculation with cowpox (vaccination)
 \vfill
-- 1880s: Pasteur extends vaccination to chicken cholera and anthrax in animals and human rabies
+\bbullet 1880s: Pasteur extends vaccination to chicken cholera and anthrax in animals and human rabies
 \vfill
-At the time, *herd immunity* was not understood so this was for personal protection
+At the time, \defword{herd immunity} was not understood so this was for personal protection
 \end{frame}
 
 
@@ -391,11 +400,11 @@ Measles cases in the USA
     \includegraphics[width=\textwidth]{FIGS/Bernoulli-1760-first_page.jpg}
 \end{minipage}
 \begin{minipage}{0.47\textwidth}
-- \href{https://gallica.bnf.fr/ark:/12148/bpt6k3558n/f220.item}{BNF scan} or \href{https://julien-arino.github.io/assets/pdf/Bernoulli-1760.pdf}{pdf}
-\vfill
-- Probably the first epidemic model
-\vfill
-- About petite vérole (smallpox) inoculation    
+\bbullet \href{https://gallica.bnf.fr/ark:/12148/bpt6k3558n/f220.item}{BNF scan} or \href{https://julien-arino.github.io/assets/pdf/Bernoulli-1760.pdf}{pdf}
+\vskip0.5cm
+\bbullet Probably the first epidemic model
+\vskip0.5cm
+\bbullet About petite vérole (smallpox) inoculation    
 \end{minipage}
 \end{frame}
 
@@ -405,51 +414,50 @@ Measles cases in the USA
     \includegraphics[width=\textwidth]{FIGS/RonaldRoss_WellcomeCollection.jpg}
 \end{minipage}
 \begin{minipage}{0.47\textwidth}
-- On 20 August 1897, observed malaria parasites in the gut of a mosquito fed several days earlier on a malaria positive human
-\vfill
-- Nobel Prize for Medicine 1902
-\vfill
-- Started considering malaria eradication using mathematical models; for some history, read \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3320609/pdf/ppat.1002588.pdf}{this 2012 paper}
+\bbullet On 20 August 1897, observed malaria parasites in the gut of a mosquito fed several days earlier on a malaria positive human
+\vskip0.5cm
+\bbullet Nobel Prize for Medicine 1902
+\vskip0.5cm
+\bbullet Started considering malaria eradication using mathematical models; for some history, read \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3320609/pdf/ppat.1002588.pdf}{this 2012 paper}
 \end{minipage}
 \end{frame}
 
 
 \begin{frame}{Kermack and McKendrick (1927+)}
-
-- We spend a lot more time on this later
+\bbullet We spend a lot more time on this later
 \vfill
-- Groundbreaking set of papers starting in 1927
+\bbullet Groundbreaking set of papers starting in 1927
 \vfill
-- We will see one particular case, the most well known, but this is just the tip of the iceberg of their work
+\bbullet We will see one particular case, the most well known, but this is just the tip of the iceberg of their work
 \end{frame}
 
 \begin{frame}{Macdonald, Dietz and malaria}
-- Read for instance \href{https://doi.org/10.1371/journal.ppat.1002588}{this paper}, which presents a history of the development of the so-called Ross-Macdonald model
+\bbullet Read for instance \href{https://doi.org/10.1371/journal.ppat.1002588}{this paper}, which presents a history of the development of the so-called Ross-Macdonald model
 \vfill
-- Klaus Dietz also worked a lot on malaria
+\bbullet Klaus Dietz also worked a lot on malaria
 \end{frame}
     
     
 \begin{frame}{Some activity later, but not much until 1990s}
-- In recent years, explosion
+\bbullet In recent years, explosion
 \vfill
-- Since the beginning of COVID-19: just nuts..
+\bbullet Since the beginning of COVID-19: just nuts..
 \end{frame}
 
 \begin{frame}{Some landmarks in mathematical epidemiology (IMBO)}
-- Macdonald. The epidemiology and control of malaria. 1957
+\bbullet Macdonald. The epidemiology and control of malaria. 1957
 \vfill
-- Baroyan, Rvachev et al. Deterministic epidemic models for a territory with a transport network. Kibernetika, 1967
+\bbullet Baroyan, Rvachev et al. Deterministic epidemic models for a territory with a transport network. Kibernetika, 1967
 \vfill
-- Hethcote \& Yorke. Gonorrhea Transmission Dynamics and Control. LNBM 56, 1984
+\bbullet Hethcote \& Yorke. Gonorrhea Transmission Dynamics and Control. LNBM 56, 1984
 \vfill
-- Anderson \& May. Infectious diseases of humans: dynamics and control. 1991
+\bbullet Anderson \& May. Infectious diseases of humans: dynamics and control. 1991
 \vfill
-- Capasso. Mathematical Structures of Epidemic Systems. LNBM 97, 1993
+\bbullet Capasso. Mathematical Structures of Epidemic Systems. LNBM 97, 1993
 \vfill
-- Hethcote. The mathematics of infectious diseases. SIAM Review, 2000
+\bbullet Hethcote. The mathematics of infectious diseases. SIAM Review, 2000
 \vfill
-- van den Driessche \& Watmough. Reproduction numbers and sub-threshold endemic equilibria for compartmental models of disease transmission. MBS, 2002      
+\bbullet van den Driessche \& Watmough. Reproduction numbers and sub-threshold endemic equilibria for compartmental models of disease transmission. MBS, 2002      
 \end{frame}
 
 
@@ -458,29 +466,30 @@ Measles cases in the USA
 \subsection{Computational epidemiology}
 
 \begin{frame}{A more recent trend}
-- Some rare numerical work $\leq$ 1980s, mostly simulation of math models
+\bbullet Some rare numerical work $\leq$ 1980s, mostly simulation of math models
 \begin{itemize}
     \item Baroyan, Rvachev et al. \href{https://doi.org/10.2307/1426167}{Computer modelling of influenza epidemics for the whole country (USSR)}. \emph{Advances in Applied Probability} (1971) 
     \item Rvachev \& Longini. \href{https://doi.org/10.1016/0025-5564(85)90064-1}{A mathematical model for the global spread of influenza}. \emph{Mathematical Biosciences} (1986) 
     \item Flahault, Letrait et al. \href{https://doi.org/10.1002/sim.4780071107}{Modelling the 1985 influenza epidemic in France}. \emph{Statistics in Medicine} (1988)
 \end{itemize}
 \vfill
-- More and more frequent now, to the point that some modelling studies are purely simulation-based
+\bbullet More and more frequent now, to the point that some modelling studies are purely simulation-based
 \end{frame}
 
 \begin{frame}{Agent-based models (ABM)}
-- Early in the life of these models, they were called IBM (individual-based models)
+\bbullet Early in the life of these models, they were called IBM (individual-based models)
 \vfill
-- Over the years, a "philosophical" distinction has emerged:
-    - IBM are mathematical models that consider individuals as the units; e.g., DTMC, CTMC, branching processes, etc.
-    - ABM are computational models whose study is, for the most part, only possible numerically 
+\bbullet Over the years, a "philosophical" distinction has emerged:
+\begin{itemize}
+\item IBM are mathematical models that consider individuals as the units; e.g., DTMC, CTMC, branching processes, etc.
+\item ABM are computational models whose study is, for the most part, only possible numerically
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Network models}
-- Network models endow vertices with simple systems and couple them through graphs
+\bbullet Network models endow vertices with simple systems and couple them through graphs
 \vfill
-- Can be ABM, but some networks can also be studied analytically
-
+\bbullet Can be ABM, but some networks can also be studied analytically
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%
@@ -488,17 +497,17 @@ Measles cases in the USA
 \subsection{Use of data in epidemiology}
 
 \begin{frame}{Has happened all along, undergoing a transformation}
-- Epidemiology has long relied on data
+\bbullet Epidemiology has long relied on data
 \vfill
-- Many developments in statistics originate there
+\bbullet Many developments in statistics originate there
 \vfill
-- Data has traditionally been better for chronic diseases than for infectious ones
+\bbullet Data has traditionally been better for chronic diseases than for infectious ones
 \vfill
-- Near-real-time surveillance of infectious diseases ongoing since the 1980s (e.g., Réseau Sentinelles)
+\bbullet Near-real-time surveillance of infectious diseases ongoing since the 1980s (e.g., Réseau Sentinelles)
 \vfill
-- SARS-CoV-1 saw the beginning of a move towards real-time emerging infectious disease data
+\bbullet SARS-CoV-1 saw the beginning of a move towards real-time emerging infectious disease data
 \vfill
-- With SARS-CoV-2, the system has really progressed a lot, both in terms of "citizen science" and governmental initiatives
+\bbullet With SARS-CoV-2, the system has really progressed a lot, both in terms of ``citizen science'' and governmental initiatives
 \end{frame}
 
 
@@ -510,13 +519,13 @@ Measles cases in the USA
 \section{Compartmental models}
 
 \begin{frame}{Compartmental models}
-- Have become synonymous with epidemiological models
+\bbullet Have become synonymous with epidemiological models
 \vfill
-- Many epidemiological models are compartmental models, but the development of compartmental models in the 1970-1980s was not at all specific to epidemiology
+\bbullet Many epidemiological models are compartmental models, but the development of compartmental models in the 1970-1980s was not at all specific to epidemiology
 \vfill
-- See in particular the works of John Jacquez, Carl Simon, GG Walter
+\bbullet See in particular the works of John Jacquez, Carl Simon, GG Walter
 \vfill
-- Unjustly fell into disuse: there are some very nice results in the area    
+\bbullet Unjustly fell into disuse: there are some very nice results in the area    
 \end{frame}
 
 \begin{frame}{Compartment (\href{https://doi-org.uml.idm.oclc.org/10.1016/B978-0-12-434180-7.50021-8}{Jacquez 1979})}
@@ -737,13 +746,75 @@ This model is typically called the Kermack-McKendrick (KMK) SIR model
 \end{frame}
 
 
-\begin{frame}{}
-  Trajectories of \eqref{sys:KMK_2d} in $(S,I)$-space, normalised, with IC $(S_0,1-S_0)$ and $\beta/\gamma=2.5$
-  \vfill
+<<KMK_SI_plane,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=6,include=FALSE>>=
+# Plot the trajectories of the KMK SIR system in the SI-plane
+# In this plot, the total population N is normalised to 1
+gamma = 1/5
+beta = 0.5
+# Store the values of S and I in lists
+S = list()
+I = list()
+i = 1
+# Solutions starting on the S axis
+for (S0 in seq(0.6, 1, 0.1)) {
+  I0 = 0
+  S[[i]] = seq(0.001, S0, 0.001)
+  I[[i]] = S0+I0-S[[i]]+gamma/beta*log(S[[i]]/S0)
+  i = i+1
+}
+# Solutions starting on the S+I=1 line
+for (S0 in seq(1, 0.05, -0.1)) {
+  I0 = 1-S0
+  S[[i]] = seq(0.001, S0, 0.001)
+  I[[i]] = S0+I0-S[[i]]+gamma/beta*log(S[[i]]/S0)
+  i = i+1
+}
+# S+I=1 line
+S[[i]] = seq(0, 1, 0.001)
+I[[i]] = 1-S[[i]]
+# Plot (and save) the result
+#png("../FIGS/KMK_planar_trajectories.png", width = 1000, height = 600)
+if (plot_blackBG) {
+  par(bg = 'black', fg = 'white') # set background to black, foreground white
+  colour = "white"
+} else {
+  colour = "black"
+}
+for (i in 1:length(S)) {
+  if (i == 1) {
+    plot(S[[i]], I[[i]],
+         type = "l", lwd = 3,
+         col = ifelse((I[[i]][length(I[[i]])] < max(I[[i]])), "red", colour),
+         xlim = c(0,1), ylim = c(0,1),
+         xaxs = "i", yaxs = "i",
+         xlab = "S", ylab = "I",
+         col.axis = colour, cex.axis = 2,
+         col.lab = colour, cex.lab = 2,
+         bty = "n")
+    points(S[[i]][length(S[[i]])], I[[i]][length(I[[i]])],
+          pch = 19, cex = 3, 
+          col = ifelse((I[[i]][length(I[[i]])] < max(I[[i]])), "red", colour))
+  } else if (i<length(S)) {
+    lines(S[[i]], I[[i]], 
+          col = ifelse((I[[i]][length(I[[i]])] < max(I[[i]])), "red", colour),
+          lwd = 3)
+    points(S[[i]][length(S[[i]])], I[[i]][length(I[[i]])],
+           pch = 19, cex = 3, 
+           col = ifelse((I[[i]][length(I[[i]])] < max(I[[i]])), "red", colour))
+  } else {
+    lines(S[[i]], I[[i]])
+  }
+}
+@
+
+\begin{frame}
+Trajectories of \eqref{sys:KMK_2d} in $(S,I)$-space, normalised, with IC $(S_0,1-S_0)$ and $\beta/\gamma=2.5$
+\vfill
 \begin{center}
-  \includegraphics[width=\textwidth]{FIGS/KMK_planar_trajectories.png}
+\includegraphics[width=\textwidth]{FIGS/lecture-01-KMK_SI_plane}
 \end{center}
 \end{frame}
+
 
 
 \begin{frame}{}
@@ -829,7 +900,7 @@ sol <- ode(IC, times, rhs_SIR_KMK, params)
 \end{lstlisting}
 \end{frame}
 
-<<KMK_R0eq1dot5,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=4,include=FALSE>>=
+<<KMK_R0eq1dot5,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
 library(latex2exp)
 plot(sol[, "time"], sol[, "I"], 
      type = "l", lwd = 2,
@@ -844,7 +915,7 @@ main = TeX("Kermack-McKendrick SIR, $R_0=1.5$"),
 xlab = "Time (days)", ylab = "Prevalence")
 \end{lstlisting}
 \begin{center}
-\includegraphics[width=\textwidth]{FIGS/lecture-01-introduction-math-epi-KMK_R0eq1dot5}
+\includegraphics[width=\textwidth]{FIGS/lecture-01-KMK_R0eq1dot5}
 \end{center}
 \end{frame}
 
@@ -1047,6 +1118,15 @@ final_size_eq = function(S_inf, S0 = 999, I0 = 1, R_0 = 2.5) {
   OUT = S0*(log(S0)-log(S_inf)) - (S0+I0-S_inf)*R_0
   return(OUT)
 }
+final_size = function(L) {
+  with(as.list(L), {
+  S_inf = uniroot(f = function(x) final_size_eq(S_inf = x, 
+                                                S0 = S0, I0 = I0, 
+                                                R_0 = R_0),
+                  interval = c(0.05, S0))
+  return(S_inf$root)
+  })
+}
 @
 
 
@@ -1092,11 +1172,24 @@ uniroot(
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{A function to use this..}
+\begin{lstlisting}
+final_size = function(L) {
+  with(as.list(L), {
+  S_inf = uniroot(f = function(x) final_size_eq(S_inf = x, 
+                                                S0 = S0, I0 = I0, 
+                                                R_0 = R_0),
+                  interval = c(0.05, S0))
+  return(S_inf$root)
+  })
+}
+\end{lstlisting}
+\end{frame}
 
 \begin{frame}[fragile]{A figure with all the information}
 \begin{lstlisting}
 S = seq(0.1, S0, by = 0.1)
-fs = final_size(S, S0 = S0, I0 = I0, R_0 = R_0)
+fs = final_size_eq(S, S0 = S0, I0 = I0, R_0 = R_0)
 S_inf = uniroot(f = function(x) final_size_eq(S_inf = x, 
                                               S0 = S0, I0 = I0, 
                                               R_0 = R_0),
@@ -1108,46 +1201,99 @@ text(x = S_inf$root, y = 0, labels = "S_inf", adj = c(-0.25,-1))
 \end{lstlisting}
 \end{frame}
 
+<<KMK_final_size_0p8,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+N0 = 1000
+I0 = 1
+S0 = N0-I0
+R_0 = 0.8
+S = seq(0.1, S0, by = 0.1)
+fs = final_size_eq(S, S0 = S0, I0 = I0, R_0 = R_0)
+S_inf = uniroot(f = function(x) final_size_eq(S_inf = x, 
+                                              S0 = S0, I0 = I0, 
+                                              R_0 = R_0),
+                interval = c(0.05, S0))
+plot(S, fs, type = "l", ylab = "Value of equation (10)")
+abline(h = 0)
+points(x = S_inf$root, y = 0, pch = 19)
+text(x = S_inf$root, y = 0, labels = "S_inf", adj = c(-0.25,-1))    
+@
+
 
 \begin{frame}{$\R_0=0.8$}
 \begin{center}
-  \includegraphics[width=\textwidth]{FIGS/KMK_final_size_R0_0p8}
+  \includegraphics[width=\textwidth]{FIGS/lecture-01-KMK_final_size_0p8}
 \end{center}
 \end{frame}
 
 
+<<KMK_final_size_2p5,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+N0 = 1000
+I0 = 1
+S0 = N0-I0
+R_0 = 2.5
+S = seq(0.1, S0, by = 0.1)
+fs = final_size_eq(S, S0 = S0, I0 = I0, R_0 = R_0)
+S_inf = uniroot(f = function(x) final_size_eq(S_inf = x, 
+                                              S0 = S0, I0 = I0, 
+                                              R_0 = R_0),
+                interval = c(0.05, S0))
+plot(S, fs, type = "l", ylab = "Value of equation (10)")
+abline(h = 0)
+points(x = S_inf$root, y = 0, pch = 19)
+text(x = S_inf$root, y = 0, labels = "S_inf", adj = c(-0.25,-1))    
+@
+
+
 \begin{frame}{$\R_0=2.4$}
   \begin{center}
-    \includegraphics[width=\textwidth]{FIGS/KMK_final_size_R0_2p4}
+    \includegraphics[width=\textwidth]{FIGS/lecture-01-KMK_final_size_2p5}
   \end{center}
 \end{frame}
 
+<<KMK_attack_rate,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+library(lattice)
+library(viridis)
+library(latex2exp)
+values = expand.grid(
+  R_0 = seq(0.01, 3, by = 0.01),
+  I0 = seq(1, 100, 1)
+)
+values$S0 = N0-values$I0
+L = split(values, 1:nrow(values))
+values$S_inf = sapply(X = L, FUN = final_size)
+values$final_size = values$S0-values$S_inf+values$I0
+values$attack_rate = (values$final_size / N0)*100
+
+p = levelplot(attack_rate ~ R_0*I0, data = values, 
+              xlab = TeX("$R_0$"), ylab = "I(0)",
+              col.regions = viridis(100))
+print(p)
+@
 
 \begin{frame}[fragile]{A little nicer}
 \begin{lstlisting}
 values = expand.grid(
   R_0 = seq(0.01, 3, by = 0.01),
-  I0 = 1:100
+  I0 = seq(1, 100, 1)
 )
 values$S0 = N0-values$I0
 L = split(values, 1:nrow(values))
-
 values$S_inf = sapply(X = L, FUN = final_size)
+values$final_size = values$S0-values$S_inf+values$I0
+values$attack_rate = (values$final_size / N0)*100
 
-values$taille_finale = values$S0-values$S_inf+values$I0
-values$taux_attaque = (values$taille_finale / N0)*100
-
-levelplot(taux_attaque ~ R_0*I0, data = values, 
-          xlab="R_0", ylab = "I0",
-          col.regions = viridis(100))  
+p = levelplot(attack_rate ~ R_0*I0, data = values, 
+              xlab = TeX("$R_0$"), ylab = "I(0)",
+              col.regions = viridis(100))
+print(p)
 \end{lstlisting}
-(requires \code{lattice} and \code{viridis} librairies)
+(requires \code{lattice}, \code{viridis} and \code{latex2exp} librairies)
 \end{frame}
 
 
 \begin{frame}{Attack rate (in \%)}
   \begin{center}
-    \includegraphics[width=\textwidth]{FIGS/KMK_taux_attaque}
+    \includegraphics[width=\textwidth]{FIGS/lecture-01-KMK_attack_rate}
   \end{center}
 \end{frame}
 
@@ -1680,6 +1826,36 @@ Denote
              parms = params, method = "ode45")
   \end{lstlisting}
 \end{frame}
+
+<<KMK_final_size,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+library(deSolve)
+rhs_SIRS <- function(t, x, p) {
+  with(as.list(c(x, p)), {
+    N = S + I + R
+    dS = b + nu * R - d * S - beta * S * I
+    dI = beta * S * I - (d + gamma) * I
+    dR = gamma * I - (d + nu) * R
+    return(list(c(dS, dI, dR)))
+  })
+}
+# Initial conditions
+N0 = 1000
+I0 = 1
+IC = c(S = N0-I0, I = I0, R = 0)
+# "Known" parametres
+d = 1/(80*365.25)
+b = N0 * d
+gamma = 1/14
+nu = 1/365.25
+# Set beta s.t. R_0 = 1.5
+R_0 = 1.5
+beta = R_0 * (d + gamma) / S0
+params = list(b = b, d = d, gamma = gamma, beta = beta, nu = nu)
+times = seq(0, 365, 1)
+# Call the numerical integrator
+sol <- ode(y = IC, times = times, func = rhs_SIRS, 
+           parms = params, method = "ode45")
+@
 
 \begin{frame}{}
   \begin{center}

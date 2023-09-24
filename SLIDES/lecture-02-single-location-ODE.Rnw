@@ -32,7 +32,100 @@
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
+\section{The SLIRS models}
+
+\begin{frame}{Simplifying the SIRS model}
+\begin{minipage}{0.2\textwidth}
+  \def\skip{*-1.5}
+  \begin{tikzpicture}[scale=1, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
+    %% Fake nodes for arrows
+    \node [above=1cm of S] (birth) {};
+    \node [left=0.5cm of S] (dS) {};
+    \node [left=0.5cm of I] (dI) {};
+    %% Flows
+    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b(N)$} (S);
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (I) to node [midway, above] (TextNode) {$dI$} (dI);
+    \path [line, very thick, bend right] (S) to node [midway, left] (TextNode) {$\beta SI$} (I);
+    \path [line, very thick, bend right] (I) to node [midway, right] (TextNode) {$\gamma I$} (S);
+  \end{tikzpicture}    
+\end{minipage}
+\begin{minipage}{0.75\textwidth}
+\bbullet We have already seen the epidemic KMK SIR model and the endemic SIRS model
+\vskip0.3cm
+\bbullet By making some simplifications, we can obtain the SIS model: assume the time spent in the $R$ compartment goes to zero, i.e., $\nu\to\infty$
+\end{minipage}
+\vfill
+The main characteristics of the model are the same as the SIRS
+\[
+\R_0 = \frac{\beta}{d+\gamma}
+\]
+and determines whether we go to the DFE $(N^\star,0)$ or to the endemic equilibrium
+\end{frame}
 
 
+
+\section{An extension of KMK -- SLIAR models}
+
+\begin{frame}
+SIR is a little too simple for many diseases:
+\begin{itemize}
+\item No incubation period
+\item A lot of infectious diseases (in particular respiratory) have mild and less mild forms depending on the patient
+\end{itemize}
+\vfill
+$\implies$ model with SIR but also L(atent) and (A)symptomatic individuals, in which I are now symptomatic individuals
+\vfill
+Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic} (2006)
+\end{frame}
+
+\begin{frame}
+\centering
+  \begin{tikzpicture}[auto, %node distance = 2cm, auto,
+    cloud/.style={minimum width={width("N-1")+2pt},
+      draw, ellipse,fill=gray!20}]
+    \node [cloud, fill=green!90] (S) {$S$};
+    \node [cloud, right=2cm of S, fill=red!30] (L) {$L$};
+    \node [cloud, above right=of L, fill=red!90] (I) {$I$};
+    \node [cloud, below right=of L, fill=red!60] (A) {$A$};
+    \node [cloud, below right=of I, fill=blue!90] (R) {$R$};
+      \node [cloud, right=1.5cm of I, draw=none, fill=none] (h1) {};
+    %% Infections
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta S(I+\delta A)$} (L);
+    \path [line, very thick] (L) to node [midway, above, sloped] (TextNode) {$p\kappa L$} (I);
+    \path [line, very thick] (L) to node [midway, above, sloped] (TextNode) {$(1-p)\kappa L$} (A);
+    \path [line, very thick] (I) to node [midway, above, sloped] (TextNode) {$f\alpha I$} (R);
+    \path [line, very thick] (A) to node [midway, above, sloped] (TextNode) {$\eta A$} (R);
+      \path [line, very thick] (I) to node [midway, above, sloped] (TextNode) {$(1-f)\alpha I$} (h1);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Basic reproduction number}
+\begin{equation}
+\mathcal{R}_0=S_0\beta
+\left(
+\frac{p}{\alpha}+\frac{\delta(1-p)}{\eta}
+\right)
+=\frac{S_0\beta\rho}{\alpha}
+\end{equation}
+where 
+\[
+\rho = \alpha
+\left(
+\frac{p}{\alpha}+\frac{\delta(1-p)}{\eta}
+\right)
+\]
+\end{frame}
+
+
+\begin{frame}{Final size relation}
+\begin{equation}
+S_0(\ln S_0-\ln S_\infty) =
+\mathcal{R}_0(S_0-S_\infty)+\frac{\mathcal{R}_0I_0}{\rho}
+\end{equation}
+\end{frame}
 
 \end{document}
