@@ -50,8 +50,11 @@ rsconnect/
 
 # Some of the files produced by Sweave
 SLIDES/*-concordance.tex
+SLIDES/*.aux
+SLIDES/*.dvi
 SLIDES/*.log
 SLIDES/*.nav
+SLIDES/*.out
 SLIDES/*.snm
 SLIDES/*.synctex.gz
 SLIDES/*.toc
