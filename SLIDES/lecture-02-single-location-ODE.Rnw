@@ -562,16 +562,6 @@ par rapport \`a (\ref{sys:SLIRS}). De plus, chaque semi-trajectoire de
 \end{theorem}
 }
 
-\frame{
-Nous ne donnons pas la preuve de ce r\'esultat. Elle
-utilise la m\'ethode des matrices compos\'ees. Toutefois, l'application est ici
-difficile, et nous pr\'eferrons illustrer cette m\'ethode en
-l'utilisant dans un cas plus simple. Le cas d'un mod\`ele
-SEIR (sans perte d'immunit\'e) en population non constante est
-trait\'e plus loin.
-}
-
-
 
 
 \frame{\frametitle{Remarques}
@@ -596,8 +586,8 @@ comportement exotique.
 \subsection{SLIRS in variable population}
 
 
-\frame{\frametitle{Liu, Levin et Iwasa}
-Mod\`ele SIRS de la forme
+\begin{frame}{Liu, Levin et Iwasa}
+SIRS of the form
 \begin{subequations}\label{sys:SIRS_LLI}
 \begin{align}
 S' &= B(N)-dS-f(S,I)I+\nu R \\
@@ -605,37 +595,32 @@ I' &= f(S,I)I-(d+\gamma)I \\
 R' &= \gamma I-(d+\nu)R
 \end{align}
 \end{subequations}
-Les auteurs font quelques consid\'erations sur le cas g\'en\'eral d'une
-fonction $f$ diff\'erentiable, et telle que $f(0,I)=0$ pour tout $I$
-et $\partial f/\partial S>0$. Ils supposent que la composante
-d\'emographique du syst\`eme, qui est r\'egie par l'\'equation
+\vfill
+Authors discuss the general case of $f$ differentiable and s.t. $f(0,I)=0$ for all $I$ and $\partial f/\partial S>0$
+\vfill
+They assume that the demographic component of the model, ruled by 
 \[
 N'=B(N)-dN
 \]
-admet un \'equilibre stable. 
-}
+admits a stable EP
+\end{frame}
 
-\frame{
-Utilisant le fait que $N$ a un \'equilibre stable, ils r\'eduisent la
-dimension du syst\`eme.
-Apr\`es avoir \'etabli des conditions g\'en\'eriques conduisant \`a
-une bifurcation de Hopf, ils se livrent \`a une analyse plus
-d\'etaill\'ee du syst\`eme lorsque la fonction d'incidence prend la
-forme
+\begin{frame}
+Using the fact that $N$ has a stable EP, they reduce the system
+\vfill
+After establishing generic conditions leading to the existence of a Hopf bifurcation, they study the system in more detail when incidence takes the form
 \[
 f(S,I)=\beta I^{p-1}S^q
 \]
-}
+\end{frame}
 
-\frame{\frametitle{Liu et van den Driessche}
-Liu et van den Driessche traitent d'un mod\`ele SEIS
-et d'un mod\`ele SEIRS dans lesquels la population est non constante
-et la p\'eriode de latence est une fonction qui d\'epend du nombre
-d'infect\'es dans la population. Dans le cas d'un mod\`ele SEIS, le
-comportement n'est pas modifi\'e par cette fonction. Par contre, dans
-le cas d'une immunit\'e temporaire (SEIRS), les auteurs trouvent
-(num\'eriquement) une bifurcation de Hopf.
-}
+\begin{frame}{Liu \& van den Driessche}
+Liu and van den Driessche consider an SLIS model and an SLIRS model in which the population is not constant and where the latent period depends on the number of infected individuals in the population
+\vfill
+In the case of the SLIS model, the behaviour is not modified by this function
+\vfill
+In the case where immunity is temporary (SLIRS), they find (numerically) a Hopf bifurcation
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -716,7 +701,9 @@ S_0(\ln S_0-\ln S_\infty) =
 
 \begin{frame}{A method for computing $\mathcal{R}_0$ in epidemic models}
 
-\bbullet This method is not universal! It works in a relatively large class of models, but not everywhere. If it doesn't work, the next generation matrix method (see later) does work, \textbf{but} should be considered only for obtaining the reproduction number, not to deduce LAS (cf. my remark earlier)
+\bbullet This method is not universal! It works in a relatively large class of models, but not everywhere
+\vfill
+\bbullet If it doesn't work, the next generation matrix method does work, \textbf{but} should be considered only for obtaining the reproduction number, not to deduce LAS
 \vfill
 \bbullet Here, I change the notation in the paper, for convenience
 \end{frame}
@@ -725,93 +712,98 @@ S_0(\ln S_0-\ln S_\infty) =
 Suppose system can be written in the form
 \begin{subequations}\label{sys:SIR_general}
 \begin{align}
-\mathbf{S}' &= \mathbf{b}(\mathbf{S},\mathbf{I},\mathbf{R})-\mathbf{D}\mathbf{S}\beta(\mathbf{S},\mathbf{I},\mathbf{R})\mathbf{h}\mathbf{I} \label{sys:SIR_general_dS} \\
-\mathbf{I}' &= \mathbf{\Pi}\mathbf{D}\mathbf{S}\beta(\mathbf{S},\mathbf{I},\mathbf{R})\mathbf{h}\mathbf{I}-\mathbf{V}\mathbf{I} \label{sys:SIR_general_dI} \\
-\mathbf{R}' &= \mathbf{f}(\mathbf{S},\mathbf{I},\mathbf{R})+\mathbf{W}\mathbf{I} \label{sys:SIR_general_dR}
+\bS' &= \mathbf{b}(\bS,\bI,\bR)-\bD\bS\beta(\bS,\bI,\bR)\bh\bI \label{sys:SIR_general_dS} \\
+\bI' &= \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI \label{sys:SIR_general_dI} \\
+\bR' &= \mathbf{f}(\bS,\bI,\bR)+\mathbf{W}\bI \label{sys:SIR_general_dR}
 \end{align}
 \end{subequations}
-
-where $\mathbf{S}\in\mathbb{R}^m$, $\mathbf{I}\in\mathbb{R}^n$ and $\mathbf{R}\in\mathbb{R}^k$ are susceptible, infected and removed compartments, respectively
-
-IC are $\geq 0$ with at least one of the components of $\mathbf{I}(0)$ positive
-
+\vfill
+where $\bS\in\IR^m$, $\bI\in\IR^n$ and $\bR\in\IR^k$ are susceptible, infected and removed compartments, respectively
+\vfill
+IC are $\geq 0$ with at least one of the components of $\bI(0)$ positive
 \end{frame}  
 
 
 \begin{frame}
-$$
-\mathbf{S}' = \mathbf{b}(\mathbf{S},\mathbf{I},\mathbf{R})-\mathbf{D}\mathbf{S}\beta(\mathbf{S},\mathbf{I},\mathbf{R})\mathbf{h}\mathbf{I}
-$$
-- $\mathbf{b}:\mathbb{R}_+^m\times\mathbb{R}_+^n\times\mathbb{R}_+^k\to\mathbb{R}^m$ continuous function encoding recruitment and death of uninfected individuals
-- $\mathbf{D}\in\mathbb{R}^{m\times m}$ diagonal with diagonal entries $\sigma_i>0$ the relative susceptibilities of susceptible compartments, with convention that $\sigma_1=1$
-- Scalar valued function $\beta:\mathbb{R}_+^m\times\mathbb{R}_+^n\times\mathbb{R}_+^k\to\mathbb{R}_+$ represents infectivity, with, e.g., $\beta(\mathbf{S},\mathbf{I},\mathbf{R})=\beta$ for mass action
-- $\mathbf{h}\in\mathbb{R}^{n}$ row vector of relative horizontal transmissions
+\begin{equation}\tag{\ref{sys:SIR_general_dS}}
+\bS' = \mathbf{b}(\bS,\bI,\bR)-\bD\bS\beta(\bS,\bI,\bR)\bh\bI
+\end{equation}
+\begin{itemize}
+\item $\mathbf{b}:\IR_+^m\times\IR_+^n\times\IR_+^k\to\IR^m$ continuous function encoding recruitment and death of uninfected individuals
+\item $\bD\in\IR^{m\times m}$ diagonal with diagonal entries $\sigma_i>0$ the relative susceptibilities of susceptible compartments, with convention that $\sigma_1=1$
+\item Scalar valued function $\beta:\IR_+^m\times\IR_+^n\times\IR_+^k\to\IR_+$ represents infectivity, with, e.g., $\beta(\bS,\bI,\bR)=\beta$ for mass action
+\item $\bh\in\IR^{n}$ row vector of relative horizontal transmissions
+\end{itemize}
 \end{frame}  
 
 
 \begin{frame}
-$$
-\mathbf{I}' = \mathbf{\Pi}\mathbf{D}\mathbf{S}\beta(\mathbf{S},\mathbf{I},\mathbf{R})\mathbf{h}\mathbf{I}-\mathbf{V}\mathbf{I} \\
-$$
-
-- $\mathbf{\Pi}\in\mathbb{R}^{n\times m}$ has $(i,j)$ entry the fraction of individuals in $j^{\textrm{th}}$ susceptible compartment that enter $i^{\textrm{th}}$ infected compartment upon infection
-- $\mathbf{D}\in\mathbb{R}^{m\times m}$ diagonal with diagonal entries $\sigma_i>0$ the relative susceptibilities of susceptible compartments, with convention that $\sigma_1=1$
-- Scalar valued function $\beta:\mathbb{R}_+^m\times\mathbb{R}_+^n\times\mathbb{R}_+^k\to\mathbb{R}_+$ represents infectivity, with, e.g., $\beta(\mathbf{S},\mathbf{I},\mathbf{R})=\beta$ for mass action
-- $\mathbf{h}\in\mathbb{R}^{n}$ row vector of relative horizontal transmissions
-- $\mathbf{V}\in\mathbb{R}^{n\times n}$ describes transitions between infected states and removals from these states due to recovery or death
+\begin{equation}\tag{\ref{sys:SIR_general_dI}}
+\bI' = \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI
+\end{equation}
+\begin{itemize}
+\item $\bPi\in\IR^{n\times m}$ has $(i,j)$ entry the fraction of individuals in $j^{\textrm{th}}$ susceptible compartment that enter $i^{\textrm{th}}$ infected compartment upon infection
+\item $\bD\in\IR^{m\times m}$ diagonal with diagonal entries $\sigma_i>0$ the relative susceptibilities of susceptible compartments, with convention that $\sigma_1=1$
+\item Scalar valued function $\beta:\IR_+^m\times\IR_+^n\times\IR_+^k\to\IR_+$ represents infectivity, with, e.g., $\beta(\bS,\bI,\bR)=\beta$ for mass action
+\item $\bh\in\IR^{n}$ row vector of relative horizontal transmissions
+\item $\mathbf{V}\in\IR^{n\times n}$ describes transitions between infected states and removals from these states due to recovery or death
+\end{itemize}
 \end{frame}  
 
 
 \begin{frame}
-$$
-\mathbf{R}' = \mathbf{f}(\mathbf{S},\mathbf{I},\mathbf{R})+\mathbf{W}\mathbf{I}
-$$
-
-- $\mathbf{f}:\mathbb{R}_+^m\times\mathbb{R}_+^n\times\mathbb{R}_+^k\to \mathbb{R}^k$ continuous function encoding flows into and out of removed compartments because of immunisation or similar processes
-- $\mathbf{W}\in\mathbb{R}^{k\times n}$ has $(i,j)$ entry the rate at which individuals in the $j^{\textrm{th}}$ infected compartment move into the $i^{\textrm{th}}$ removed compartment
+\begin{equation}\tag{\ref{sys:SIR_general_dR}}
+\bR' = \mathbf{f}(\bS,\bI,\bR)+\mathbf{W}\bI
+\end{equation}
+\begin{itemize}
+\item $\mathbf{f}:\IR_+^m\times\IR_+^n\times\IR_+^k\to \IR^k$ continuous function encoding flows into and out of removed compartments because of immunisation or similar processes
+\item $\mathbf{W}\in\IR^{k\times n}$ has $(i,j)$ entry the rate at which individuals in the $j^{\textrm{th}}$ infected compartment move into the $i^{\textrm{th}}$ removed compartment
+\end{itemize}
 \end{frame}
 
 
 
 \begin{frame}
-Suppose $\mathbf{E}_0$ is a locally stable disease-free equilibrium (DFE) of the system without disease, i.e., an EP of
-$$
+Suppose $\bE_0$ is a locally stable disease-free equilibrium (DFE) of the system without disease, i.e., an EP of
 \begin{align*}
-\mathbf{S}' &= \mathbf{b}(\mathbf{S},\mathbf{0},\mathbf{R}) \\
-\mathbf{R}' &= \mathbf{f}(\mathbf{S},\mathbf{0},\mathbf{R}) \\
+\bS' &= \mathbf{b}(\bS,\b0,\bR) \\
+\bR' &= \mathbf{f}(\bS,\b0,\bR) \\
 \end{align*}
-$$
 
 \begin{theorem}
 Let
-$$
+\begin{equation}\label{eq:R0_final_size_method}
 \mathcal{R}_0 = 
-\beta(\mathbf{S}_0,\mathbf{0},\mathbf{R}_0)
-\mathbf{h}\mathbf{V}^{-1}
-\mathbf{\Pi}\mathbf{D}\mathbf{S}_0
-$$
-- If $\mathcal{R}_0<1$, the DFE $\mathbf{E}_0$ is a locally asymptotically stable EP of $\eqref{sys:SIR_general_dS}$-$\eqref{sys:SIR_general_dR}$
-- If $\mathcal{R}_0>1$, the DFE $\mathbf{E}_0$ of $\eqref{sys:SIR_general_dS}$-$\eqref{sys:SIR_general_dR}$ is unstable
+\beta(\bS_0,\b0,\bR_0)
+\bh\mathbf{V}^{-1}
+\bPi\bD\bS_0
+\end{equation}
+\begin{itemize}
+\item If $\mathcal{R}_0<1$, the DFE $\bE_0$ is a locally asymptotically stable EP of \eqref{sys:SIR_general}
+\item If $\mathcal{R}_0>1$, the DFE $\bE_0$ of \eqref{sys:SIR_general} is unstable
+\end{itemize}
 \end{theorem}
-
-If no demography (epidemic model), then just $\mathcal{R}_0$, of course
+\vfill
+If no demography (epidemic model), then just $\R_0$, of course
 \end{frame}  
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Final size relations}
 
 \begin{frame}{Final size relations}
-
 Assume no demography, then system should be writeable as
 \begin{subequations}
 \begin{align}
-\mathbf{S}' &= -\mathbf{D}\mathbf{S}\beta(\mathbf{S},\mathbf{I},\mathbf{R})\mathbf{h}\mathbf{I}  \label{sys:SIR_epi_dS} \\
-\mathbf{I}' &= \mathbf{\Pi}\mathbf{D}\mathbf{S}\beta(\mathbf{S},\mathbf{I},\mathbf{R})\mathbf{h}\mathbf{I}-\mathbf{V}\mathbf{I} 
+\bS' &= -\bD\bS\beta(\bS,\bI,\bR)\bh\bI  \label{sys:SIR_epi_dS} \\
+\bI' &= \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI 
 \label{sys:SIR_epi_dI} \\
-\mathbf{R}' &= \mathbf{W}\mathbf{I}
+\bR' &= \mathbf{W}\bI
 \label{sys:SIR_epi_dR} 
 \end{align}
 \end{subequations}
-For $w(t)\in\mathbb{R}_+^n$ continuous, define
+\vfill
+For $w(t)\in\IR_+^n$ continuous, define
 $$
 w_\infty = \lim_{t\to\infty}w(t)\quad\text{and}\quad
 \hat{w}=\int_0^\infty w(t)\ dt
@@ -820,38 +812,38 @@ $$
 
 \begin{frame}
 Define the row vector 
-$$
-\mathbb{R}^m\ni\mathbf{\Gamma}
-=(\Gamma_1,\ldots,\Gamma_m)=\beta(\mathbf{S}_0,\mathbf{0},\mathbf{R}_0)\mathbf{h}\mathbf{V}^{-1}\mathbf{\Pi}\mathbf{D}
-$$
+\[
+\IR^m\ni\bGamma
+=(\Gamma_1,\ldots,\Gamma_m)=\beta(\bS_0,\b0,\bR_0)\bh\mathbf{V}^{-1}\bPi\bD
+\]
 then 
-$$
-\mathcal{R}_0=\mathbf{\Gamma}\mathbf{S}(0)
-$$
+\[
+\mathcal{R}_0=\bGamma\bS(0)
+\]
 \end{frame}  
 
 \begin{frame}
-Suppose incidence is mass action, i.e., $\beta(\mathbf{S},\mathbf{I},\mathbf{R})=\beta$ and $m>1$
-
-Then for $i=1,\ldots,m$, express $\mathbf{S}_i(\infty)$ as a function of $\mathbf{S}_1(\infty)$ using
+Suppose incidence is mass action, i.e., $\beta(\bS,\bI,\bR)=\beta$ and $m>1$
+\vfill
+Then for $i=1,\ldots,m$, express $\bS_i(\infty)$ as a function of $\bS_1(\infty)$ using
 $$
-\mathbf{S}_i(\infty)  = 
-\mathbf{S}_i(0) \left(
-\frac{\mathbf{S}_1(\infty)}{\mathbf{S}_1(0)}
+\bS_i(\infty)  = 
+\bS_i(0) \left(
+\frac{\bS_1(\infty)}{\bS_1(0)}
 \right)^{\sigma_i/\sigma_1}
 $$
 then substitute into 
-$$
+\begin{align*}
 \frac{1}{\sigma_i}
-\ln\left(\frac{\mathbf{S}_i(0)}{\mathbf{S}_i(\infty)}\right)
-=
-\mathbf{\Gamma}\mathbf{D}^{-1}\left(\mathbf{S}(0)-\mathbf{S}(\infty)\right)
-+\beta\mathbf{h}\mathbf{V}^{-1}\mathbf{I}(0)
-= 
+\ln\left(\frac{\bS_i(0)}{\bS_i(\infty)}\right)
+&=
+\bGamma\bD^{-1}\left(\bS(0)-\bS(\infty)\right)
++\beta\bh\mathbf{V}^{-1}\bI(0) \\
+&= 
 \frac{1}{\sigma_1}
-\ln\left(\frac{\mathbf{S}_1(0)}{\mathbf{S}_1(\infty)}\right)
-$$
-which is a final size relation for the general system when $\mathbf{S}_i(0)>0$
+\ln\left(\frac{\bS_1(0)}{\bS_1(\infty)}\right)
+\end{align*}
+which is a final size relation for the general system when $\bS_i(0)>0$
 \end{frame}  
 
 
@@ -863,7 +855,7 @@ If incidence is mass action and $m=1$ (only one susceptible compartment), reduce
 \frac{S_0}{S_\infty}
 \right)
 =\frac{\mathcal{R}_0}{S_0}
-(S_0-S_\infty)+\beta\mathbf{h}\mathbf{V}^{-1}\mathbf{I}_0
+(S_0-S_\infty)+\beta\bh\mathbf{V}^{-1}\bI_0
 \end{equation}
 \end{frame}  
 
@@ -871,10 +863,10 @@ If incidence is mass action and $m=1$ (only one susceptible compartment), reduce
 \begin{frame}
 In the case of more general incidence functions, the final size relations are inequalities of the form, for $i=1,\ldots,m$,
 $$
-\ln\left(\frac{\mathbf{S}_i(0)}{\mathbf{S}_i(\infty)}\right)
+\ln\left(\frac{\bS_i(0)}{\bS_i(\infty)}\right)
 \geq
-\sigma_i\mathbf{\Gamma}\mathbf{D}^{-1}\left(\mathbf{S}(0)-\mathbf{S}(\infty)\right)
-+\sigma_i\beta(K)\mathbf{h}\mathbf{V}^{-1}\mathbf{I}(0)
+\sigma_i\bGamma\bD^{-1}\left(\bS(0)-\bS(\infty)\right)
++\sigma_i\beta(K)\bh\mathbf{V}^{-1}\bI(0)
 $$
 where $K$ is the initial total population
 \end{frame}  
@@ -884,24 +876,25 @@ where $K$ is the initial total population
 \subsection{Examples}
 
 \begin{frame}{The SLIAR model}
-- Paper we have already seen:
-  - Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic} (2006)
-- However, suppose additionally that $L$ are also infectious
+\bbullet Paper we have already seen: Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic} (2006)
+\vfill
+\bbullet However, suppose additionally that $L$ are also infectious
 \end{frame}  
 
 \begin{frame}
-\includegraphics{FIGS/SLIAR_infectiousL}
+\centering
+\includegraphics[width=\textwidth]{FIGS/SLIAR_infectiousL}
 \end{frame}  
 
 
 \begin{frame}
-Here, $\mathbf{S}=S$, $\mathbf{I}=(L,I,A)^T$ and $\mathbf{R}=R$, so $m=1$, $n=3$ and 
+Here, $\bS=S$, $\bI=(L,I,A)^T$ and $\bR=R$, so $m=1$, $n=3$ and 
 $$
-\mathbf{h}=[\varepsilon\; 1\; \delta],
+\bh=[\varepsilon\; 1\; \delta],
 \quad
-\mathbf{D}=1,
+\bD=1,
 \quad 
-\mathbf{\Pi}
+\bPi
 =\begin{pmatrix}
 1 \\ 0 \\0
 \end{pmatrix}
@@ -913,12 +906,11 @@ $$
 -(1-p)\kappa & 0 & \eta
 \end{pmatrix}
 $$
-Incidence is mass action so $\beta(\mathbf{E}_0)=\beta$ and thus
-$$
-\begin{align}
+Incidence is mass action so $\beta(\bE_0)=\beta$ and thus
+\begin{align*}
 \mathcal{R}_0
 &=
-\beta\mathbf{h}\mathbf{V}^{-1}\mathbf{\Pi}\mathbf{D}\mathbf{S}_0 \\
+\beta\bh\mathbf{V}^{-1}\bPi\bD\bS_0 \\
 &=
 \beta\;
 [\varepsilon\; 1\; \delta]
@@ -937,29 +929,30 @@ S_0 \\
 +\frac{p}{\alpha}
 +\frac{\delta(1-p)}{\eta}
 \right)
-\end{align}
-$$
+\end{align*}
 \end{frame}  
 
 \begin{frame}
 For final size, since $m=1$, we can use $\eqref{eq:final_size_m1}$:
-$$
+\[
 \ln\left(
 \frac{S_0}{S_\infty}
 \right)
 =\frac{\mathcal{R}_0}{S_0}
-(S_0-S_\infty)+\beta\mathbf{h}\mathbf{V}^{-1}\mathbf{I}_0
-$$
-Suppose $\mathbf{I}_0=(0,I_0,0)$, then
-$$
+(S_0-S_\infty)+\beta\bh\mathbf{V}^{-1}\bI_0
+\]
+\vfill
+Suppose $\bI_0=(0,I_0,0)$, then
+\[
 \ln\left(
 \frac{S_0}{S_\infty}
 \right)
 =\mathcal{R}_0\frac{S_0-S_\infty}{S_0}
 +\frac{\beta}{\alpha}I_0
-$$
-If $\mathbf{I}_0=(L_0,I_0,A_0)$, then
-$$
+\]
+\vfill
+If $\bI_0=(L_0,I_0,A_0)$, then
+\[
 \ln\left(
 \frac{S_0}{S_\infty}
 \right)
@@ -971,7 +964,7 @@ $$
 \right)L_0
 +\frac{\beta\delta}{\eta}A_0
 +\frac{\beta}{\alpha}I_0
-$$
+\]
 \end{frame}  
 
 
@@ -993,21 +986,24 @@ with $S_U(0)=(1-\gamma)S_0$ and $S_V(0)=\gamma S_0$
 \end{frame}  
 
 \begin{frame}
-\includegraphics{FIGS/SLIR_epidemic_with_vaccination}
+\centering
+\includegraphics[width=\textwidth]{FIGS/SLIR_epidemic_with_vaccination}
 \end{frame}  
 
 \begin{frame}
 Here, $m=2$, $n=4$,
-$$
-\mathbf{h} = [0\;0\;1\;\sigma_I],\quad
-\mathbf{D}=\begin{pmatrix}
+\[
+\bh = [0\;0\;1\;\sigma_I],\quad
+\bD=\begin{pmatrix}
 1 & 0 \\ 0 & \sigma_S
 \end{pmatrix},\quad
-\mathbf{\Pi}=
+\bPi=
 \begin{pmatrix}
 1 & 0 \\ 0 & 1 \\ 0 & 0 \\ 0 & 0
 \end{pmatrix}
-\quad\text{and}\quad
+\]
+and
+\[
 \mathbf{V}=
 \begin{pmatrix}
 \kappa_U & 0 & 0 & 0 \\
@@ -1015,32 +1011,34 @@ $$
 -\kappa_U & 0 & \alpha_U & 0 \\
 0 & -\kappa_V & 0 & \alpha_V
 \end{pmatrix}
-$$
+\]
+\end{frame}
+
+\begin{frame}
 So
-$$
-\mathbf{\Gamma}=\left[
+\[
+\bGamma=\left[
 \frac{\beta}{\alpha_U}\; \frac{\sigma_I\sigma_S\beta}{\alpha_V}
 \right],
 \quad
 \mathcal{R}_c = S_0\beta\left(
 \frac{1-\gamma}{\alpha_U}+\frac{\sigma_I\sigma_S\gamma}{\alpha_V}
 \right)
-$$
+\]
 and the final size relation is
-$$
-\begin{align}
+\begin{multline*}
 \ln\left(
 \frac{(1-\gamma)S_U(0)}{S_U(\infty)}
 \right)
-&= 
+= \\ 
 \frac{\beta}{\alpha_U}[(1-\gamma)S_U(0)-S_U(\infty)]
 +\frac{\sigma_I\beta}{\alpha_V}[\gamma S_V(0)-S_V(\infty)]+\frac{\beta}{\alpha_U}I_0 \\
-S_V(\infty) &= \gamma S_U(0)\left(
+\end{multline*}
+\[
+S_V(\infty) = \gamma S_U(0)\left(
 \frac{S_U(\infty)}{(1-\gamma)S_0}
 \right)^{\sigma_S}
-\end{align}
-$$
-
+\]
 \end{frame}
 
 \end{document}
