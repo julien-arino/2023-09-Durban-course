@@ -56,3 +56,5 @@ rsconnect/
 *.synctex.gz
 *.toc
 *.vrb
+FIGS/lecture-*.pdf
+lecture-*.tex
