@@ -49,12 +49,12 @@ po/*~
 rsconnect/
 
 # Some of the files produced by Sweave
-*-concordance.tex
-*.log
-*.nav
-*.snm
-*.synctex.gz
-*.toc
-*.vrb
+SLIDES/*-concordance.tex
+SLIDES/*.log
+SLIDES/*.nav
+SLIDES/*.snm
+SLIDES/*.synctex.gz
+SLIDES/*.toc
+SLIDES/*.vrb
 SLIDES/FIGS/lecture-*.pdf
 SLIDES/lecture-*.tex
