@@ -50,14 +50,14 @@ tspan = seq(from = 0, to = params$t_f, by = 0.1)
 
 # Now simulate the ODE. Loop on several values of R_0
 R_0 = c(0.8, 1.5, 2.5)
-# On sauve les résultats dans une liste, ainsi que les valeurs des équilibres
+# Save results in a list together with EP values
 sol_ODE = list()
 EP = list()
 # Now loop on R_0
 for (r0 in R_0) {
   # Name for list entry
   entry_name = sprintf("$R_0$=%1.1f",r0)
-  # On garde la valeur de R_0 en cours pour calculer les équilibres
+  # Keep the current value of R_0 to compute EPs
   params$R_0 = r0
   # R0=(beta/(d+gamma)) => beta=R0*(d+gamma)
   params$beta = r0*(params$d+params$gamma)
@@ -74,7 +74,7 @@ for (r0 in R_0) {
 max_I = max(unlist(lapply(sol_ODE, function(x) max(x[,"I"]))))
 
 # Plot
-png(file = "../FIGS/sol_endemic_SIS_several.png",
+png(file = "../SLIDES/FIGS/sol_endemic_SIS_several.png",
     width = 1200, height = 800, res = 200)
 y_axis = plot_hr_yaxis(sol_ODE[[1]][,"time"], sol_ODE[[1]][,"I"],
                        y_range = c(0, max_I),
@@ -93,5 +93,5 @@ legend("topleft", legend = TeX(names(EP)), cex = 0.8,
        lty = unlist(lapply(EP, function(x) x$lty)),
        lwd = c(3,3,3))
 dev.off()
-crop_figure(file = "../FIGS/sol_endemic_SIS_several.png")
+crop_figure(file = "../SLIDES/FIGS/sol_endemic_SIS_several.png")
 
