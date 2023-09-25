@@ -5,7 +5,7 @@
 \include{slides_setup_nonLightBoard_whiteBG.tex}
 
 \title{Taking complex processes into account: advanced models}
-\subtitle{Lecture 05}
+\subtitle{Durban -- Lecture 05}
 \author{Julien Arino}
 \date{September 2023}
 
@@ -20,10 +20,14 @@
 \end{frame}
 \addtocounter{page}{-1}
 
-\begin{frame}
+% The outline page
+{
+\setbeamercolor{background canvas}{bg=outline_colour}
+\begin{frame}{Outline}
     \tableofcontents[hideallsubsections]
 \end{frame}
 \addtocounter{page}{-1}
+}
 
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
@@ -35,1500 +39,1043 @@
 %%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+\section{Sojourn time in compartments}
+
+\begin{frame}
+We return here to something discussed in Lecture 03 (Stochastic models)
+\vfill
+See in particular the work of Horst Thieme
+\vfill
+If one considers time of sojourn in compartments from a more detailed perspective, one obtains integro-differential models
+\vfill
+We use here continuous random variables. See chapters 12 and 13 in Thieme's book for arbitrary distributions
+\end{frame}
+
+
+
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
+\subsection{A model with vaccination}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{The general model}
+
+\begin{frame}{A model with vaccine efficacy and waning}
+\begin{itemize}
+\item Exponential distribution of recovery times (rate $\gamma$)
+\vfill
+\item Susceptible individuals are vaccinated (number of vaccinated at time $t$ is denoted $V(t)$)
+\vfill
+\item Vaccination wanes, a fraction $P(t)$ of the vaccinated at time $t=0$ remain protected by the vaccine
+\vfill
+\item Vaccination is imperfect, $0\leq 1-\sigma\leq 1$ is the vaccine \textbf{efficacy}
+\end{itemize}
+\vfill
+{\tiny
+\begin{itemize}
+\setlength{\itemsep}{-5pt}
+\item JA, Cooke, PvdD \& Velasco-Hernández. \href{https://julien-arino.github.io/assets/pdf/papers/2004_ArinoCookeVelascoPvdD-DCDSB4.pdf}{An epidemiology model that includes a leaky vaccine with a general waning function} \emph{DCDS-B} \textbf{4}(2): 479-495 (2004)
+\end{itemize}}
+\end{frame}
+
+\begin{frame}\frametitle{Model structure}
+\centering
+\def\skip{*2.5}
+\begin{tikzpicture}[scale=1, transform shape]
+%% Regular nodes
+\node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+\node [circle, fill=red!90, text=black] at (2\skip,0) (I) {$I$};
+\node [circle, fill=blue!50, text=black] at (1\skip,-2) (V) {$V$};
+%% Fake nodes for arrows
+\node [left=2cm of S] (birthS) {};
+\node [left=1.5cm of V] (birthV) {};
+\node [above=0.75cm of S] (dS) {};
+\node [above=0.75cm of I] (dI) {};
+\node [below=0.75cm of V] (dV) {};
+%% Flows
+\path [line, very thick] (birthS) to node [midway, above] (TextNode) {$(1-\alpha)dN$} (S);
+\path [line, very thick] (birthV) to node [midway, below] (TextNode) {$\alpha dN$} (V);
+\path [line, very thick] (S) to node [midway, right] (TextNode) {$dS$} (dS);
+\path [line, very thick] (I) to node [midway, right] (TextNode) {$dI$} (dI);
+\path [line, very thick] (V) to node [midway, right] (TextNode) {$dV$} (dV);
+\path [line, very thick, bend left=10] (S) to node [midway, above] (TextNode) {$\beta SI/N$} (I);
+\path [line, very thick, bend left=10] (I) to node [midway, below] (TextNode) {$\gamma I$} (S);
+\path [line, very thick, bend left=10] (S) to node [midway,above,sloped] (TextNode) {$\phi S$} (V);
+\path [line, very thick, bend left=10,color=red] (V) to node [midway,below,sloped] (TextNode) {$P(t)$} (S);
+\path [line, very thick] (V) to node [midway, below, sloped] (TextNode) {$\sigma\beta VI/N$} (I);
+\end{tikzpicture}    
+\end{frame}
+
+\frame{\frametitle{Parametres}
+\begin{itemize}
+\item $d> 0$: mortality rate
+\item $\gamma\geq 0$: recovery rate
+\item $\beta> 0$: infectiousness of the disease
+\item $\phi\geq 0$: vaccination rate of susceptible individuals
+\item $\alpha\in[0,1)$: fraction of newborns vaccinates
+\item $0\leq 1-\sigma\leq 1$: efficacy of the vaccine. From now on, assume $0\leq \sigma< 1$
+\end{itemize}
+}
+
+
+\begin{frame}\frametitle{}
+\begin{itemize}
+\item Disease transmission: standard incidence
+\vfill
+\item Vaccination of newborns
+\vfill
+\item Birth and death rate equal (\imply constant total population)
+\end{itemize}
+
+\textbf{Assumptions on $P$}: $P(t)$ is a nonnegative and nonincreasing
+function with $P(0^+)=1$, and such that $\int_0^\infty P(u)du$ is
+positive and finite
+\vfill
+Constant total population $\Rightarrow$ $S(t)=N-I(t)-V(t)$; further, we
+switch to \textbf{proportions}: $S$, $I$ and $V$ represent the
+proportions in the population, and $N=1$ ($S$ used in equations for
+conciseness)
+\end{frame}
+
+\begin{frame}\frametitle{The SIS model with vaccination} 
+\begin{subequations}\label{sys:SIVS_general}
+\begin{align}
+  \frac{dI(t)}{dt}&= \beta(S(t)+\sigma V(t))I(t)-(d+\gamma)I(t)
+  \label{sys:SIVS_general_I}\\ 
+  V(t)&= V_0(t) \label{sys:SIVS_general_V} \\
+  &\quad +\int_0^t(\phi S(u)+\alpha d)P(t-u)e^{-d(t-u)}
+  e^{-\sigma\beta\int_u^tI(x)dx}du \nonumber
+\end{align}
+\end{subequations}
+\vfill
+\begin{itemize}
+\item $\alpha d$ proportion of vaccinated newborns,
+\item $\phi S(u)$ proportion of vaccinated susceptibles, 
+\item $P(t-u)$ fraction of the proportion vaccinated still in the $V$
+  class $t-u$ time units after going in,
+\item $e^{-d(t-u)}$ fraction of the proportion vaccinated
+not dead due to natural causes,
+\item $e^{-\sigma\beta\int_u^t I(x)dx}$ fraction of the proportion
+  vaccinated not gone to the infective class.
+\end{itemize} 
+\end{frame}
+
+\begin{frame}\frametitle{Obtaining the initial condition}
+Let $v(t,\tau)$ be the (density) proportion of individuals in vaccination class-age $\tau$ still vaccinated at time $t$,
+then
+\begin{equation}\label{eq:SIVS_age_of_vaccination}
+\left(\frac{\partial}{\partial t}+\frac{\partial}{\partial\tau}\right)
+v(t,\tau)=
+-(\sigma\beta I(t)+d+\eta(\tau))v(t,\tau)
+\end{equation}
+where $V(t)=\int_0^\infty v(t,\tau)d\tau$. $\eta(\tau)$ is the vaccine waning rate coefficient, with proportion still in the vaccination class-age $\tau$ being $P(\tau)=\exp\left(-\int_0^\tau\eta(q)dq\right)$.
+It is assumed that $P$ is a survival function
+\vfill
+Inflow in class-age zero is 
+\[
+v(t,0)=\phi S(t)+\alpha d
+\]
+and $v(0,\tau)\geq 0$ is assumed
+\end{frame}
+
+\begin{frame}
+Integrating \eqref{eq:SIVS_age_of_vaccination} along characteristics, dividing the integral for $V(t)$ at $t$, substituting in the solutions, and changing integration variables, we get
+\begin{equation}
+V_0(t)=e^{-\int_0^t(\sigma\beta I(x)+d)dx} \int_0^\infty
+v(0,u)\frac{P(t+u)}{P(u)}du 
+\label{eq:V0}
+\end{equation}
+The ratio $P(t+u)/P(u)=\exp\left(\int_u^{t+u}\eta(q)dq\right)$ is well defined for $t+u\geq u\geq 0$ and bounded above by 1. 
+\vfill
+Since $V(0)$ is finite, the integral in $V_0(t)$ converges, and thus $V_0(t)$ is nonnegative,
+nonincreasing and $\lim_{t\to\infty}V_0(t)=0$
+\end{frame}
+
+\frame{
+Let
+\[
+\D=\{
+(S,I,V); S\geq 0, I\geq 0, V\geq 0, S+I+V=1
+\}
+\]
+\vfill
+\begin{theorem}
+The set $\D$ is positively invariant under the flow of \eqref{sys:SIVS_general} with $I(0)>0, S(0)>0$
+\label{th:invariance_gen_model}
+\end{theorem}
+}
+
+
+\begin{frame}\frametitle{}
+With the assumed initial conditions in $\D$, it can be shown that the system defined by \eqref{sys:SIVS_general_I} and \eqref{sys:SIVS_general_V} is equivalent to the system defined by \eqref{sys:SIVS_general_I} and
+\begin{align}
+\frac{d}{dt}V(t) &= \frac{d}{dt}V_0(t)+\phi S(t)+\alpha d \label{eq:Vprime_general} \\
+&\quad -(d+\sigma\beta I(t))(V(t)-V_0(t)) 
++ Q(t)\nonumber
+\end{align}
+where to simplify notation, we denote
+\[
+Q(t)=\int_0^t (\phi S(u)+\alpha d) d_t(P(t-u))e^{-d(t-u)}
+e^{-\sigma\beta\int_u^t I(x)dx}du
+\]
+\vfill
+The system defined by \eqref{sys:SIVS_general_I} and \eqref{eq:Vprime_general} is of standard form, therefore results of Hale (see Hale \& Verduyn-Lunel) ensure the local existence, uniqueness and continuation of solutions of model \eqref{sys:SIVS_general}
+\end{frame}
+
+\frame{\frametitle{$\R_0$}
+Define $\R_0$ with vaccination as
+\begin{equation}
+\R_v=\R_0\left[
+\frac{1+\sigma\phi\tilde P-(1-\sigma)\alpha d\tilde P}
+{1+\phi\tilde P}
+\right]
+\label{eq:generalRphi}
+\end{equation}
+where $\R_0=\frac{\beta}{d+\gamma}$ is the reproduction number in the absence of vaccination and 
+\[
+\tilde P=\lim_{t\to\infty}\int_0^t P(v)e^{-dv}dv
+\]
+in such a way that $\tilde P<1/d$
+\vfill
+\bbullet
+$\R_v\leq \R_0$ and, in absence of vaccination,
+$\R_v=\R_0$
+}
+
+\frame{
+\begin{theorem}
+System \eqref{sys:SIVS_general} with an arbitrary loss of vaccination function $P(t)$ always admits the disease-free equilibrium
+\begin{itemize}
+\item
+If $\R_0< 1$, then the DFE is the only equilibrium of the system and the disease goes extinct
+\item
+If $\R_v<1$, the DFE is LAS; if $\R_v>1$, the DFE is unstable
+\end{itemize}
+\label{th:R0_gen_mod}
+\end{theorem}
+\vfill
+\begin{figure}[htbp]
+ \begin{center}
+   \includegraphics[width=0.95\textwidth]{FIGS/Rvac}
+ \end{center}
+\end{figure}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Case reducing to an ODE}
+
+\frame{\frametitle{Reduction of the system using specific $P(t)$ functions}
+As before, two examples
+\vfill
+\begin{itemize}
+\item The distribution of waning times is exponential, which leads to
+ an ODE system. Treated briefly here, just so as to emphasize the
+ presence of a so-called \emph{backward bifurcation}, a rather
+ uncommon phenomenon in epidemiological models
+\vfill
+\item The waning time is a constant, which leads to a DDE model. We
+ show that the backward bifurcation is also present
+\end{itemize}
+}
+
+\frame{\frametitle{Case reducing to an ODE system}
+Assume $P(v)=e^{-\theta v}$, $\theta>0$.
+$V_0(t)=V_0(0)e^{-(d+\theta)t}e^{-\int_0^t\sigma\beta I(x)dx}$ from
+(\ref{eq:V0}). Then (\ref{sys:SIVS_general_I}) and
+(\ref{eq:Vprime_general}) give the ODE system
+\begin{subequations}\label{ODEmodel}
+\begin{align}
+\frac{dI}{dt}&= \beta(1-I-(1-\sigma)V)I-(d+\gamma)I
+\label{ODEmodelI}\\
+\frac{dV}{dt}&= \phi(1-I-V)-\sigma\beta IV -(d+\theta)V+\alpha d
+\label{ODEmodelV}
+\end{align}
+\end{subequations}
+which with no newborn vaccination ($\alpha=0$) is the model studied in
+Kribs-Zaletta \& Velasco-Hernandez, 2000 (extended to SIR with
+vaccination: Arino,
+McCluskey and van den Driessche).\\[0.2cm]
+
+From Theorem~\ref{th:R0_gen_mod} the DFE always exists, with
+\[
+I_{DFE}=0,
+S_{DFE}=\frac{\theta+d(1-\alpha)}{d+\theta+\phi},
+V_{DFE}=\frac{\phi+\alpha d}{d+\theta+\phi}
+\]
+}
+
+
+
+\frame{\frametitle{Backward bifurcation}
+Assume that $\R_0>1$, then endemic equilibria (positive $I$
+equilibria, denoted
+by $I^\star$) can be obtained analytically from the quadratic equation
+\[
+\mathcal{P} (I)=AI^2+BI+C=0
+\]
+where
+\begin{eqnarray*}
+A&=& -\sigma\beta \\
+B&=& \sigma(\beta-(d+\gamma))-(d+\theta+\sigma\phi)\\
+C&=& (d+\gamma)(d+\theta+\phi)(\R_v-1)/\beta
+\end{eqnarray*}
+with
+\[
+\R_v=\R_0\frac{d+\theta+\sigma\phi-\alpha(1-\sigma)d}{d+\theta+\phi}
+\]
+from  (\ref{eq:generalRphi}).
+}
+
+\frame{
+Backward bifurcation leading to two endemic
+equilibria occurs for $\sigma>0$ if $ \mathcal{P}'(0)=B>0$,
+$\mathcal{P}(0)=C<0$ and $B^2>4AC$ (we always have
+$\mathcal{P}(1)<0$)
+\vfill
+\bbullet
+On an $(\R_v,I)$ bifurcation diagram, this occurs for
+$\R_c<\R_v<1$, where $\R_c$ is the value of $\R_v$ at
+the saddle node bifurcation point where the two values of $I$ coincide,
+\emph{i.e.}, $I=I_c=B/(-2A)$
+\vfill
+\bbullet
+For $\R_v<\R_c$, there is no endemic equilibrium (EEP).
+For $\R_v>1$, the constant term $C>0$, and there is a unique EEP
+\vfill
+\bbullet
+In the case of forward bifurcation, $\R_c=1$; this is the case in
+particular if the vaccine is totally effective ($\sigma=0$)
+}
+
+
+\frame{
+By standard planar ODE arguments the following can be shown
+\vfill
+\begin{theorem}
+For the ODE system (\ref{ODEmodel}) with $V(0)\geq 0$, $I(0)>0$, and
+$\R_0>1$
+\vskip0.3cm
+(i) if $\R_v<\R_c$, then the disease dies out,
+\vskip0.3cm
+(ii) if $\R_c<\R_v<1$, then the EEP
+with larger $I$ is l.a.s., and the EEP with smaller $I$ is unstable
+\vskip0.3cm
+(iii) if $\R_v>1$, then the unique EEP is globally
+asymptotically stable in $\D-\{I=0\}$
+\label{th:odecase}
+\end{theorem}
+}
+
+\frame{
+Pertussis:
+\begin{itemize}
+\item 3 week average disease duration ($\gamma=0.04762$)
+\item Average lifetime 75 years ($d=3.6530E-05$)
+\item Average number of adequate contacts per infective per day is
+ estimated at 0.4 ($\beta=0.4$)
+\item Most newborns are vaccinated in the first few months of life
+ ($\alpha=0.9$)
+\item  Vaccine is effective, $\sigma=0.1$ (90\% effective vaccine).
+\item Pertussis vaccine begins to wane after about 3 years
+ and the average waning time of the vaccine
+ $1/\theta$ is assumed to be 5 years, giving $\theta=5.4794E-04$
+\end{itemize}
+\vfill
+With these parameter values, there is backward
+bifurcation for a range of $\phi$ values given by $0.0254\leq\phi\leq0.1506$
+}
+
+\frame{
+With the above parameter values, $\R_0=8.3936$ and
+$\R_v(\phi)=0.8807$ for
+$\phi=0.1$, which is in the range of backward bifurcation since the
+critical value $\R_c(\phi)=0.8669<\R_v(\phi)<1$
+\vfill
+\begin{center}
+   \includegraphics[width=0.8\textwidth]{FIGS/SIV_ode_bif_phi}
+\end{center}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Case reducing to a DDE}
+\begin{frame}\frametitle{Step function case: a delay integral model}
+Suppose that
+\[ 
+P(v)=
+\left\{
+\begin{array}{l}
+1\textrm{ if }v\in[0,\omega] \\
+0\textrm{ otherwise} 
+\end{array}
+\right.
+\]
+Since $V_0(t)=0$ for $t>\omega$, with $S=1-I-V$ the
+integral equation \eqref{sys:SIVS_general_V} becomes, for $t>\omega$
+\begin{equation}
+  V(t)=\int_{t-\omega}^t(\phi (1-I(u)-V(u))+\alpha d)e^{-d(t-u)}
+  e^{-\sigma\beta\int_u^tI(x)dx}du
+  \label{eq:VoftStepCase}
+\end{equation}
+\end{frame}
+
+\begin{frame}
+Differentiating \eqref{eq:VoftStepCase} (see equation
+\eqref{eq:Vprime_general}) gives the model as the two
+dimensional system, for $t>\omega$
+\begin{subequations}\label{sys:SIVS_DDE}
+\begin{align}
+  \frac{d}{dt}I(t) &= 
+  \beta(1-I(t)-(1-\sigma)V(t))I(t)-(d+\gamma)I(t) \label{sys:SIVS_DDE_dS} \\
+  \frac{d}{dt}V(t) &=
+  \phi(1-I(t)-V(t)) \label{sys:SIVS_DDE_dV}\\
+  &\qquad-\phi(1-I(t-\omega)-V(t-\omega))e^{-d\omega}
+  e^{-\sigma\beta\int_{t-\omega}^t I(x)dx} \nonumber \\
+  &\qquad -\sigma\beta IV-dV
+  +\alpha d\left(1-e^{-d\omega}e^{-\sigma\beta\int_{t-\omega}^t I(x)dx}
+  \right) \nonumber
+\end{align}
+\end{subequations}
+Hereafter, shift time by $\omega$ so that these equations hold for $t>0$
+\end{frame}
+
+
+\frame{
+The well posedness of the problem follows from
+Theorem~\ref{th:invariance_gen_model} and from the fact that solutions
+of (\ref{sys:SIVS_general}) exist and are unique.
+For a constant waning period, the basic reproduction number from
+(\ref{eq:generalRphi}) is
+\begin{equation}
+ \R_v = \R_0
+ \frac{d+(\sigma\phi-\alpha(1-\sigma)d)
+ (1-e^{-d\omega})}{d+\phi(1-e^{-d\omega})}
+ \label{eq:Rphi}
+\end{equation}
+
+
+With $I_{DF}=0$, from Theorem~\ref{th:R0_gen_mod}
+\begin{equation}
+ V_{DF}=\frac{(\phi+\alpha d)(1-e^{-d\omega})}{d+\phi(1-e^{-d\omega})}
+,\,\,
+S_{DF}=\frac{d-\alpha d(1-e^{-d\omega})}{d+\phi(1-e^{-d\omega})}
+ \label{eq:DFE_V}
+\end{equation}
+}
+
+\frame{\frametitle{Finding the EEP's}
+From nullclines, there exists one (or more) endemic equilbria
+(EEP) iff there exists $0<I^\star\leq 1$ such that
+\begin{equation}
+ V^\star=f(I^\star)=g(I^\star)
+ \label{eq:f_egal_g}
+\end{equation}
+where
+\begin{equation}
+ f(I)=\frac{1-1/\R_0-I}{1-\sigma}
+ \label{eq:f(I)}
+\end{equation}
+for $\sigma<1$, and
+\begin{equation}
+ g(I)=\frac{(\phi(1-I)+\alpha d)(1-e^{-d\omega-\sigma\beta\omega I})}
+ {\phi(1-e^{-d\omega-\sigma\beta\omega I})+d+\sigma\beta I}
+ \label{eq:g(I)}
+\end{equation}
+}
+
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
-%%\slideBGcolor{\red}
-%\part[Dissolve]{Dimension infinie}
-%
-%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%\part{Temps de s\'ejour dans les classes}
-%
-%\frame{
-%On s'appuie ici en particulier sur les travaux de Thieme.
-%\vfill
-%Si la description du temps de s\'ejour dans les diff\'erents
-%\'etats d\'ecrits par un mod\`ele \'epid\'emiologique est affin\'ee,
-%cela donne lieu \`a des syst\`emes int\'egro-diff\'erentiels.
-%\vfill
-%Nous nous pla\c{c}ons ici dans le cadre des variables
-%al\'eatoires continues. Une approche plus g\'en\'erale, capable
-%d'accomoder des variables al\'eatoires arbitraires, est d\'evelopp\'ee
-%dans le livre de Thieme, auquel on se r\'eferera
-%pour plus de d\'etails (voir en particulier les chapitres 12 et 13).
-%}
-%
-%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Formulation du probl\`eme}
-%L'id\'ee qui sous-tend toute cette d\'emarche est probabiliste. Elle
-%s'appuie en particulier sur la th\'eorie de la \emph{survie} et sur
-%celle des \emph{risques comp\'etitifs}.
-%\vfill
-%\begin{itemize}
-%\item
-%On consid\`ere un syst\`eme physique arbitraire qui
-%peut se trouver dans deux \'etats diff\'erents, $A$ et $B$. 
-%\item Le syst\`eme est \`a l'instant 0 dans l'\'etat $A$. 
-%\item Un \'evenement (al\'eatoire) $\mathcal{E}$ fait passer le
-%  syst\`eme dans l'\'etat $B$, \`a l'instant $t$. 
-%\end{itemize}
-%On s'int\'eresse \`a la distribution de la variable al\'eatoire $T$,
-%\emph{instant de passage de l'\'etat $A$ \`a l'\'etat $B$}. 
-%Il s'agit bien entendu d'une variable al\'eatoire positive.
-%Pour simplifier, on suppose par ailleurs que c'est une variable
-%al\'eatoire continue.
-%}
-%
-%
-%\frame{\frametitle{Fonction de survie}
-%La fonction de r\'epartition (f.r.) $F(t)$ caract\'erise alors la
-%distribution de $T$, avec $F(t)=\Proba{T\leq t}$.
-%\begin{definition}[Fonction de survie]
-%La fonction de \emph{survie} de $A$ est donn\'ee par
-%\begin{equation}
-%\Surv(t)=1-F(t)=\Proba{T>t}
-%\end{equation}
-%\label{def:survival}
-%\end{definition}
-%Ainsi, $\Surv(t)$ repr\'esente la fraction de tous les
-%syst\`emes qui \'etaient dans l'\'etat $A$ au temps $t=0$ et qui le
-%sont toujours au temps $t$.
-%Puisque $F$ est une f.r., elle est monotone croissante, ce qui
-%entra\^ine que $\Surv$ est monotone d\'ecroissante. Par
-%ailleurs, $\Surv(0)=1$.
-%}
-%
-%\frame{\frametitle{Taux de risque}
-%Le \emph{taux de risque} est la probabilit\'e instantan\'ee qu'un
-%\'evenement $\mathcal{E}$ ait lieu \`a l'instant suivant, si cela est
-%possible.
-%\begin{definition}[Taux de risque]
-%Soit une variable al\'eatoire $T$. Alors le \emph{taux de risque} $h$
-%est d\'efini par
-%\begin{equation}
-%h(t)= \lim_{\Delta t\searrow 0} \frac{\Proba{ T<t+\Delta t | T\geq
-%t}}{\Delta t}
-%\label{eq:hazard}
-%\end{equation}
-%\label{def:hazard}
-%\end{definition}
-%Par cons\'equent, le taux de risque est conditionel \`a la fonction de
-%survie.
-%}
-%
-%
-%\frame{\frametitle{Exemple}
-%Le taux de risque (dans ce cas, la \emph{force de mortalit\'e})
-%associ\'e \`a la probabilit\'e de d\'ec\`es l'instant suivant,
-%conditionnellement \`a une survie jusqu'\`a l'instant, a la forme
-%suivante: 
-%\begin{figure}[htbp]
-%\begin{center}
-%\includegraphics[width=\figfullwidth]{Figures/bathtub}
-%\end{center}
-%\end{figure}
-%}
-%
-%
-%\frame{\frametitle{Propri\'et\'e}
-%\begin{property}
-%\begin{equation}
-%h(t)=-\frac{d}{dt}\ln \Surv(t)
-%\end{equation}
-%\end{property}
-%
-%\begin{proof}
-%\begin{eqnarray*}
-%h(t)&=& \lim_{\Delta t\searrow 0} \frac{\Proba{T> t} -\Proba{T\geq
-%t+\Delta t}}{\Proba{T\geq t}\Delta t}\\
-%&=& \lim_{\Delta t\searrow 0}\frac{\Surv(t)-\Surv(t+\Delta t)}
-%{\Surv(t)\Delta t}
-%\\
-%&=& -\frac{1}{\Surv(t)}\frac{d\Surv(t)}{dt}
-%= -\frac{f(t)}{\Surv(t)}
-%= -\frac{d}{dt}\ln \Surv(t)\qedhere
-%\end{eqnarray*}
-%\end{proof}
-%}
-%
-%\frame{
-%\begin{eqnarray*}
-%\Surv(t)-\Surv(a)&=&\Proba{\textrm{survivre pendant }
-%  (a,t)\textrm{ en ayant surv\'ecu jusqu'\`a }a} \\
-%&=& \exp\left(-\int_a^t h(u)du\right)
-%\end{eqnarray*}
-%}
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Risques comp\'etitifs}
-%On suppose maintenant que le syst\`eme commence dans l'\'etat $A$ au
-%temps $t=0$, et que selon lequel des deux \'evenements $\mathcal{E}_1$
-%ou $\mathcal{E}_2$ a lieu en premier, il passe dans l'\'etat $B_1$ ou
-%$B_2$, respectivement.
-%
-%Soient les deux variables al\'eatoires $T_A$, \emph{temps pass\'e}
-%dans l'\'etat $A$ (ou \emph{temps de s\'ejour} en $A$),
-%$T_{AB_1}$, le \emph{temps avant passage} \`a l'\'etat $B_1$ et
-%$T_{AB_2}$ le \emph{temps avant passage} \`a l'\'etat $B_2$.
-%
-%Si l'on consid\`ere l'\'etat $A$, on ne peut \'evidemment pas observer
-%les variables $T_{AB_1}$ ou $T_{AB_2}$. Ce qui est observable est le
-%temps de s\'ejour en $A$
-%\[
-%T^*_A=\min\left( T_{AB_1},T_{AB_2} \right)
-%\]
-%(where $^*$ indique une quantit\'e observable).
-%}
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Propri\'et\'es de la fonction de survie}
-%Le \emph{temps de s\'ejour moyen} $\tau$ dans l'\'etat $A$ est donn\'e
-%par
-%\[
-%\tau=\int_0^\infty tf(t)dt
-%\]
-%Si l'on suppose que $\lim_{t\to\infty}t\Surv(t)=0$ (v\'erifi\'e pour
-%la plupart des distributions de probabilit\'e usuelles),
-%\[
-%\tau=\int_0^\infty \Surv(t)dt
-%\]
-%}
-%
-%\frame{\frametitle{Cas d'une distribution al\'eatoire}
-%Supposons que la variable al\'eatoire $T$ suive une distribution
-%exponentielle $f(t)=\theta e^{-\theta t}$ pour $t\geq 0$, avec
-%$\theta>0$.
-%Alors la fonction de survie pour l'\'etat $A$ prend la forme
-%$\Surv(t)=e^{-\theta t}$, pour $t\geq 0$, et le temps de s\'ejour
-%moyen dans l'\'etat $A$ est
-%\[
-%\tau=\int_0^\infty e^{-\theta t}dt=\frac 1\theta
-%\]
-%}
-%
-%
-%\frame{\frametitle{Cas d'une distribution de Dirac}
-%Si, d'autre part, pour une constante $\omega>0$,
-%\[
-%\Surv(t)=
-%\left\{
-%\begin{array}{ll}
-%1, & 0\leq t\leq\omega \\
-%0, & \omega<t
-%\end{array}
-%\right.
-%\]
-%ce qui veut dire que $T$ a une distribution de Dirac
-%$\delta_\omega(t)$, et le temps de s\'ejour moyen est une constante,
-%\[
-%\tau=\int_0^\omega dt=\omega
-%\]
-%Ces deux distributions sont des extr\^emes.
-%}
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-%\part{Un exemple de mod\`ele SIS}
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Formulation du mod\`ele -- Hypoth\`eses}
-%\begin{itemize}
-%\item
-%Maladie ne conf\'erant
-%pas d'immunit\'e ($\Rightarrow$ mod\`ele SIS).
-%\item Pas de d\'emographie ($\Rightarrow$ $N\equiv N(t)=S(t)+I(t)$
-%constante).
-%\item 
-%Transmission de la maladie se fait selon le sch\'ema
-%d'\emph{incidence proportionnelle}: $f(S,I)=\beta SI/N$. $\beta$ donne la
-%probabilit\'e de transmission de la maladie lorsqu'un contact a lieu
-%multipli\'ee par le nombre de tels contacts fait par un infectieux par
-%unit\'e de temps. 
-%\end{itemize}  
-%}
-%
-%
-%\frame{\frametitle{La gu\'erison}
-%Contrairement aux mod\`eles pr\'ec\'edemment \'etudi\'es, nous ne
-%supposons pas ici que la gu\'erison se fait \`a un taux
-%$\gamma$. 
-%\vfill
-%Plut\^ot, nous supposons
-%que, des individus qui sont devenus infectieux au temps $t_0$, une
-%fraction $P(t-t_0)$ restent infectieux au temps $t\geq t_0$. 
-%\vfill
-%Par cons\'equent, when on la consid\`ere au temps $t\geq 0$, la
-%fonction $P(t)$ est une fonction de survie.
-%\vfill
-%Elle v\'erifie donc les propri\'et\'es donn\'ees avant, et en
-%particulier, $P(0)=1$. 
-%}
-%
-%\frame{ 
-%Diagramme de transfert du syst\`eme:
-%\begin{figure}[htbp]
-%  \begin{center}
-%    \includegraphics[width=\figfullwidth]{Figures/SIS_gen}
-%  \end{center}
-%\end{figure}
-%}
-%
-%\frame{
-%Puisque $N$ est constant, il suit que $S(t)=N-I(t)$, et l'on peut
-%\'ecrire le mod\`ele sous la forme de l'\'equation int\'egrale
-%suivante, qui d\'ecrit le nombre d'individus infectieux:
-%\begin{equation}
-%I(t) = I_0(t)+ \int_0^t\beta\frac{(N-I(u))I(u)}{N} P(t-u) du
-%\label{eq:SIS_dim_inf_I} 
-%\end{equation}
-%Ici $I_0(t)$ est le nombre d'individus qui sont infectieux \`a
-%l'instant $t=0$ et qui le sont toujours au temps $t$. Il est suffisant
-%de supposer que la fonction $I_0(t)$ est positive, d\'ecroissante, et
-%telle que $\lim_{t\to\infty}I_0(t)=0$.
-%Le terme $P(t-u)$ dans l'int\'egrale est la proportion d'individus qui
-%sont devenus infectieux \`a l'instant $u$ et qui le sont toujours \`a
-%l'instant $t$. 
-%En multipliant ceci avec le terme de contact $\beta (N-I(u))I(u)/N$ et
-%en sommant sur $[0,t]$, on obtient le nombre d'infectieux \`a
-%l'instant $t$.
-%}
-%
-%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{La condition initiale}
-%Dans le cas d'une \'equation telle \eqref{eq:SIS_dim_inf_I},
-%d\'eterminer la condition initiale $I_0(t)$ n'est pas une t\^ache
-%ais\'ee. On utilise pour ce faire 
-%l'\emph{\^age dans la classe infectieuse}. 
-%Soit $i(t,\tau)$ la densit\'e d'individus dans la classe d'infection
-%$\tau$, proportion des individus dans la classe d'infection $\tau$ qui
-%sont toujours infectieux \`a l'instant $t$. On a alors
-%\[
-%\left(\frac{\partial}{\partial t}+\frac{\partial}{\partial
-%    \tau}\right)i(t,\tau)
-%=-(\eta(\tau)+d)i(t,\tau)
-%\]
-%Ici, $\eta(\tau)$ est le coefficient de taux de gu\'erison (peut
-%d\'ependre de $\tau$).
-%}
-%
-%\frame{
-%La proportion toujours dans la classe $I$ \`a l'\^age d'infection $\tau$
-%\'egale \`a
-%\[
-%P(\tau)=\exp\left(-\int_0^\tau \eta(q)-ddq\right)
-%\]
-%dont on suppose qu'elle v\'erifie les hypoth\`eses g\'en\'erales sur
-%les fonctions de gu\'erison.
-%L'influx dans la classe d'\^age d'infection z\'ero est
-%\[
-%i(t,0)=\beta \frac{S(t)I(t)}N
-%\]
-%Par ailleurs, $i(0,\tau)\geq 0$ est sp\'ecifi\'ee.
-%}
-%
-%
-%%\frame{
-%%On peut donc int\'egrer le long des charact\'eristiques, ce qui donne
-%%\begin{align*}
-%%i(t,\tau) &= i(t-\tau,0)\exp\left(
-%%-\int_{t-\tau}^t d\;dq -\int_0^\tau \eta(q)dq
-%%\right),\quad \textrm{lorsque }0\leq \tau \leq t, \\
-%%i(t,\tau) &= i(0,\tau-t)\exp\left(
-%%-\int_{0}^t d\;dq -\int_{\tau-t}^\tau \eta(q)dq
-%%\right),\quad \textrm{lorsque }t\leq \tau<\infty, 
-%%\end{align*}
-%%}
-%
-%
-%%\frame{
-%%Maintenant, le nombre d'infectieux au temps $t$ est donn\'e en
-%%fonction de la classe d'\^age d'infection par $I(t)=\int_0^\infty
-%%i(t,\tau)d\tau$. Subdivisant cette int\'egrale et utilisant les
-%%valeurs qui pr\'ec\`edent, on a donc
-%%\begin{align*}
-%%I(t) = & \int_0^t 
-%%i(t-\tau,0)\exp\left(
-%%-\int_{t-\tau}^t d\;dq -\int_0^\tau \eta(q)dq
-%%\right)d\tau \\
-%%&+ \int_t^\infty
-%%i(0,\tau-t)\exp\left(
-%%-\int_{0}^t d\;dq -\int_{\tau-t}^\tau \eta(q)dq
-%%\right)d\tau
-%%\end{align*}
-%%}
-%
-%%\frame{
-%%Changeons la variable d'int\'egration ($u=t-\tau$), utilisons $S=N-I$ et les
-%%d\'efinitions de $i(t,0)$ et de $P(\tau)$. Cela donne
-%%\begin{align*}
-%%I(t) = & \int_0^t 
-%%\beta\frac{(N-I(u))I(u)}{N} \exp\left(
-%%-\int_{t-\tau}^t d\;dq\right)P(t-u)du \\
-%%&+ \exp\left(-\int_{0}^t d\;dq\right)
-%%\int_t^\infty
-%%i(0,u)\frac{P(t+u)}{P(u)}du
-%%\end{align*}
-%%}
-%
-%
-%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Cas d'une distribution exponentielle}
-%Supposons tout d'abord que $P(t)$ est telle que le temps de s\'ejour
-%dans l'\'etat infectieux a une distribution exponentielle de
-%param\`etre $\gamma$ (d'esp\'erance $1/\gamma$), \emph{i.e.},
-%$P(t)=e^{-\gamma t}$.
-%Alors l'\'equation (\ref{eq:SIS_dim_inf_I}) s'\'ecrit
-%\[
-%I(t)=I_0(t)+\int_0^t \beta\frac{(N-I(u))I(u)}{N} e^{-\gamma (t-u)}du
-%\]
-%En d\'erivant $I(t)$ par rapport au temps, on obtient
-%\begin{eqnarray*}
-%I'(t) &=& I_0'(t)-\gamma\int_0^t \beta\frac{(N-I(u))I(u)}{N}e^{-\gamma
-%  (t-u)}du +\beta \frac{(N-I(t))I(t)}{N} \\
-%&=& I_0'(t)+\beta \frac{(N-I(t))I(t)}{N}
-%+\gamma\left( I_0(t)-I(t)\right)
-%\end{eqnarray*}
-%}
-%
-%
-%\frame{
-%Ici, on a $I_0(t)=I_0(0)e^{-\gamma t}$, ce qui entra\^ine que
-%\[
-%I'(t)=\beta \frac{(N-I(t))I(t)}{N}-\gamma I(t)
-%\]
-%soit l'\'equation diff\'erentielle ordinaire de type logistique qui
-%d\'ecrit en g\'en\'eral l'\'evolution des infectieux dans un mod\`ele
-%SIS sans dynamique d\'emographique (voir par exemple
-%le livre de Brauer et C$^3$).
-%\vfill
-%On est donc ramen\'e \`a un cas particulier du mod\`ele SIS. Ici,
-%$\Rzero=\beta/\gamma$ puisqu'il n'y a pas de composante d\'emographique.
-%}
-%
-%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Cas d'une distribution de Dirac}
-%On suppose maintenant que $P(t)$ est une fonction en escalier:
-%\[
-%P(t)=\left\{
-%\begin{array}{l}
-%1\textrm{ si }t\in[0,\omega] \\
-%0\textrm{ sinon}
-%\end{array}
-%\right.
-%\]
-%\emph{i.e.}, le temps de s\'ejour dans l'\'etat infectieux est
-%constant, de valeur $\omega>0$. 
-%Dans ce cas, (\ref{eq:SIS_dim_inf_I}) s'\'ecrit
-%\[
-%I(t)=I_0(t)+\int_{t-\omega}^t \beta\frac{(N-I(u))I(u)}{N} du
-%\]
-%}
-%
-%\frame{
-%\[
-%I(t)=I_0(t)+\int_{t-\omega}^t \beta\frac{(N-I(u))I(u)}{N} du
-%\]
-%Calcul de la d\'eriv\'ee par rapport au temps donne,
-%pour $t\geq\omega$,
-%\[
-%I'(t)=I_0'(t)+\beta\frac{(N-I(t))I(t)}{N}
-%-\beta\frac{\left(N-I(t-\omega)\right)I(t-\omega)}{N}
-%\]
-%Puisque $I_0(t)$ disparait pour $t>\omega$, cela donne l'\'equation
-%diff\'erentielle \`a retard (EDR) suivante
-%\[
-%I'(t)=\beta\frac{(N-I(t))I(t)}{N}
-%-\beta\frac{(N-I(t-\omega))I(t-\omega)}{N}
-%\]
-%}
-%
-%
-%\frame{
-%cf. Section 7.6 de Brauer et C$^3$ (where la transmission est
-%de type loi d'action de masse). Notons que chaque valeur de $I$ est un
-%\'equilibre, et par cons\'equent, la forme int\'egrale au dessus fait
-%une meilleure description que l'EDR. Ici, 
-%$\Rzero=\beta\omega$ est un seuil. Pour $\Rzero<1$, l'\'equilibre sans
-%maladie est stable, tandis que pour $\Rzero>1$, l'\'equilibre
-%endemique est localement asymptotiquement stable (Section
-%7.6 de Brauer et C$^3$). 
-%}
-%
-%\frame{\frametitle{Remarque}
-%Pour \^etre plus r\'ealiste, la fonction de survie pour l'\'etat
-%infectieux est quelque part entre une distribution exponentielle et
-%une distribution de Dirac. Ces deux cas sont donc des extr\^emes.
-%}
-%
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%\part{Un autre exemple \\ Effet de la vaccination}
-%
-%\frame{\frametitle{Un mod\`ele SIS avec vaccination}
-%\begin{itemize}
-%\item Mod\`ele SIS normal (gu\'erison exponentiellement distribu\'ee). 
-%\item Vaccination comme dans le mod\`ele SIRV en ODE d\'ej\`a vu, avec
-%  vaccin pas totalement efficace.
-%\item Pas de classe R.
-%\item La dur\'ee d'efficacit\'e du vaccin est arbitrairement
-%  distribu\'ee: une fraction $P(t)$ des individus vaccin\'es au temps
-%  0 sont toujours couverts par le vaccin au temps $t$. 
-%\end{itemize}
-%}
-%
-%\frame{\frametitle{Diagramme de flot du mod\`ele}
-%\begin{figure}[htbp]
-%  \begin{center}
-%    \includegraphics[width=0.65\textwidth]{../CommonFigures/vaccination_newborns_integral}
-%  \end{center}
-%\end{figure}
-%}
-%
-%\frame{\frametitle{Hypoth\`eses sur $P$}
-%$P$ est une fonction de survie.
-%\begin{itemize}
-%\item $P(t)$ positive.
-%\item $P(t)$ croissante.
-%\item $P(0^+)=1$.
-%\item $\int_0^\infty P(u)du$ positive et finie.
-%\end{itemize}
-%}
-%
-%
-%\frame{\frametitle{Le mod\`ele SIVS}
-%\begin{itemize}
-%\item
-%La population totale est constante. 
-%\item
-%On utilise $S(t)=N-I(t)-V(t)$. 
-%\item
-%On normalise \`a $N=1$.
-%\end{itemize}
-%{\footnotesize
-%\begin{subequations}\label{genmodel}
-%\begin{align}
-%  \frac{dI(t)}{dt}&= \beta(S(t)+\sigma V(t))I(t)-(d+\gamma)I(t) 
-%  \label{genmodelI}\\
-%  V(t)&=V_0(t)+\int_0^t(\phi S(u)+\alpha d)P(t-u)e^{-d(t-u)}
-%  e^{-\sigma\beta\int_u^tI(x)dx}du \label{genmodelV}
-%\end{align}
-%\end{subequations}}
-%}
-%
-%
-%\frame{\frametitle{Terme int\'egral}
-%{\footnotesize
-%\[
-%V(t)=V_0(t)+\int_0^t(\phi S(u)+\alpha d)P(t-u)e^{-d(t-u)}
-%  e^{-\sigma\beta\int_u^tI(x)dx}du
-%\]}
-%\begin{itemize}
-%\item $\alpha d$ proportion de nouveaux n\'es vaccin\'es,
-%\item $\phi S(u)$ proportion de susceptibles vaccin\'es, 
-%\item $P(t-u)$ fraction de la proportion des vaccin\'es toujours dans
-%  la classe $V$, $t-u$ unit\'es de temps apr\`es y \^etre rentr\'e,
-%\item $e^{-d(t-u)}$ fraction de la proportion des vaccin\'es pas
-%  d\'ec\'ed\'es de causes naturelles,
-%\item $e^{-\sigma\beta\int_u^t I(x)dx}$ fraction de la proportion
-%  des vaccin\'es n'\'etant pas retourn\'ee dans la classe $I$.
-%\end{itemize} 
-%}
-%
-%\frame{\frametitle{Param\`etres}
-%\begin{itemize}
-%\item $d> 0$: taux de mortalit\'e.
-%\item $\gamma\geq 0$: taux de gu\'erison.
-%\item $\beta> 0$: infectiosit\'e de la maladie.
-%\item $\phi\geq 0$: taux de vaccination des susceptibles.
-%\item $\alpha\in[0,1)$: fraction des nouveaux n\'es vaccin\'es.
-%\item $0\leq 1-\sigma\leq 1$: efficacit\'e du vaccin. On consid\`ere
-%  dor\'enavant que $0\leq \sigma< 1$. 
-%\end{itemize}
-%}
-%
-%\frame{\frametitle{Condition initiale}
-%Pour obtenir (\ref{genmodelV}) et $V_0(t)$, on formule le mod\`ele en
-%\^age dans la classe de vaccination $\tau$ (m\^eme fa\c{c}on que pour
-%le SIS d'avant).
-%On a
-%\begin{equation}
-%V_0(t)=e^{-\int_0^t(\sigma\beta I(x)+d)dx} \int_0^\infty
-%v(0,u)\frac{P(t+u)}{P(u)}du 
-%\label{eq:V0}
-%\end{equation}
-%where $v(0,\tau)$ est la densit\'e \`a $t=0$ de la proportion
-%d'individus dans la classe d'\^age de vaccination $\tau$; donc
-%$V_0(0)=\int_0^\infty v(0,u)du$.
-%L'int\'egrale au dessus converge, et par cons\'equent, $V_0(t)$ est
-%positive et $\lim_{t\to\infty}V_0(t)=0$. 
-%}
-%
-%
-%\frame{
-%Soit
-%\[
-%\mathcal{D}=\{
-%(S,I,V); S\geq 0, I\geq 0, V\geq 0, S+I+V=1
-%\}
-%\]
-%\begin{theorem}
-%L'ensemble $\mathcal{D}$ est positivement invariant sous le flot de
-%(\ref{genmodel}) avec $I(0)>0, S(0)>0$.
-%\label{th:invariance_gen_model}
-%\end{theorem}
-%}
-%
-%\frame{
-%Avec la condition initiale dans $\mathcal{D}$ que nous prennons, on
-%montre que le syst\`eme d\'efini par (\ref{genmodelI}) et (\ref{genmodelV})
-%est \'equivalent au syst\`eme d\'efini par (\ref{genmodelI}) et
-%\begin{equation}
-%\frac{d}{dt}V(t)=\frac{d}{dt}V_0(t)
-%+\phi S(t)+\alpha d-(d+\sigma\beta I(t))(V(t)-V_0(t)) 
-%+ Q(t)
-%\label{eq:Vprime_genmodel}
-%\end{equation}
-%where pour simplifier, on a not\'e
-%\[
-%Q(t)=\int_0^t (\phi S(u)+\alpha d) d_t(P(t-u))e^{-d(t-u)}
-%e^{-\sigma\beta\int_u^t I(x)dx}du
-%\]
-%}
-%
-%
-%\frame{
-%Le syst\`eme sous la forme (\ref{genmodelI}) and
-%(\ref{eq:Vprime_genmodel}) est de forme standard, et les r\'esultats
-%de Hale et Verduyn Lunel assurent l'existence et l'unicit\'e locales,
-%de m\^eme que la continuation des solutions du mod\`ele (\ref{genmodel}). 
-%}
-%
-%
-%\frame{\frametitle{$\Rzero$}
-%On d\'efinit $\Rzero$ avec vaccination par
-%\begin{equation}
-%\Rvac=\Rzero\left[  
-%\frac{1+\sigma\phi\tilde P-(1-\sigma)\alpha d\tilde P}
-%{1+\phi\tilde P} 
-%\right]
-%\label{eq:generalRphi} 
-%\end{equation} 
-%where $\Rzero=\frac{\beta}{d+\gamma}$ est le nombre de reproduction
-%\'el\'ementaire en l'absence de vaccination et
-%\[
-%\tilde P=\lim_{t\to\infty}\int_0^t P(v)e^{-dv}dv
-%\]
-%de telle fa\c{c}on que $\tilde P<1/d$.
-%
-%\begin{itemize}
-%\item
-%$\Rvac\leq \Rzero$, et en l'absence de vaccination,
-%$\Rvac=\Rzero$.
-%\end{itemize}
-%}
-%
-%
-%\frame{
-%\begin{theorem} 
-%Le syst\`eme (\ref{genmodel}) avec fonction de perte de vaccination
-%arbitraire admet toujours l'ESM. 
-%\begin{itemize}
-%\item 
-%Si $\Rzero< 1$, alors l'ESM est le seul \'equilibre du syst\`eme et la
-%maladie s'\'eteint.
-%\item 
-%Si $\Rvac<1$, l'ESM est localement asymptotiquement stable; si
-%$\Rvac>1$ l'ESM est instable.
-%\end{itemize}
-%\label{th:R0_gen_mod}
-%\end{theorem} 
-%\vfill
-%\begin{figure}[htbp]
-%  \begin{center}
-%    \includegraphics[width=0.95\textwidth]{../CommonFigures/Rvac}
-%  \end{center}
-%\end{figure}
-%}
-%
-%\frame{\frametitle{Preuve}
-%Equation (\ref{genmodelI}) has $I=0$ as an equilibrium and using
-%$I=0$ in equation (\ref{genmodelV}) as $t\to\infty$ gives
-%$I_{DFE}=0$, $V_{DFE}=(\phi+\alpha
-%d)\tilde P/(1+\phi\tilde P)$ and $S_{DFE}=1-V_{DF}=(1-\alpha d\tilde
-%P)/(1+\phi\tilde P)$.
-%Since if $\Rzero<1$ the only equilibrium of (\ref{genmodelI}) is
-%$I_{DFE}=0$, it follows that the DFE is the only equilibrium
-%of system (\ref{genmodel}) when $\Rzero<1$. 
-%
-%Suppose now that $\Rzero< 1$, \emph{i.e.}, that $\beta< d+\gamma$. Then
-%equation (\ref{genmodelI}) gives
-%\[
-%\frac{dI}{dt}< (d+\gamma)\left( (S+\sigma V) -1 \right)I
-%\]
-%Since $I\geq 0$ and $S+\sigma V\leq S+V\leq 1$, this inequality
-%implies that $dI/dt<0$, and so $I(t)\to 0=I_{DFE}$ as $t\to\infty$,
-%for all initial conditions $I(0)>0$.
-%}
-%
-%
-%
-%\frame{
-%Linearizing (\ref{genmodelI}) and (\ref{genmodelV})
-%about the DFE by setting $I(t)=q(t)$, $V(t)=V_{DFE}+r(t)$, and taking
-%$t\to\infty$ 
-%gives the equations
-%\[
-%\frac{dq(t)}{dt}=(\beta(S_{DFE}+\sigma V_{DFE})-(d+ \gamma))q(t)
-%\]
-%\begin{eqnarray*}
-%r(t)&=&-\phi\int_0^t (r(u)+q(u)) P(t-u)e^{-d(t-u)} du \\
-%&& -\sigma\beta\int_0^t
-%(\phi(1-V_{DFE})+\alpha d)P(t-u)e^{-d(t-u)}\int_u^tq(x)dxdu
-%\end{eqnarray*}
-%}
-%
-%\frame{
-%Letting $q(t)=C_1 e^{zt}$ and $r(t)=C_2 e^{zt}$, the above system
-%becomes triangular and has a non trivial solution if and only if 
-%\[
-%z=\beta(S_{DFE}+\sigma V_{DFE})-(d+\gamma)=(d+\gamma)(\Rvac -1)
-%\]
-%or
-%\begin{equation}
-%1=-\phi\int_0^\infty P(v)e^{-(d+z)v}dv
-%\label{eq:caract_general}
-%\end{equation}
-%as $t\to\infty$.
-%These equations give the eigenvalues at the DFE.
-%}
-%
-%
-%\frame{
-%Let $z=x+iy$ be a root of equation (\ref{eq:caract_general}). Then by
-%the proof of Lemma 2 in VdD Watmough 2000 , if $x\geq 0$, then
-%$y=0$. But since $\phi\geq 0$, equation (\ref{eq:caract_general}) has
-%no nonnegative real root, thus all of its roots have negative real
-%parts. Hence the DFE is l.a.s if $\Rvac<1$, and unstable if $\Rvac>1$.
-%} 
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Reduction of the system using specific $P(t)$ functions}
-%As before, two examples:
-%\begin{itemize}
-%\item The distribution of waning times is exponential, which leads to
-%  an ODE system. Treated briefly here, just so as to emphasize the
-%  presence of a so-called \emph{backward bifurcation}, a rather
-%  uncommon phenomenon in epidemiological models. 
-%\item The waning time is a constant, which leads to a DDE model. We
-%  show that the backward bifurcation is also present.
-%\end{itemize}
-%}
-%
-%\frame{\frametitle{Case reducing to an ODE system}
-%Assume $P(v)=e^{-\theta v}$, $\theta>0$. 
-%$V_0(t)=V_0(0)e^{-(d+\theta)t}e^{-\int_0^t\sigma\beta I(x)dx}$ from
-%(\ref{eq:V0}). Then (\ref{genmodelI}) and
-%(\ref{eq:Vprime_genmodel}) give the ODE system
-%\begin{subequations}\label{ODEmodel}
-%\begin{align}
-%\frac{dI}{dt}&= \beta(1-I-(1-\sigma)V)I-(d+\gamma)I
-%\label{ODEmodelI}\\
-%\frac{dV}{dt}&= \phi(1-I-V)-\sigma\beta IV -(d+\theta)V+\alpha d
-%\label{ODEmodelV}
-%\end{align}
-%\end{subequations}
-%which with no newborn vaccination ($\alpha=0$) is the model studied in
-%Kribs-Zaletta \& Velasco-Hernandez, 2000 (extended to SIR with
-%vaccination: Arino, 
-%McCluskey and van den Driessche).\\[0.2cm]
-%
-%From Theorem~\ref{th:R0_gen_mod} the DFE always exists, with 
-%\[
-%I_{DFE}=0,
-%S_{DFE}=\frac{\theta+d(1-\alpha)}{d+\theta+\phi},
-%V_{DFE}=\frac{\phi+\alpha d}{d+\theta+\phi}
-%\]
-%}
-%
-%
-%
-%\frame{\frametitle{Backward bifurcation}
-%Assume that $\Rzero>1$, then endemic equilibria (positive $I$
-%equilibria, denoted  
-%by $I^*$) can be obtained analytically from the quadratic equation
-%\[
-%\mathcal{P} (I)=AI^2+BI+C=0
-%\]
-%where
-%\begin{eqnarray*}
-%A&=& -\sigma\beta \\
-%B&=& \sigma(\beta-(d+\gamma))-(d+\theta+\sigma\phi)\\
-%C&=& (d+\gamma)(d+\theta+\phi)(\Rvac-1)/\beta
-%\end{eqnarray*}
-%with 
-%\[
-%\Rvac=\Rzero\frac{d+\theta+\sigma\phi-\alpha(1-\sigma)d}{d+\theta+\phi}
-%\]
-%from  (\ref{eq:generalRphi}).
-%}
-%
-%\frame{
-%Backward bifurcation leading to two endemic
-%equilibria occurs for $\sigma>0$ if $ \mathcal{P}'(0)=B>0$,
-%$\mathcal{P}(0)=C<0$ and $B^2>4AC$ (we always have
-%$\mathcal{P}(1)<0$).
-% 
-%\point
-%On an $(\Rvac,I)$ bifurcation diagram, this occurs for
-%$\Rc<\Rvac<1$, where $\Rc$ is the value of $\Rvac$ at
-%the saddle node bifurcation point where the two values of $I$ coincide,
-%\emph{i.e.}, $I=I_c=B/(-2A)$.
-%
-%\point
-%For $\Rvac<\Rc$, there is no endemic equilibrium (EEP).
-%For $\Rvac>1$, the constant term $C>0$, and there is a unique EEP.
-%
-%\point
-%In the case of forward bifurcation, $\Rc=1$; this is the case in
-%particular if the vaccine is totally effective ($\sigma=0$).
-%}
-%
-%
-%\frame{
-%By standard planar ODE arguments the following can be shown.
-%\begin{theorem}
-%For the ODE system (\ref{ODEmodel}) with $V(0)\geq 0$, $I(0)>0$, and
-%$\Rzero>1$, 
-%
-%(i) if $\Rvac<\Rc$, then the disease dies out,
-%
-%(ii) if $\Rc<\Rvac<1$, then the EEP
-%with larger $I$ is l.a.s., and the EEP with smaller $I$ is unstable, and
-%
-%(iii) if $\Rvac>1$, then the unique EEP is globally
-%asymptotically stable in $\mathcal{D}-\{I=0\}$.
-%
-%\label{th:odecase}
-%\end{theorem}
-%}
-%
-%\frame{
-%Pertussis (see, \emph{e.g.}, \cite{Chin2000}):
-%\begin{itemize}
-%\item 3 week average disease duration ($\gamma=0.04762$) [time unit
-%  one day].
-%\item Average lifetime 75 years ($d=3.6530E-05$)
-%\item Average number of adequate contacts per infective per day is
-%  estimated at 0.4 ($\beta=0.4$). 
-%\item Most newborns are vaccinated in the first few months of life
-%  ($\alpha=0.9$).
-%\item  Vaccine is effective, $\sigma=0.1$ (90\% effective vaccine).
-%\item Pertussis vaccine begins to wane after about 3 years
-%  \cite[p. 378]{Chin2000}, and the average waning time of the vaccine
-%  $1/\theta$ is assumed to be 5 years, giving $\theta=5.4794E-04$.
-%\end{itemize}
-%With these parameter values, there is backward
-%bifurcation for a range of $\phi$ values given by $0.0254\leq\phi\leq0.1506$.
-%}
-%
-%\frame{
-%With the above parameter values, $\Rzero=8.3936$ and
-%$\Rvac(\phi)=0.8807$ for 
-%$\phi=0.1$, which is in the range of backward bifurcation since the
-%critical value $\Rc(\phi)=0.8669<\Rvac(\phi)<1$.
-%\begin{figure}[htbp]
-%  \begin{center}
-%    \includegraphics[width=0.8\textwidth]{../CommonFigures/SIV_ode_bif_phi}
-%    \caption{Backward bifurcation in the ODE vaccination model,
-%      obtained by varying $\phi$ in $[0.01,0.2]$ with other parameters
-%    as given in the text. Here and in other bifurcation diagrams, only
-%    the endemic equilibria are shown (the solid curve is the locally
-%    stable EEP, the dashed curve is the unstable EEP).}
-%    \label{fig:bif_ode}
-%  \end{center}
-%\end{figure}
-%}
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Step function case: a delay integral model}
-%Suppose that
-%\[ 
-%P(v)=
-%\left\{
-%\begin{array}{l}
-%1\textrm{ if }v\in[0,\omega] \\
-%0\textrm{ otherwise} 
-%\end{array}
-%\right.
-%\]
-%Since $V_0(t)=0$ for $t>\omega$, with $S=1-I-V$ the
-%integral equation 
-%(\ref{genmodelV}) becomes, for $t>\omega$
-%\begin{equation}
-%  V(t)=\int_{t-\omega}^t(\phi (1-I(u)-V(u))+\alpha d)e^{-d(t-u)}
-%  e^{-\sigma\beta\int_u^tI(x)dx}du
-%  \label{eq:VoftStepCase}
-%\end{equation}
-%}
-%
-%\frame{
-%Differentiating this last expression (see equation
-%(\ref{eq:Vprime_genmodel})) gives the model as the two
-%dimensional system, for $t>\omega$
-%\begin{subequations}\label{delaymodel}
-%\begin{align}
-%  \frac{d}{dt}I(t)&= \beta(1-I(t)-(1-\sigma)V(t))I(t)-(d+\gamma)I(t) 
-%  \label{delaymodelI} \\
-%  \frac{d}{dt}V(t)&=
-%  \phi(1-I(t)-V(t)) \nonumber \\
-%  &-\phi(1-I(t-\omega)-V(t-\omega))e^{-d\omega}
-%  e^{-\sigma\beta\int_{t-\omega}^t I(x)dx} \nonumber\\
-%  &-\sigma\beta IV-dV
-%  +\alpha d\left(1-e^{-d\omega}e^{-\sigma\beta\int_{t-\omega}^t I(x)dx}
-%  \right)
-%  \label{delaymodelV}
-%\end{align}
-%\end{subequations}
-%Hereafter, we shift time by $\omega$ so that these equations hold
-%for $t>0$. 
-%}
-%
-%\frame{
-%The well posedness of the problem follows from
-%Theorem~\ref{th:invariance_gen_model} and from the fact that solutions
-%of (\ref{genmodel}) exist and are unique.
-%For a constant waning period, the basic reproduction number from
-%(\ref{eq:generalRphi}) is
-%\begin{equation}
-%  \Rvac = \Rzero
-%  \frac{d+(\sigma\phi-\alpha(1-\sigma)d)
-%  (1-e^{-d\omega})}{d+\phi(1-e^{-d\omega})} 
-%  \label{eq:Rphi}
-%\end{equation}
-%
-%
-%With $I_{DF}=0$, from Theorem~\ref{th:R0_gen_mod}
-%\begin{equation}
-%  V_{DF}=\frac{(\phi+\alpha d)(1-e^{-d\omega})}{d+\phi(1-e^{-d\omega})}
-%,\,\, 
-%S_{DF}=\frac{d-\alpha d(1-e^{-d\omega})}{d+\phi(1-e^{-d\omega})}
-%  \label{eq:DFE_V}
-%\end{equation}
-%}
-%
-%\frame{\frametitle{Finding the EEP's}
-%From nullclines, there exists one (or more) endemic equilbria
-%(EEP) iff there exists $0<I^*\leq 1$ such that
-%\begin{equation}
-%  V^*=f(I^*)=g(I^*)
-%  \label{eq:f_egal_g}
-%\end{equation}
-%where
-%\begin{equation}
-%  f(I)=\frac{1-1/\Rzero-I}{1-\sigma}
-%  \label{eq:f(I)}
-%\end{equation}
-%for $\sigma<1$, and
-%\begin{equation}
-%  g(I)=\frac{(\phi(1-I)+\alpha d)(1-e^{-d\omega-\sigma\beta\omega I})}
-%  {\phi(1-e^{-d\omega-\sigma\beta\omega I})+d+\sigma\beta I}
-%  \label{eq:g(I)}
-%\end{equation}
-%}
-%
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Visualising and locating the bifurcation}
-%From the nullcline equations, an EEP exists iff there exists an
-%$I^*\in(0,1]$ such that equations (\ref{eq:f_egal_g})-(\ref{eq:g(I)})
-%hold. 
-%So we study the zeros of
-%\[
-%H(I)=\frac{1-1/\Rzero-I}{1-\sigma} -
-%\frac{(\phi(1-I)+\alpha d)(1-e^{-d\omega-\sigma\beta\omega I})}
-%{\phi(1-e^{-d\omega-\sigma\beta\omega I})+d+\sigma\beta I}
-%\]
-%To state the problem in a formal way, let
-%$\mathcal{A}=\{\alpha,\beta,\gamma,\omega,\phi,\sigma\}$ be the set of
-%parameters of interest, and denote
-%\begin{equation}
-%H(I,\mathcal{A})=
-%f(I)-g(I)
-%\label{eq:H}
-%\end{equation}
-%to show the dependence on these parameters. 
-%}
-%
-%\frame{
-%We proceed as follows.
-%\begin{enumerate}
-%\item Choose a parameter $a_i\in\mathcal{A}$.
-%\item Fix all other $a_j$'s ($j\neq i$).
-%\item Choose $a_{i,min}$, $a_{i,max}$ and
-%  $\Delta a_i$ for $a_i$.
-%\item For all
-%   $a_{i,k}=a_{i,min}+k\Delta a_i$ ($k$
-%   such that $a_{i,k}\leq a_{i,max}$), compute
-%   $I^*$ such that $H(I^*,a_{i,k})=0$. \label{point1}
-%\end{enumerate}
-%Step~\ref{point1} is carried out using the {\sc MatLab} {\tt fzero}
-%function.
-%
-%Further precision can be gained by showing that 
-%\[
-%H(0)=\frac{\Rvac-1}{(1-\sigma)\Rzero}
-%\] 
-%and that, for $\sigma<1$
-%\[
-%H(1)=-\frac{1}{(1-\sigma)\Rzero}-\frac{\alpha
-%d(1-e^{-d\omega-\sigma\beta\omega})}{\phi(1
-%-e^{-d\omega-\sigma\beta\omega})+d+\sigma\beta}<0 
-%\]
-%}
-%
-%\frame{
-%Define $\Rc$ as previously. For $\Rzero>1$ and
-%$\Rvac<1$, there are several possibilities.
-%\begin{itemize}
-%\item If $\Rvac<\Rc$, then there is no EEP. $H(0)$ and $H(1)$
-%  are strictly negative, and numerical simulations seem to indicate
-%  that $H$ has no roots in $(0,1]$ (\emph{i.e.}, that $H<0$ on this
-%  interval).
-%\item If $\Rc<\Rvac<1$, then there are endemic equilibria. 
-%  Here, since $H(0)$
-%  and $H(1)$ are strictly negative, the only possibility is thus to
-%  have an even number of zeros of $H$. Numerical simulations appear to
-%  indicate that the number of endemic equilibria is 2.
-%\end{itemize}
-%In between these two situations $\Rvac=\Rc$ and there is
-%one endemic equilibrium $I^*$. Using the same procedure as for the
-%visualisation of the bifurcation, it is possible to compute
-%$\Rc$ by finding the value $I^*$ such that
-%$H(I^*,\mathcal{A})=0$ and $H'(I^*,\mathcal{A})=0$, for a given
-%parameter $a_i\in\mathcal{A}$.
-%
-%If $\Rvac>1$ then $H(0)>0$ and so there is an odd number of endemic
-%equilibria. Numerical simulations indicate that there is a unique
-%EEP.
-%}
-%
-%\frame{\frametitle{Numerical bifurcation analysis}
-%Same parameter values as in ODE case, except that the
-%constant waning time
-%(the delay) $\omega$ has to be substituted for $\theta$. We take
-%$\omega=1825$, \emph{i.e.}, corresponding to a 5 years waning time.
-% 
-%These parameters give $\Rzero=8.3936$ and $\Rvac(\phi)=0.8819$, which
-%is in the range of the backward bifurcation since (using the above
-%method) $\Rc(\phi)=0.8675$.
-%
-%The bifurcation diagram is very like that depicted in
-%Figure~\ref{fig:bif_ode}. Numerical simulations of the DDE model
-%(using {\tt dde23}) indicate that there are no additional
-%bifurcations; solutions either go to the DFE or to the (larger) EEP.
-%}
-%
-%
-%\frame{
-%\begin{figure}[htbp]
-%  \begin{center}
-%    \includegraphics[width=0.85\textwidth]{../CommonFigures/bif_and_time}
-%    \caption{(a) Values of $I^*$ as a function of $\omega$ by
-%      solving $H(I,\mathcal{A})=0$ with $a_i=\omega$. (b) Value of
-%      $I(t)$ versus time, obtained by numerical integration of system
-%      (\ref{delaymodel}) with initial data $I(t)=c$, for
-%      $t\in[-\omega,0]$, $c$ varying from 0 to 1 by steps of
-%      0.02, and parameter values as in the text with $\omega=1825$.} 
-%    \label{fig:bif_and_time}
-%  \end{center}
-%\end{figure}
-%}
-%
-%
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%\part{Age d'infection}
-%\frame{\frametitle{Age d'infection}
-%Nous avons vu que la dimension infinie pouvait \^etre cons\'equence
-%d'une description d\'etaill\'ee (ou non sp\'ecifi\'ee) de temps de
-%s\'ejour dans les classes.
-%Nous avons utilis\'e la notion d'\^age d'infection pour trouver la
-%condition initiale du syst\`eme \eqref{eq:SIS_dim_inf_I}.
-%Ici, nous \'etudions plus en d\'etail ce type de mod\'elisation. 
-%A l'origine, l'\^age dans la classe d'infection a \'et\'e introduit
-%pour rendre compte des diff\'erences d'infectivit\'e selon le temps
-%depuis le d\'ebut de l'infection, au niveau individuel. C'est par
-%exemple un fait bien connu que l'infectiosit\'e d'un individu atteint
-%du HIV varie grandement au cours du temps.
-%}
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%\part{Structuration en \^age}
-%\frame{\frametitle{Structuration en \^age}
-%Prendre en compte l'\^age est \'egalement important. Plusieurs raisons
-%\`a cela.
-%\begin{itemize}
-%\item Les caract\'eristiques d\'emo\-graphiques
-%varient grandement avec l'\^age.
-%\item Les interactions sont en
-%g\'en\'eral plus fr\'equentes entre personnes du m\^eme \^age, et plus
-%fr\'equentes \'egalement chez les individus plus jeunes.
-%\item Au
-%niveau des maladies, il y a des diff\'erences. Certaines maladies
-%touchent pr\'ef\'erentiellement les jeunes, d'autres touchent plut\^ot
-%des individus plus ag\'es.
-%\end{itemize}
-%\vfill
-%Cette partie est bas\'ee sur les cours de Jia Li lors de l'\'ecole
-%d'\'epid\'emiologie de Banff.
-%}
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Formulation d'un mod\`ele SIR}
-%On formule un mod\`ele SIR structur\'e en \^age, qui est not\'e $a$.
-%On suppose que la mortalit\'e naturelle a lieu au taux $\mu$, la
-%gu\'erison au taux $\gamma$, tous deux d\'ependants de $a$. Lorsqu'un
-%individu est malade, il est de plus soumis \`a une mortalit\'e
-%sp\'ecifique \`a la maladie, au taux $\delta(a)$.
-%Tout d'abord, les equations directrices sont
-%\begin{subequations}\label{sys:SIR_age_structure}
-%\begin{align}
-%(\partial_t+\partial_a)S(t,a) &=
-%\Lambda(a)-(\mu(a)+\lambda(t,a))S(t,a)
-%\label{sys:SIR_age_structure_S} \\
-%(\partial_t+\partial_a)I(t,a) &=
-%-(\mu(a)+\gamma(a)+\delta(a))I(t,a)+\lambda(t,a)S(t,a)
-%\label{sys:SIR_age_structure_I} \\
-%(\partial_t+\partial_a)R(t,a) &=
-%\gamma(a)I(t,a)
-%\label{sys:SIR_age_structure_R}
-%\end{align}
-%\end{subequations}
-%}
-%
-%\frame{
-%Les conditions au bord sont donn\'ees par
-%\addtocounter{equation}{-1}\
-%\begin{subequations}
-%\setcounter{equation}{3}
-%\begin{align}
-%S(t,a_0)&=B \label{sys:SIR_age_structure_BCS} \\
-%I(t,a_0)&=0 \label{sys:SIR_age_structure_BCI} \\
-%R(t,a_0)&=0 \label{sys:SIR_age_structure_BCR} 
-%\end{align}
-%tandis que les conditions initiales sont
-%\begin{align}
-%S(0,a)&=\Phi(a) \label{sys:SIR_age_structure_ICS} \\
-%I(0,a)&=\Psi(a) \label{sys:SIR_age_structure_ICI} \\
-%R(0,a)&=0 \label{sys:SIR_age_structure_ICR} 
-%\end{align}
-%\end{subequations}
-%}
-%
-%\frame{
-%Le taux de transmission de la maladie, $\lambda(t,a)$, est d\'efini de
-%la fa\c{c}on suivante:
-%\[
-%\lambda(t,a)=r(a)\int_{a_0}^\infty \beta(a,s)\rho(a,s)
-%\frac{I(t,s)}{N(t,s)}ds
-%\]
-%where $r(a)$ est le nombre de contacts que font les individus d'\^age
-%$a$, par unit\'e de temps, $\beta(a,s)$ est la probabilit\'e de
-%transmission de la maladie entre un infectieux d'\^age $s$ et un
-%susceptible d'\^age $a$, $\rho(a,s)$ est le taux de rencontre entre
-%des personnes d'\^age $a$ et des personnes d'\^age $s$, et
-%$N(t,a)=S(t,a)+I(t,a)+R(t,a)$ est la distribution de population
-%totale. 
-%}
-%
-%
-%\frame{
-%Pour simplifier, on suppose que $\beta(a,s)$ est s\'eparable,
-%$\beta(a,s)=f(a)g(s)$, where $f(a)$ est la susceptibilit\'e des
-%individus d'\^age $a$ et $g(s)$ est la force d'infection des individus
-%d'\^age $s$. Ainsi, 
-%\begin{equation}\label{eq:beta_age_dep}
-%\lambda(t,a)=r(a)f(a)\int_{a_0}^\infty g(s)\rho(a,s)
-%\frac{I(t,s)}{N(t,s)}ds
-%\end{equation}
-%}
-%
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Analyse du mod\`ele SIR}
-%On trouve l'ESM en posant $I=0$. On trouve $(S,I,R)=(S^0(a),0,0)$,
-%avec
-%\[
-%S^0(a)=Be^{-M(a)} +e^{-M(a)}\int_{a_0}^a e^{M(x)}\Lambda(x)dx
-%\]
-%where
-%\[
-%M(a)=\int_{a_0}^a \mu(s)ds
-%\]
-%On consid\`ere la solution perturb\'ee $u(t,a)=S(t,a)-S^0(a)$.
-%Supposons que le taux de rencontre soit s\'eparable,
-%$\rho(a,s)=p_1(a)p_2(s)$. 
-%}
-%
-%
-%\frame{
-%Alors
-%\[
-%\tilde\lambda(t,a):=r(a)f(a)p_1(a)\int_{a_0}^\infty
-%\frac{g(s)p_2(s)}{S^0(s)}I(t,s) ds \simeq \lambda(t,a)
-%\]
-%et on obtient la linearisation
-%\begin{align*}
-%(\partial_t+\partial_a)u&=-\mu(a)u-\tilde\lambda(t,a)S^0(a) \\
-%(\partial_t+\partial_a)I&=-(\mu(a)+\gamma(a)+\delta(a))I
-%+\tilde\lambda(t,a)S^0(a) \\
-%(\partial_t+\partial_a)R&=\gamma(a)I
-%\end{align*}
-%}
-%
-%
-%\frame{
-%Posons 
-%\[
-%u(t,a)=\tilde u(a)e^{c(t-a)}\quad\quad I(t,a)=\tilde I(a)e^{c(t-a)}
-%\]
-%Alors, si l'on note
-%\[
-%b(a)=S^0(a)r(a)f(a)p_1(a)\quad\quad W=\int_{a_0}^\infty
-%\frac{g(s)p_2(s)}{S^0(s)}e^{-cs}\tilde I(s)ds
-%\]
-%}
-%
-%
-%\frame{
-%on a
-%\begin{align*}
-%\frac{d\tilde u(a)}{da} &= -\mu(a)\tilde u(a)-b(a)e^{ca}W \\
-%\frac{d\tilde I(a)}{da} &= -(\mu(a)+\gamma(a))\tilde I(a)+b(a)e^{ca}W
-%\end{align*}
-%\[
-%\tilde I(a)=We^{-M(a)-\Gamma(a)}\int_{a_0}^\infty
-%e^{M(s)+\Gamma(s)}b(s)e^{cs}ds 
-%\]
-%where $\Gamma(a)=\int_{a_0}^a\gamma(s)ds$. Par cons\'equent,
-%\[
-%W=W\int_{a_0}^\infty \frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
-%\int_{a_0}^s e^{M(v)+\Gamma(v)}b(v)e^{-c(s-v)}dvds
-%\]
-%}
-%
-%\frame{
-%Soit alors
-%\[
-%H(c):=\int_{a_0}^\infty \frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
-%\int_{a_0}^s e^{M(v)+\Gamma(v)}b(v)e^{-c(s-v)}dvds
-%\]
-%On recherche les racines de l'equation caract\'eristique $H(c)=1$.
-%On a
-%{\footnotesize 
-%\[
-%\frac{dH(c)}{dc}=-\int_{a_0}^\infty 
-%\frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
-%\int_{a_0}^s (s-v)e^{M(v)+\Gamma(v)}b(v)e^{-c(s-v)}dvds<0
-%\]}
-%ce qui implique que $H(c)$ est une fonction d\'ecroissante. Soit $c^*$
-%une solution r\'eelle de $H(c)=1$. Si $H(0)>1$, alors $c>0$, tandis
-%que si $H(0)<1$, $c<0$.
-%}
-%
-%
-%\frame{
-%Supposons que $c^*=\alpha+i\beta$ soit une racine complexe de
-%$H(c)=1$. Alors, 
-%{\footnotesize
-%\[
-%\Re H(c)=
-%\int_{a_0}^\infty \frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
-%\int_{a_0}^s e^{M(v)+\Gamma(v)}b(v)e^{-\alpha(s-v)}\cos\beta(s-v)dvds
-%\]}
-%Par cons\'equent, $H(0)<1$ entra\^ine que $\alpha<0$.
-%
-%Donc $H(0)=1$ est un seuil, $\Rzero=H(0)$.
-%}
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%\frame{\frametitle{Analyse par les semigroupes: mod\`ele SIA}
-%Pour illustrer l'utilisation de la m\'ethode des semigroupes dans ce
-%contexte, on consid\`ere ici un mod\`ele SIA d\'ecrivant l'\'evolution
-%du HIV/SIDA. Le mod\`ele est pratiquement \'equivalent \`a
-%\eqref{sys:SIR_age_structure}, \`a quelques diff\'erences pr\`es. 
-%On suppose que la classe $I$ contient les individus porteurs du HIV,
-%mais non encore en stade SIDA. Il n'y a pas de mortalit\'e
-%sp\'ecifique \`a cet \'etat. Le taux $\gamma(a)$ repr\'esente ici la
-%progression vers le stade SIDA. Lorsqu'un individu est en stade SIDA
-%(dans la classe A, pour AIDS), il est soumis \`a une mortalit\'e
-%sp\'ecifique.
-%}
-%
-%
-%\frame{
-%\begin{subequations}\label{sys:SIA_age_structure}
-%\begin{align}
-%(\partial_t+\partial_a)S(t,a) &=
-%\Lambda(a)-(d(a)+\lambda(t,a))S(t,a)
-%\label{sys:SIA_age_structure_S} \\
-%(\partial_t+\partial_a)I(t,a) &=
-%-(d(a)+\gamma(a))I(t,a)+\lambda(t,a)S(t,a)
-%\label{sys:SIA_age_structure_I} \\
-%(\partial_t+\partial_a)A(t,a) &=
-%\gamma(a)A(t,a)-(d(a)+\delta(a))A(t,a)
-%\label{sys:SIA_age_structure_R}
-%\end{align}
-%\end{subequations}
-%On suppose que
-%\[
-%\lambda(t,a)=h(a)\int_{a_0}^\infty \rho(a,a')
-%\frac{I(t,a')}{T(t,a')}da'
-%\]
-%where $T(t,a')=S(t,a')+I(t,a')$. 
-%}
-%
-%\frame{
-%Un individu en stade SIDA n'a plus de contacts. Donc la
-%dynamique de $S$ et de $I$ ne d\'epend pas de la dynamique de $A$, et
-%l'on consid\`ere \`a pr\'esent le syst\`eme consistant de ces deux
-%premi\`eres variables.
-%Soit $\omega$ l'\^age maximum. 
-%Le syst\`eme en proportions prend la forme
-%\[
-%x:=\frac ST\quad\quad y:=\frac IT
-%\]
-%Puisque l'on ne consid\`ere que $S$ et $I$, on a $x+y=1$, et par
-%cons\'equent le syst\`eme s'\'ecrit
-%\begin{subequations}\label{sys:SIA_age_struct}
-%\begin{align}
-%(\partial_t+\partial_a)y(t,a)&=(1-y)(-\gamma(a)y+\lambda(t,a)) \\
-%\lambda(t,a)&=h(a)\int_0^\omega p(a,a')y(t,a')da'
-%\end{align}
-%\end{subequations}
-%}
-%
-%
-%
-%\frame{
-%Soit $X=\{f\in L^1(0,\omega)\}$. On d\'efinit alors
-%\[
-%(Af)(a):=-\frac{d}{da}f(a),\quad f\in D(A)
-%\]
-%avec $D(a)=\{f\in X,\; f\textrm{ est absolument continue, }f(0)=0\}$,
-%et  
-%\[
-%F(f)(a)\equiv (1-f(a))\left(
-%-\gamma(a)f(a)+h(a)\int_0^\omega p(a,a')f(a')da'\right)
-%\]
-%un op\'erateur de $X\to X$. 
-%Soit $\Omega=\{f\in X,\; 0\leq f\leq 1\textrm{ p.p.}\}$. Alors
-%\eqref{sys:SIA_age_struct} s'\'ecrit
-%\begin{align*}
-%\frac{dy}{dt}&= Ay+F(y) \\
-%y(0)&= y_0\in\Omega
-%\end{align*}
-%}
-%
-%
-%
-%\frame{
-%Soit
-%\[
-%(\mathcal{B}f)(a)=-\frac{df(a)}{da}-\gamma(a)f(a) 
-%\quad\quad
-%(\mathcal{P}f)(a)=h(a)\int_0^\omega p(a,a')f(a')da'
-%\]
-%On a 
-%\[
-%(\partial_t+\partial_a)y=-\gamma(a)y+h(a)\int_0^\omega
-%\rho(a,a')y(t,a')da' \Leftrightarrow
-%\frac{dy}{dt}=(\mathcal{B}+\mathcal{P})y
-%\]
-%$\mathcal{B}+\mathcal{P}$ g\'en\`ere un $C_0$-semigroupe $T(t)$,
-%$t\geq 0$, qui est eventually uniform\'ement continu. 
-%%Les bornes
-%%de croissance de $T$ sont donn\'e par les bornes spectrales de
-%%$\mathcal{B}+\mathcal{P}$. 
-%}
-%
-%
-%\frame{
-%La r\'esolvante de
-%$\mathcal{B}+\mathcal{P}$ est
-%\[
-%R(\lambda;\mathcal{B}+\mathcal{P})=(S_\lambda-I)^{-1}G
-%\]
-%avec
-%\[
-%(Gf)(a)=\int_0^a 
-%e^{-\lambda(a-\sigma)}\frac{\Gamma(a)}{\Gamma(\sigma)}
-%f(\sigma)d\sigma
-%\]
-%\[
-%(S_\lambda f)(a)=\int_0^\omega\int_0^a 
-%e^{-\lambda(a-\sigma)}\frac{\Gamma(a)}{\Gamma(\sigma)}
-%\rho(\sigma,\xi)d\sigma f(\xi)d\xi
-%\]
-%where l'on a not\'e
-%\[
-%\Gamma(a)=\exp\left(-\int_0^a \gamma(a')da'\right)
-%\]
-%}
-%
-%
-%\frame{\frametitle{$\Rzero$}
-%$\Rzero$ est le rayon spectral de l'op\'erateur
-%\[
-%(Sf)(a)=\int_0^\omega\int_0^a \frac{\Gamma(a)}{\Gamma(\sigma)}
-%h(\sigma)p(\sigma,\xi)d\sigma f(\xi)d\xi
-%\]
-%}
-%
-%
-%\frame{\frametitle{Formation des paires}
-%$\rho(t,a,a')$ proportion de partenaires d'un individu d'\^age $a$ qui
-%sont d'\^age $a'$.
-%
-%$r(t,a)$ nombre moyen de partenaires qu'a un individu d'\^age $a$.
-%
-%$T(t,a)$ nombre total d'individus d'\^age $a$.
-%
-%\vfill
-%On doit v\'erifier les conditions suivantes.
-%\begin{itemize}
-%\item $0\leq\rho\leq 1$,
-%\item $\int_0^\infty \rho(t,a,a')da'=1$,
-%\item $\rho(t,a,a')r(t,a)T(t,a)=\rho(t,a',a)r(t,a')T(t,a')$,
-%\item $r(t,a)T(t,a)r(t,a')T(t,a')=0\Rightarrow \rho(t,a,a')=0$.
-%\end{itemize}
-%}
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%
-%\part{Propagation spatiale -- Cas EDP}
-%\frame{\frametitle{Propagation spatiale d'une \'epid\'emie}
-%Lopez et al, 1999. Propagation de vagues \'epid\'emiques when
-%l'infection est \`a courte port\'ee. 
-%\begin{itemize}
-%\item Mod\`eles SIS et SIR.
-%\item Consid\`erent une route de longueur $L$.
-%\end{itemize}
-%}
-%
-%\frame{\frametitle{Le mod\`ele SIR le long de la route}
-%{\footnotesize
-%\begin{subequations}\label{sys:SIS_spatial}
-%\begin{align}
-%\frac{\partial S(x,t)}{\partial t} &=
-%-\beta(x,t)S(x,t)-dS(x,t)+dN(x)+\lambda_1I(x,t) \\
-%\frac{\partial I(x,t)}{\partial t} &=
-%\lambda(x,t)S(x,t)-dI(x,t)-(\gamma_1+\gamma_2)I(x,t)
-%\label{eq:SIS_spatialI}\\ 
-%\frac{\partial R(x,t)}{\partial t} &=
-%\gamma_2I(x,t)-dR(x,t)
-%\end{align}
-%\end{subequations}}
-%where la force d'infection est
-%{\footnotesize
-%\begin{equation}\label{eq:SIS_spatial_lambda}
-%\lambda(x,t)=\frac 1N \int_0^L\beta(x,x')I(x,x')dx'
-%\end{equation}}
-%et la population totale le long de la route est
-%{\footnotesize
-%\[
-%N=\int_0^LN(x')dx'
-%\]}
-%}
-%
-%
-%\frame{
-%Prennons l'exemple du mod\`ele SIS ($\gamma_2=0,\gamma_1=\gamma$). On
-%r\'esoud \eqref{eq:SIS_spatialI} en terme de $\lambda$:
-%\begin{equation}\label{eq:SIS_spatial_calculI}
-%\begin{aligned}
-%I(x,t) &= \exp\left(-\int_0^t\lambda(x,s)-(d+\gamma)tds\right) \\
-%& \times \int_0^t \lambda(x,t')N(x)
-%e^{\int_0^{t'}\lambda(x,s)+(d+\gamma)t' ds}dt' \\
-%&+I(x,0)\exp\left(-\int_0^t \lambda(x,s)-(d+\gamma)tds\right)
-%\end{aligned}
-%\end{equation}
-%}
-%
-%\frame{
-%On remplace \eqref{eq:SIS_spatial_calculI} dans
-%\eqref{eq:SIS_spatial_lambda}: 
-%\[
-%\begin{aligned}
-%\lambda(x,t) &= 
-%\int_0^L \beta(x,x')n(x')
-%\int_0^t \lambda(x',t')
-%e^{-\int_{t'}^t \lambda(x',s)-(d+\gamma)(t-t')ds}dt'dx' \\
-%&+\int_0^L \beta(x,x')i(x',0)
-%e^{-\int_0^t \lambda(x',s)-(d+\gamma)t ds}dx'
-%\end{aligned}
-%\]
-%where $n(x)=N(x)/N$ et $i(x,t)=I(x,t)/N$. Sans d\'emographie ($d=0$):
-%\[
-%\begin{aligned}
-%\lambda(x,t) &= 
-%\int_0^L \beta(x,x')n(x')
-%\int_0^t \lambda(x',t')
-%e^{-\int_{t'}^t \lambda(x',s)-\gamma(t-t')ds}dt'dx' \\
-%&+\int_0^L \beta(x,x')i(x',0)
-%e^{-\int_0^t \lambda(x',s)-\gamma t ds}dx'
-%\end{aligned}
-%\]
-%}
-%
-%
-%\frame{
-%Le probl\`eme est donc sous la forme
-%\[
-%\mathbf{B}\lambda(x,t)=\lambda(x,t)
-%\]
-%Dans les deux cas, $\mathbf{B}$ est un op\'erateur de type Hammerstein
-%en $x$.
-%\begin{itemize}
-%\item Cas SIR: $\mathbf{B}$ est un op\'erateur de Volterra
-%  nonlin\'eaire en $t$. \imply Existence et unicit\'e des
-%  solutions. 
-%\item Cas SIS: $\mathbf{B}$ n'est pas un op\'erateur de Volterra
-%  nonlin\'eaire en $t$. Il y ressemble toutefois, et les auteurs
-%  etablissent l'existence et l'unicit\'e des solutions. 
-%\end{itemize}
-%}
-%
-%
-%\frame{
-%Dans les deux cas, on a propagation d'un front d'onde puis on approche
-%un \'etat d'\'equilibre. On a, dans le cas SIS,
-%\[
-%\lambda(x)=\lim_{t\to\infty}\mathbf{B}\lambda(x,t)
-%=\mathbf{B}_\infty\lambda(x)=
-%\int_0^L\beta(x,x')n(x')
-%\frac{\lambda(x',\infty)}{\lambda(x',\infty)+\gamma}
-%\]
-%qui ne d\'epend pas de $t$. Discutent alors de conditions faisant que
-%cette limite ne soit pas z\'ero, en cherchant les valeurs de $z$
-%telles que $\mathbf{B}_\infty\lambda(x)=z\lambda(x)$ ait une solution
-%positive. 
-%\vfill
-%Montrent qu'il existe un $z_{seuil}=\Rzero$ qui distingue entre
-%$\lambda(x)\equiv 0$ si $\Rzero<1$, et une solution positive unique si
-%$\Rzero>1$.
-%}
+\frame{\frametitle{Visualising and locating the bifurcation}
+From the nullcline equations, an EEP exists iff there exists an
+$I^\star\in(0,1]$ such that equations (\ref{eq:f_egal_g})-(\ref{eq:g(I)})
+hold.
+So we study the zeros of
+\[
+H(I)=\frac{1-1/\R_0-I}{1-\sigma} -
+\frac{(\phi(1-I)+\alpha d)(1-e^{-d\omega-\sigma\beta\omega I})}
+{\phi(1-e^{-d\omega-\sigma\beta\omega I})+d+\sigma\beta I}
+\]
+To state the problem in a formal way, let
+$\mathcal{A}=\{\alpha,\beta,\gamma,\omega,\phi,\sigma\}$ be the set of
+parameters of interest, and denote
+\begin{equation}
+H(I,\mathcal{A})=
+f(I)-g(I)
+\label{eq:H}
+\end{equation}
+to show the dependence on these parameters.
+}
+
+\frame{
+We proceed as follows.
+\begin{enumerate}
+\item Choose a parameter $a_i\in\mathcal{A}$.
+\item Fix all other $a_j$'s ($j\neq i$).
+\item Choose $a_{i,min}$, $a_{i,max}$ and
+ $\Delta a_i$ for $a_i$.
+\item For all
+  $a_{i,k}=a_{i,min}+k\Delta a_i$ ($k$
+  such that $a_{i,k}\leq a_{i,max}$), compute
+  $I^\star$ such that $H(I^\star,a_{i,k})=0$. \label{point1}
+\end{enumerate}
+Step~\ref{point1} is carried out using the {\sc MatLab} {\tt fzero}
+function.
+
+Further precision can be gained by showing that
+\[
+H(0)=\frac{\R_v-1}{(1-\sigma)\R_0}
+\]
+and that, for $\sigma<1$
+\[
+H(1)=-\frac{1}{(1-\sigma)\R_0}-\frac{\alpha
+d(1-e^{-d\omega-\sigma\beta\omega})}{\phi(1
+-e^{-d\omega-\sigma\beta\omega})+d+\sigma\beta}<0
+\]
+}
+
+\frame{
+Define $\R_c$ as previously. For $\R_0>1$ and
+$\R_v<1$, there are several possibilities.
+\begin{itemize}
+\item If $\R_v<\R_c$, then there is no EEP. $H(0)$ and $H(1)$
+ are strictly negative, and numerical simulations seem to indicate
+ that $H$ has no roots in $(0,1]$ (\emph{i.e.}, that $H<0$ on this
+ interval).
+\item If $\R_c<\R_v<1$, then there are endemic equilibria.
+ Here, since $H(0)$
+ and $H(1)$ are strictly negative, the only possibility is thus to
+ have an even number of zeros of $H$. Numerical simulations appear to
+ indicate that the number of endemic equilibria is 2.
+\end{itemize}
+In between these two situations $\R_v=\R_c$ and there is
+one endemic equilibrium $I^\star$. Using the same procedure as for the
+visualisation of the bifurcation, it is possible to compute
+$\R_c$ by finding the value $I^\star$ such that
+$H(I^\star,\mathcal{A})=0$ and $H'(I^\star,\mathcal{A})=0$, for a given
+parameter $a_i\in\mathcal{A}$.
+
+If $\R_v>1$ then $H(0)>0$ and so there is an odd number of endemic
+equilibria. Numerical simulations indicate that there is a unique
+EEP.
+}
+
+\frame{\frametitle{Numerical bifurcation analysis}
+Same parameter values as in ODE case, except that the
+constant waning time
+(the delay) $\omega$ has to be substituted for $\theta$. We take
+$\omega=1825$, \emph{i.e.}, corresponding to a 5 years waning time
+\vfill
+These parameters give $\R_0=8.3936$ and $\R_v(\phi)=0.8819$, which
+is in the range of the backward bifurcation since (using the above
+method) $\R_c(\phi)=0.8675$
+\vfill
+The bifurcation diagram is very like that depicted in
+earlier for the ODE. Numerical simulations of the DDE model
+(using {\tt dde23}) indicate that there are no additional
+bifurcations; solutions either go to the DFE or to the (larger) EEP
+}
+
+
+\frame{
+\begin{center}
+   \includegraphics[width=0.75\textwidth]{FIGS/bif_and_time}
+\end{center}
+(a) Values of $I^\star$ as a function of $\omega$ by solving $H(I,\mathcal{A})=0$ with $a_i=\omega$. (b) Value of $I(t)$ versus time, obtained by numerical integration of system \eqref{sys:SIVS_DDE} with initial data $I(t)=c$, for $t\in[-\omega,0]$, $\omega=1825$, $c$ varying from 0 to 1 by steps of 0.02
+}
+
+
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Age of infection}
+\frame{\frametitle{Age of infection}
+We have seen that infinite dimensionality could result from a detailed description (or an unspecified one) of the sojourn time in compartments
+\vfill
+We used age of vaccination to find the initial condition of system \eqref{sys:SIVS_general}
+\vfill
+Here we take a closer look at this type of model
+\vfill
+Originally, age of infection was introduced to account for differences in infectivity depending on the time since an individual became infected
+\vfill
+For instance, it is known that infectiousness of HIV positive patients vary as a function of time
+}
+
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Structuration in age}
+\frame{\frametitle{Age structure}
+Taking into account age can be important in some cases
+\vfill
+\begin{itemize}
+\item Demographic characteristics vary with age
+\item Interactions are in general more frequent between people of a similar age. They are also more frequent in younger individuals
+\item Some diseases attack preferentially younger individuals
+\item The immunity of individuals changes with age, so for instance, older people may be more susceptible to some diseases than younger people
+\end{itemize}
+\vfill
+This is based on courses given by Jia Li during a Banff summer school in 2004
+}
+
+\begin{frame}{Note on age}
+\defword{Chronological age}, as a structuring variable, is ``easier'' than other structuring variables
+\vfill
+Indeed, if $a$ is (chronological) age, then
+\[
+\frac{d}{dt}a = 1
+\]
+\end{frame}
+
+
+\frame{\frametitle{Formulation of an SIR model}
+Let $a$ be the age. Assume that natural death and recovery occur at the rates $\mu$ and $\gamma$, respectively, both dependent on $a$
+\vfill
+When an individual is sick, they are subject to disease-induced death at the rate $\delta(a)$
+\vfill
+Governing equations are
+\footnotesize
+\begin{subequations}\label{sys:SIR_age_structure}
+\begin{align}
+(\partial_t+\partial_a)S(t,a) &=
+\Lambda(a)-(\mu(a)+\lambda(t,a))S(t,a)
+\label{sys:SIR_age_structure_S} \\
+(\partial_t+\partial_a)I(t,a) &=
+-(\mu(a)+\gamma(a)+\delta(a))I(t,a)+\lambda(t,a)S(t,a)
+\label{sys:SIR_age_structure_I} \\
+(\partial_t+\partial_a)R(t,a) &=
+\gamma(a)I(t,a)
+\label{sys:SIR_age_structure_R}
+\end{align}
+\end{subequations}
+}
+
+\frame{
+Boundary conditions are
+\addtocounter{equation}{-1}\
+\begin{subequations}
+\setcounter{equation}{3}
+\begin{align}
+S(t,a_0)&=B \label{sys:SIR_age_structure_BCS} \\
+I(t,a_0)&=0 \label{sys:SIR_age_structure_BCI} \\
+R(t,a_0)&=0 \label{sys:SIR_age_structure_BCR}
+\end{align}
+while initial conditions take the form
+\begin{align}
+S(0,a)&=\Phi(a) \label{sys:SIR_age_structure_ICS} \\
+I(0,a)&=\Psi(a) \label{sys:SIR_age_structure_ICI} \\
+R(0,a)&=0 \label{sys:SIR_age_structure_ICR}
+\end{align}
+\end{subequations}
+}
+
+\begin{frame}{Force of infection}
+Transmission $\lambda(t,a)$ of the disease takes the form
+\[
+\lambda(t,a)=r(a)\int_{a_0}^\infty \beta(a,s)\rho(a,s)
+\frac{I(t,s)}{N(t,s)}ds
+\]
+where 
+\begin{itemize}
+\item $r(a)$ is the number of contacts by individuals of age $a$ per unit time
+\item $\beta(a,s)$ is the probability of disease transmission to a susceptible of age $a$ by an infectious of age $s$
+\item $\rho(a,s)$ is the meeting rate between people of age $a$ and people of age $s$
+\item $N(t,a)=S(t,a)+I(t,a)+R(t,a)$ is the distribution of total population
+\end{itemize}
+\end{frame}
+
+
+\frame{
+To simplify, assume that $\beta(a,s)$ is separable
+\[
+\beta(a,s)=f(a)g(s)
+\]
+where $f(a)$ is the susceptibility of individuals aged $a$ and $g(s)$ is the force of infection of individuals aged $s$
+\vfill
+Then
+\begin{equation}\label{eq:beta_age_dep}
+\lambda(t,a)=r(a)f(a)\int_{a_0}^\infty g(s)\rho(a,s)
+\frac{I(t,s)}{N(t,s)}ds
+\end{equation}
+}
+
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\frame{\frametitle{Analysis of the SIR model}
+We seek the DFE by setting $I=0$
+\vfill
+We find $(S,I,R)=(S^0(a),0,0)$ with
+\[
+S^0(a)=Be^{-M(a)} +e^{-M(a)}\int_{a_0}^a e^{M(x)}\Lambda(x)dx
+\]
+where
+\[
+M(a)=\int_{a_0}^a \mu(s)ds
+\]
+}
+
+
+\frame{
+Consider the perturbed solution $u(t,a)=S(t,a)-S^0(a)$. Assume that the meeting rate $\rho$ is also separable,
+\[
+\rho(a,s)=p_1(a)p_2(s)
+\]
+Then
+\[
+\tilde\lambda(t,a):=r(a)f(a)p_1(a)\int_{a_0}^\infty
+\frac{g(s)p_2(s)}{S^0(s)}I(t,s) ds \simeq \lambda(t,a)
+\]
+and we obtain the linearisation
+\begin{align*}
+(\partial_t+\partial_a)u&=-\mu(a)u-\tilde\lambda(t,a)S^0(a) \\
+(\partial_t+\partial_a)I&=-(\mu(a)+\gamma(a)+\delta(a))I
++\tilde\lambda(t,a)S^0(a) \\
+(\partial_t+\partial_a)R&=\gamma(a)I
+\end{align*}
+}
+
+
+\frame{
+Let
+\[
+u(t,a)=\tilde u(a)e^{c(t-a)}\quad\quad I(t,a)=\tilde I(a)e^{c(t-a)}
+\]
+and denote
+\[
+b(a)=S^0(a)r(a)f(a)p_1(a)\quad\quad W=\int_{a_0}^\infty
+\frac{g(s)p_2(s)}{S^0(s)}e^{-cs}\tilde I(s)ds
+\]
+}
+
+
+\frame{
+Then
+\begin{align*}
+\frac{d\tilde u(a)}{da} &= -\mu(a)\tilde u(a)-b(a)e^{ca}W \\
+\frac{d\tilde I(a)}{da} &= -(\mu(a)+\gamma(a))\tilde I(a)+b(a)e^{ca}W
+\end{align*}
+\[
+\tilde I(a)=We^{-M(a)-\Gamma(a)}\int_{a_0}^\infty
+e^{M(s)+\Gamma(s)}b(s)e^{cs}ds
+\]
+where $\Gamma(a)=\int_{a_0}^a\gamma(s)ds$
+\vfill
+Therefore
+\[
+W=W\int_{a_0}^\infty \frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
+\int_{a_0}^s e^{M(v)+\Gamma(v)}b(v)e^{-c(s-v)}dvds
+\]
+}
+
+\frame{
+Let then
+\[
+H(c):=\int_{a_0}^\infty \frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
+\int_{a_0}^s e^{M(v)+\Gamma(v)}b(v)e^{-c(s-v)}dvds
+\]
+\vfill
+We seek roots of the characteristic equation $H(c)=1$
+\vfill
+We have
+{\footnotesize
+\[
+\frac{dH(c)}{dc}=-\int_{a_0}^\infty
+\frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
+\int_{a_0}^s (s-v)e^{M(v)+\Gamma(v)}b(v)e^{-c(s-v)}dvds<0
+\]}
+implying that $H(c)$ is a decreasing function
+}
+
+
+\frame{
+\bbullet 
+Let $c^\star$ be a real solution to $H(c)=1$. If $H(0)>1$, then $c>0$, whereas if $H(0)<1$, $c<0$
+\vfill
+\bbullet
+Suppose that $c^\star=\alpha+i\beta$ is a complex root of $H(c)=1$. Then
+{\footnotesize
+\[
+\Re H(c)=
+\int_{a_0}^\infty \frac{g(s)p_2(s)}{S^0(s)}e^{-M(s)-\Gamma(s)}
+\int_{a_0}^s e^{M(v)+\Gamma(v)}b(v)e^{-\alpha(s-v)}\cos\beta(s-v)dvds
+\]}
+As a consequence, $H(0)<1$ $\implies$ $\alpha<0$
+\vfill
+So $H(0)=1$ is a threshold and we take $\R_0=H(0)$
+}
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\frame{\frametitle{Analyse par les semigroupes: mod\`ele SIA}
+Pour illustrer l'utilisation de la m\'ethode des semigroupes dans ce
+contexte, on consid\`ere ici un mod\`ele SIA d\'ecrivant l'\'evolution
+du HIV/SIDA. Le mod\`ele est pratiquement \'equivalent \`a
+\eqref{sys:SIR_age_structure}, \`a quelques diff\'erences pr\`es.
+On suppose que la classe $I$ contient les individus porteurs du HIV,
+mais non encore en stade SIDA. Il n'y a pas de mortalit\'e
+sp\'ecifique \`a cet \'etat. Le taux $\gamma(a)$ repr\'esente ici la
+progression vers le stade SIDA. Lorsqu'un individu est en stade SIDA
+(dans la classe A, pour AIDS), il est soumis \`a une mortalit\'e
+sp\'ecifique.
+}
+
+
+\frame{
+\begin{subequations}\label{sys:SIA_age_structure}
+\begin{align}
+(\partial_t+\partial_a)S(t,a) &=
+\Lambda(a)-(d(a)+\lambda(t,a))S(t,a)
+\label{sys:SIA_age_structure_S} \\
+(\partial_t+\partial_a)I(t,a) &=
+-(d(a)+\gamma(a))I(t,a)+\lambda(t,a)S(t,a)
+\label{sys:SIA_age_structure_I} \\
+(\partial_t+\partial_a)A(t,a) &=
+\gamma(a)A(t,a)-(d(a)+\delta(a))A(t,a)
+\label{sys:SIA_age_structure_R}
+\end{align}
+\end{subequations}
+On suppose que
+\[
+\lambda(t,a)=h(a)\int_{a_0}^\infty \rho(a,a')
+\frac{I(t,a')}{T(t,a')}da'
+\]
+where $T(t,a')=S(t,a')+I(t,a')$.
+}
+
+\frame{
+Un individu en stade SIDA n'a plus de contacts. Donc la
+dynamique de $S$ et de $I$ ne d\'epend pas de la dynamique de $A$, et
+l'on consid\`ere \`a pr\'esent le syst\`eme consistant de ces deux
+premi\`eres variables.
+Soit $\omega$ l'\^age maximum.
+Le syst\`eme en proportions prend la forme
+\[
+x:=\frac ST\quad\quad y:=\frac IT
+\]
+Puisque l'on ne consid\`ere que $S$ et $I$, on a $x+y=1$, et par
+cons\'equent le syst\`eme s'\'ecrit
+\begin{subequations}\label{sys:SIA_age_struct}
+\begin{align}
+(\partial_t+\partial_a)y(t,a)&=(1-y)(-\gamma(a)y+\lambda(t,a)) \\
+\lambda(t,a)&=h(a)\int_0^\omega p(a,a')y(t,a')da'
+\end{align}
+\end{subequations}
+}
+
+
+
+\frame{
+Soit $X=\{f\in L^1(0,\omega)\}$. On d\'efinit alors
+\[
+(Af)(a):=-\frac{d}{da}f(a),\quad f\in D(A)
+\]
+avec $D(a)=\{f\in X,\; f\textrm{ est absolument continue, }f(0)=0\}$,
+et
+\[
+F(f)(a)\equiv (1-f(a))\left(
+-\gamma(a)f(a)+h(a)\int_0^\omega p(a,a')f(a')da'\right)
+\]
+un op\'erateur de $X\to X$.
+Soit $\Omega=\{f\in X,\; 0\leq f\leq 1\textrm{ p.p.}\}$. Alors
+\eqref{sys:SIA_age_struct} s'\'ecrit
+\begin{align*}
+\frac{dy}{dt}&= Ay+F(y) \\
+y(0)&= y_0\in\Omega
+\end{align*}
+}
+
+
+
+\frame{
+Soit
+\[
+(\mathcal{B}f)(a)=-\frac{df(a)}{da}-\gamma(a)f(a)
+\quad\quad
+(\mathcal{P}f)(a)=h(a)\int_0^\omega p(a,a')f(a')da'
+\]
+On a
+\[
+(\partial_t+\partial_a)y=-\gamma(a)y+h(a)\int_0^\omega
+\rho(a,a')y(t,a')da' \Leftrightarrow
+\frac{dy}{dt}=(\mathcal{B}+\mathcal{P})y
+\]
+$\mathcal{B}+\mathcal{P}$ g\'en\`ere un $C_0$-semigroupe $T(t)$,
+$t\geq 0$, qui est eventually uniform\'ement continu.
+%Les bornes
+%de croissance de $T$ sont donn\'e par les bornes spectrales de
+%$\mathcal{B}+\mathcal{P}$.
+}
+
+
+\frame{
+La r\'esolvante de
+$\mathcal{B}+\mathcal{P}$ est
+\[
+R(\lambda;\mathcal{B}+\mathcal{P})=(S_\lambda-I)^{-1}G
+\]
+avec
+\[
+(Gf)(a)=\int_0^a
+e^{-\lambda(a-\sigma)}\frac{\Gamma(a)}{\Gamma(\sigma)}
+f(\sigma)d\sigma
+\]
+\[
+(S_\lambda f)(a)=\int_0^\omega\int_0^a
+e^{-\lambda(a-\sigma)}\frac{\Gamma(a)}{\Gamma(\sigma)}
+\rho(\sigma,\xi)d\sigma f(\xi)d\xi
+\]
+where l'on a not\'e
+\[
+\Gamma(a)=\exp\left(-\int_0^a \gamma(a')da'\right)
+\]
+}
+
+
+\frame{\frametitle{$\R_0$}
+$\R_0$ est le rayon spectral de l'op\'erateur
+\[
+(Sf)(a)=\int_0^\omega\int_0^a \frac{\Gamma(a)}{\Gamma(\sigma)}
+h(\sigma)p(\sigma,\xi)d\sigma f(\xi)d\xi
+\]
+}
+
+
+\frame{\frametitle{Formation des paires}
+$\rho(t,a,a')$ proportion de partenaires d'un individu d'\^age $a$ qui
+sont d'\^age $a'$.
+
+$r(t,a)$ nombre moyen de partenaires qu'a un individu d'\^age $a$.
+
+$T(t,a)$ nombre total d'individus d'\^age $a$.
+
+\vfill
+On doit v\'erifier les conditions suivantes.
+\begin{itemize}
+\item $0\leq\rho\leq 1$,
+\item $\int_0^\infty \rho(t,a,a')da'=1$,
+\item $\rho(t,a,a')r(t,a)T(t,a)=\rho(t,a',a)r(t,a')T(t,a')$,
+\item $r(t,a)T(t,a)r(t,a')T(t,a')=0\Rightarrow \rho(t,a,a')=0$.
+\end{itemize}
+}
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Spatial propagation}
+
+\frame{\frametitle{Spatial spread of an epidemic}
+Lopez et al, 1999. Propagation of epidemic waves when infection happens within a short distance
+\vfill
+\begin{itemize}
+\item SIS and SIR models
+\item Consider a road of length $L$
+\item $S(x,t)$, $I(x,t)$ and (when relevant) $R(x,t)$ are the densities of individuals in the different compartments at location $x\in[0,L]$ at time $t$
+\item For simplicity, denote 
+\[
+\frac{\partial}{\partial t}X(x,t) = X_t(x,t) 
+\]
+\end{itemize}
+}
+
+\frame{\frametitle{The SIR model on the road}
+\begin{subequations}\label{sys:SIRS_spatial}
+\begin{align}
+S_t(x,t) &= -\beta(x,t)S(x,t)-dS(x,t)+dN(x)+\lambda_1I(x,t) 
+\label{sys:SIRS_spatial_S} \\
+I_t(x,t) &= \lambda(x,t)S(x,t)-dI(x,t)-(\gamma_1+\gamma_2)I(x,t)
+\label{sys:SIRS_spatial_I} \\
+R_t(x,t) &= \gamma_2I(x,t)-dR(x,t)
+\end{align}
+where the force of infection is
+\begin{equation}\label{sys:SIRS_spatial_lambda}
+\lambda(x,t)=\frac 1N \int_0^L\beta(x,x')I(x,x')dx'
+\end{equation}
+and the total population along the road is
+\begin{equation}
+N=\int_0^LN(x')dx'
+\end{equation}
+\end{subequations}
+}
+
+
+\frame{
+Take the SIS model as an example ($\gamma_2=0,\gamma_1=\gamma$). Solve \eqref{sys:SIRS_spatial_I} in terms of $\lambda$:
+\begin{equation}\label{sys:SIS_spatial_compute_I}
+\begin{aligned}
+I(x,t) &= \exp\left(-\int_0^t\lambda(x,s)-(d+\gamma)tds\right) \\
+& \times \int_0^t \lambda(x,t')N(x)
+e^{\int_0^{t'}\lambda(x,s)+(d+\gamma)t' ds}dt' \\
+&+I(x,0)\exp\left(-\int_0^t \lambda(x,s)-(d+\gamma)tds\right)
+\end{aligned}
+\end{equation}
+}
+
+\frame{
+Substitute \eqref{sys:SIS_spatial_compute_I} into \eqref{sys:SIRS_spatial_lambda}
+\[
+\begin{aligned}
+\lambda(x,t) &=
+\int_0^L \beta(x,x')n(x')
+\int_0^t \lambda(x',t')
+e^{-\int_{t'}^t \lambda(x',s)-(d+\gamma)(t-t')ds}dt'dx' \\
+&+\int_0^L \beta(x,x')i(x',0)
+e^{-\int_0^t \lambda(x',s)-(d+\gamma)t ds}dx'
+\end{aligned}
+\]
+where $n(x)=N(x)/N$ and $i(x,t)=I(x,t)/N$. Without demography ($d=0$):
+\[
+\begin{aligned}
+\lambda(x,t) &=
+\int_0^L \beta(x,x')n(x')
+\int_0^t \lambda(x',t')
+e^{-\int_{t'}^t \lambda(x',s)-\gamma(t-t')ds}dt'dx' \\
+&\quad +\int_0^L \beta(x,x')i(x',0)
+e^{-\int_0^t \lambda(x',s)-\gamma t ds}dx'
+\end{aligned}
+\]
+}
+
+
+\frame{
+Thus the problem is in the form
+\[
+\bB\lambda(x,t)=\lambda(x,t)
+\]
+\vfill
+In both cases, $\bB$ is a Hammerstein-type operator in $x$
+\begin{itemize}
+\item SIR case: $\bB$ is a nonlinear Volterra operator in $t$ \imply existence and uniqueness of solutions
+\item SIS case: $\bB$ is not a nonlinear Volterra operator in $t$. However, it resembles one and the authors establish existence and uniqueness of solutions
+\end{itemize}
+}
+
+
+\frame{
+Dans les deux cas, on a propagation d'un front d'onde puis on approche
+un \'etat d'\'equilibre. On a, dans le cas SIS,
+\[
+\lambda(x)=\lim_{t\to\infty}\bB\lambda(x,t)
+=\bB_\infty\lambda(x)=
+\int_0^L\beta(x,x')n(x')
+\frac{\lambda(x',\infty)}{\lambda(x',\infty)+\gamma}
+\]
+qui ne d\'epend pas de $t$. Discutent alors de conditions faisant que
+cette limite ne soit pas z\'ero, en cherchant les valeurs de $z$
+telles que $\bB_\infty\lambda(x)=z\lambda(x)$ ait une solution
+positive.
+\vfill
+Montrent qu'il existe un $z_{seuil}=\R_0$ qui distingue entre
+$\lambda(x)\equiv 0$ si $\R_0<1$, et une solution positive unique si
+$\R_0>1$.
+}
 
 
 \end{document}

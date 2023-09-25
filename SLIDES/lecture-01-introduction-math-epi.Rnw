@@ -4,7 +4,7 @@
 \include{slides_setup_nonLightBoard_whiteBG.tex}
 
 \title{Introduction to mathematical epidemiology}
-\subtitle{Lecture 01}
+\subtitle{Durban -- Lecture 01}
 \author{Julien Arino}
 \date{September 2023}
 
@@ -24,10 +24,14 @@ plot_blackBG = FALSE
 \end{frame}
 \addtocounter{page}{-1}
 
-\begin{frame}
+% The outline page
+{
+\setbeamercolor{background canvas}{bg=outline_colour}
+\begin{frame}{Outline}
     \tableofcontents[hideallsubsections]
 \end{frame}
 \addtocounter{page}{-1}
+}
 
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
@@ -37,123 +41,123 @@ plot_blackBG = FALSE
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
-\section{Epidemics}
-
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-\subsection{General historical remarks}
-\begin{frame}{Among the first events recorded}
-- Epidemic events are among the first events recorded in History
-\vfill
-- Indeed their effects were devastating at a time when medicine virtually did not exist and thus were easily observed
-\end{frame}
-
-\begin{frame}{First known epidemics (\href{https://en.wikipedia.org/wiki/List_of_epidemics}{from Wikipedia})}
-
-\footnotesize
-\begin{tabular}{p{1.5cm}p{1.5cm}p{2cm}p{2cm}p{2cm}}
-Event & Date & Location & Disease & Death toll (estimate) \\
-\hline
-Plague of Megiddo & 1350 BCE & Megiddo, land of Canaan & Unknown & Unknown \\
-\href{https://en.wikipedia.org/wiki/Plague_of_Athens}{Plague of Athens} & 429–426 BCE & Greece, Libya, Egypt, Ethiopia & Possibly typhus, typhoid fever or VHF &  75,000–100,000 \\
-\href{https://en.wikipedia.org/wiki/412_BC_epidemic}{412 BCE epidemic} & 412 BCE & Greece, Roman Republic & Possibly influenza & Unknown
-\end{tabular}
-% | [Antonine Plague](https://en.wikipedia.org/wiki/Antonine_Plague) | 165–180 CE (possibly up to 190 CE) | Roman Empire | Possibly smallpox | 5–10 million |
-% | Jian'an Plague | 217 CE | Han dynasty | Possibly typhoid fever or VHF | Unknown |
-% | [Plague of Cyprian](https://en.wikipedia.org/wiki/Plague_of_Cyprian) | 250–266 CE | Europe | Possibly smallpox | Unknown |
-% | [Plague of Justinian](https://en.wikipedia.org/wiki/Plague_of_Justinian) (1st plague pandemic) | 541–549 CE | Europe and West Asia | Bubonic plague | 15–100 million (25–60% of population of Europe) | 
-% | [Roman Plague of 590](https://en.wikipedia.org/wiki/Roman_Plague_of_590) (1st plague pandemic) | 590 CE | Rome, Byzantine Empire | Bubonic plague | Unknown |
-% | [Plague of Sheroe](https://en.wikipedia.org/wiki/Plague_of_Sheroe) (1st plague pandemic) | 627–628 CE | Bilad al-Sham | Bubonic plague | 25,000+ |
-% | [Plague of Amwas](https://en.wikipedia.org/wiki/Plague_of_Amwas) (1st plague pandemic) | 638–639 CE | Byzantine Empire, West Asia, Africa | Bubonic plague | 25,000+ |
-% | [Plague of 664](https://en.wikipedia.org/wiki/Plague_of_664) (1st plague pandemic)  | 664–689 CE | British Isles | Bubonic plague | Unknown |
-% | Plague of 698–701 (1st plague pandemic) | 698–701 CE | Byzantine Empire, West Asia, Syria, Mesopotamia | Bubonic plague |Unknown |
-% | [735–737 Japanese smallpox epidemic](https://en.wikipedia.org/wiki/735%E2%80%93737_Japanese_smallpox_epidemic) | 735–737 CE | Japan | Smallpox | 2 million (approx. 1/3 of Japanese population) | 
-% | Plague of 746–747 (1st plague pandemic) | 746–747 CE | Byzantine Empire, West Asia, Africa | Bubonic plague |Unknown |
-\end{frame}
-
-\begin{frame}{Epidemics with major human cost}
-
-    % | Rang | Épidémie/pandémie | Maladie | Coût humain | Mortalité globale | Mortalité régionale | Date | Lieux |
-    % |:\end{frame}
-    
-    
-    % \begin{frame}
-    % :|\end{frame}
-    
-    
-    % \begin{frame}
-    % |\end{frame}
-    
-    
-    % \begin{frame}
-    % |---|---|---|:---:|---|
-    % | 1 | Grande peste | Peste bubonique | 75-200 M |17-54% | 30-60% de la population européenne | 1346-1353 | Europe, Asie et Afrique du Nord |
-    % | 2 | Grippe espagnole | Influenza A/H1N1 |  17-100 M |1-5.4% | | 1918-1920 | Monde |
-    % | 3 | Peste de Justinien | Peste bubonique | 15-100 M |7-56% | 25-60% de la population Européenne | 541-549 |Afrique du Nord, Europe et Asie de l'Est |
-    % | 4 | VIH/SIDA | VIH/SIDA | 36.3 M (en 2020) | Changement population totale trop important pour calculer | | 1981-présent | Monde |
-    % | 5 | COVID-19 | SARS-CoV-2 | 6.3-25 M (au 21 mai 2022) | 0.1-0.3% || 2019-présent | Monde |
-    % | 6 | 3ème pandémie de peste | Peste bubonique | 12-15 M | | | 1855-1960 | Monde |
-    % | 7 | Épidémie de Cocoliztli de 1545-1548 | Cocoliztli | 5-15 M | 1-3% | 27-80% de la population du Mexique | 1545-1548 | Mexique |
-    % | 8 | Peste Antonine | Variole ou rougeole | 5-10 M | 3-6 | 25-33% de la population Romaine | 165-180 (peut être 190) | Empire Romain |
-    % | 9 | Épidémie de variole du Mexique de 1520 | Variole | 5-8 M | 1-2% | 23-37% de la population du Mexique |1519-1520 | Mexique |
-    % | 10 | Épidémie de typhus de Russie de 1918-1922 | Typhus | 2-3 M | 0.1-0.16% | 1-1.6% de la population Russe |1918-1922 | URSS |
-    % | 11 | Pandémie d'influenza de 1957-1958 | Influenza A/H2N2 | 1-4 M | 0.03–0.1%| | 1957-1958 | Monde |
-    % | 12 | Grippe de Hong Kong | Influenza A/H3N2 | 1-4 M | 0.03-0.1% | | 1968-1969 | Monde |
-    % | 13 | Épidémie de Cocoliztli de 1576 | Cocoliztli | 2-2.5 M | 0.4-0.5% | 50% de la population du Mexique | 1576-1580 | Mexique |
-    % | 14 | Épidémie japonaise de variole de 735-737 | Variole | 2 M | 1% | 33% de la population du Japon | 735-737 | Japon |
-    % | 15 | Peste perse de 1772-1773 | Peste bubonique | 2 M | 0.2–0.3% | | 1772-1773 | Perse |
-    % | 16 | Peste de Naples (1656) | Peste bubonique | 1.25 M | 0.2% | | 1656-1658 | Sud de l'Italie |
-    % | 17 | Pandémie de choléra de 1846-1860 | Choléra | 1+ M | 0.08% | | 1846-1860 | Monde |
-    % | 18 | Peste italienne de 1629-1631 | Peste bubonique |1 M | 0.2% | | 1629-1631 | Italie |
-    % | 19 | Pandémie de grippe de 1889-1890 |Influenza (en doute) | 1 M | 0.07% | | 1889-1890 | Monde |
-    
-\end{frame}
-    
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-\subsection{Unfortunately epidemics are not yet historical}
-\begin{frame}{``Forgotten'' killers}
-\bbullet Tuberculosis (TB). In 2020, estimated 10 M cases of active TB, leading to 1.5 M deaths
-\vfill
-\bbullet Malaria: 229 M cases and 409,000 deaths in 2019
-\end{frame}
-    
-    
-\begin{frame}{Neglected tropical diseases (NTD)}
-Often endemic diseases, sometimes major causes of death, but out of sight of rich countries. De \href{https://fr.wikipedia.org/wiki/Maladies_tropicales_négligées}{Wikipedia}, sachant que la liste précise varie selon les auteurs :
-    
-    % <style scoped>
-    % table {
-    %     height: 100%;
-    %     width: 100%;
-    %     font-size: 20px;
-    % }
-    % </style>
-    
-    % | | | | 
-    % |---|---|---|
-    % | [Ulcère de Buruli](https://fr.wikipedia.org/wiki/Ulc%C3%A8re_de_Buruli) | [Maladie de Chagas](https://fr.wikipedia.org/wiki/Maladie_de_Chagas) | Dengue & Chikungunya | 
-    % | [Dracunculose](https://fr.wikipedia.org/wiki/Dracunculose) | Echinococcosis | Yaws |
-    % | Fascioliasis | [Trypanosomiase](https://fr.wikipedia.org/wiki/Maladie_du_sommeil) | [Leishmaniose](https://fr.wikipedia.org/wiki/Leishmaniose) | 
-    % | [Lèpre](https://fr.wikipedia.org/wiki/L%C3%A8pre) | [Filariose lymphatique](https://fr.wikipedia.org/wiki/Filariose_de_Bancroft) | Onchocerciasis |
-    % | Rabies | Schistosomiasis | Soil-transmitted helminthiasis | 
-    % Cysticercosis | Trachoma | Scabies and other ectoparasites |
-    % | Snakebite envenoming | Mycetoma and deep mycoses |
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-\subsection{A few examples}
-
-
-\begin{frame}{The Black Death}
-\end{frame}
-
-\begin{frame}{The British Plague of 1547}
-\end{frame}
-
-\begin{frame}{The Plague of Marseille of 1720}
-\end{frame}
+% \section{Epidemics}
+% 
+% %%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%
+% \subsection{General historical remarks}
+% \begin{frame}{Among the first events recorded}
+% - Epidemic events are among the first events recorded in History
+% \vfill
+% - Indeed their effects were devastating at a time when medicine virtually did not exist and thus were easily observed
+% \end{frame}
+% 
+% \begin{frame}{First known epidemics (\href{https://en.wikipedia.org/wiki/List_of_epidemics}{from Wikipedia})}
+% 
+% \footnotesize
+% \begin{tabular}{p{1.5cm}p{1.5cm}p{2cm}p{2cm}p{2cm}}
+% Event & Date & Location & Disease & Death toll (estimate) \\
+% \hline
+% Plague of Megiddo & 1350 BCE & Megiddo, land of Canaan & Unknown & Unknown \\
+% \href{https://en.wikipedia.org/wiki/Plague_of_Athens}{Plague of Athens} & 429–426 BCE & Greece, Libya, Egypt, Ethiopia & Possibly typhus, typhoid fever or VHF &  75,000–100,000 \\
+% \href{https://en.wikipedia.org/wiki/412_BC_epidemic}{412 BCE epidemic} & 412 BCE & Greece, Roman Republic & Possibly influenza & Unknown
+% \end{tabular}
+% % | [Antonine Plague](https://en.wikipedia.org/wiki/Antonine_Plague) | 165–180 CE (possibly up to 190 CE) | Roman Empire | Possibly smallpox | 5–10 million |
+% % | Jian'an Plague | 217 CE | Han dynasty | Possibly typhoid fever or VHF | Unknown |
+% % | [Plague of Cyprian](https://en.wikipedia.org/wiki/Plague_of_Cyprian) | 250–266 CE | Europe | Possibly smallpox | Unknown |
+% % | [Plague of Justinian](https://en.wikipedia.org/wiki/Plague_of_Justinian) (1st plague pandemic) | 541–549 CE | Europe and West Asia | Bubonic plague | 15–100 million (25–60% of population of Europe) | 
+% % | [Roman Plague of 590](https://en.wikipedia.org/wiki/Roman_Plague_of_590) (1st plague pandemic) | 590 CE | Rome, Byzantine Empire | Bubonic plague | Unknown |
+% % | [Plague of Sheroe](https://en.wikipedia.org/wiki/Plague_of_Sheroe) (1st plague pandemic) | 627–628 CE | Bilad al-Sham | Bubonic plague | 25,000+ |
+% % | [Plague of Amwas](https://en.wikipedia.org/wiki/Plague_of_Amwas) (1st plague pandemic) | 638–639 CE | Byzantine Empire, West Asia, Africa | Bubonic plague | 25,000+ |
+% % | [Plague of 664](https://en.wikipedia.org/wiki/Plague_of_664) (1st plague pandemic)  | 664–689 CE | British Isles | Bubonic plague | Unknown |
+% % | Plague of 698–701 (1st plague pandemic) | 698–701 CE | Byzantine Empire, West Asia, Syria, Mesopotamia | Bubonic plague |Unknown |
+% % | [735–737 Japanese smallpox epidemic](https://en.wikipedia.org/wiki/735%E2%80%93737_Japanese_smallpox_epidemic) | 735–737 CE | Japan | Smallpox | 2 million (approx. 1/3 of Japanese population) | 
+% % | Plague of 746–747 (1st plague pandemic) | 746–747 CE | Byzantine Empire, West Asia, Africa | Bubonic plague |Unknown |
+% \end{frame}
+% 
+% \begin{frame}{Epidemics with major human cost}
+% 
+%     % | Rang | Épidémie/pandémie | Maladie | Coût humain | Mortalité globale | Mortalité régionale | Date | Lieux |
+%     % |:\end{frame}
+%     
+%     
+%     % \begin{frame}
+%     % :|\end{frame}
+%     
+%     
+%     % \begin{frame}
+%     % |\end{frame}
+%     
+%     
+%     % \begin{frame}
+%     % |---|---|---|:---:|---|
+%     % | 1 | Grande peste | Peste bubonique | 75-200 M |17-54% | 30-60% de la population européenne | 1346-1353 | Europe, Asie et Afrique du Nord |
+%     % | 2 | Grippe espagnole | Influenza A/H1N1 |  17-100 M |1-5.4% | | 1918-1920 | Monde |
+%     % | 3 | Peste de Justinien | Peste bubonique | 15-100 M |7-56% | 25-60% de la population Européenne | 541-549 |Afrique du Nord, Europe et Asie de l'Est |
+%     % | 4 | VIH/SIDA | VIH/SIDA | 36.3 M (en 2020) | Changement population totale trop important pour calculer | | 1981-présent | Monde |
+%     % | 5 | COVID-19 | SARS-CoV-2 | 6.3-25 M (au 21 mai 2022) | 0.1-0.3% || 2019-présent | Monde |
+%     % | 6 | 3ème pandémie de peste | Peste bubonique | 12-15 M | | | 1855-1960 | Monde |
+%     % | 7 | Épidémie de Cocoliztli de 1545-1548 | Cocoliztli | 5-15 M | 1-3% | 27-80% de la population du Mexique | 1545-1548 | Mexique |
+%     % | 8 | Peste Antonine | Variole ou rougeole | 5-10 M | 3-6 | 25-33% de la population Romaine | 165-180 (peut être 190) | Empire Romain |
+%     % | 9 | Épidémie de variole du Mexique de 1520 | Variole | 5-8 M | 1-2% | 23-37% de la population du Mexique |1519-1520 | Mexique |
+%     % | 10 | Épidémie de typhus de Russie de 1918-1922 | Typhus | 2-3 M | 0.1-0.16% | 1-1.6% de la population Russe |1918-1922 | URSS |
+%     % | 11 | Pandémie d'influenza de 1957-1958 | Influenza A/H2N2 | 1-4 M | 0.03–0.1%| | 1957-1958 | Monde |
+%     % | 12 | Grippe de Hong Kong | Influenza A/H3N2 | 1-4 M | 0.03-0.1% | | 1968-1969 | Monde |
+%     % | 13 | Épidémie de Cocoliztli de 1576 | Cocoliztli | 2-2.5 M | 0.4-0.5% | 50% de la population du Mexique | 1576-1580 | Mexique |
+%     % | 14 | Épidémie japonaise de variole de 735-737 | Variole | 2 M | 1% | 33% de la population du Japon | 735-737 | Japon |
+%     % | 15 | Peste perse de 1772-1773 | Peste bubonique | 2 M | 0.2–0.3% | | 1772-1773 | Perse |
+%     % | 16 | Peste de Naples (1656) | Peste bubonique | 1.25 M | 0.2% | | 1656-1658 | Sud de l'Italie |
+%     % | 17 | Pandémie de choléra de 1846-1860 | Choléra | 1+ M | 0.08% | | 1846-1860 | Monde |
+%     % | 18 | Peste italienne de 1629-1631 | Peste bubonique |1 M | 0.2% | | 1629-1631 | Italie |
+%     % | 19 | Pandémie de grippe de 1889-1890 |Influenza (en doute) | 1 M | 0.07% | | 1889-1890 | Monde |
+%     
+% \end{frame}
+%     
+% %%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%
+% \subsection{Unfortunately epidemics are not yet historical}
+% \begin{frame}{``Forgotten'' killers}
+% \bbullet Tuberculosis (TB). In 2020, estimated 10 M cases of active TB, leading to 1.5 M deaths
+% \vfill
+% \bbullet Malaria: 229 M cases and 409,000 deaths in 2019
+% \end{frame}
+%     
+%     
+% \begin{frame}{Neglected tropical diseases (NTD)}
+% Often endemic diseases, sometimes major causes of death, but out of sight of rich countries. De \href{https://fr.wikipedia.org/wiki/Maladies_tropicales_négligées}{Wikipedia}, sachant que la liste précise varie selon les auteurs :
+%     
+%     % <style scoped>
+%     % table {
+%     %     height: 100%;
+%     %     width: 100%;
+%     %     font-size: 20px;
+%     % }
+%     % </style>
+%     
+%     % | | | | 
+%     % |---|---|---|
+%     % | [Ulcère de Buruli](https://fr.wikipedia.org/wiki/Ulc%C3%A8re_de_Buruli) | [Maladie de Chagas](https://fr.wikipedia.org/wiki/Maladie_de_Chagas) | Dengue & Chikungunya | 
+%     % | [Dracunculose](https://fr.wikipedia.org/wiki/Dracunculose) | Echinococcosis | Yaws |
+%     % | Fascioliasis | [Trypanosomiase](https://fr.wikipedia.org/wiki/Maladie_du_sommeil) | [Leishmaniose](https://fr.wikipedia.org/wiki/Leishmaniose) | 
+%     % | [Lèpre](https://fr.wikipedia.org/wiki/L%C3%A8pre) | [Filariose lymphatique](https://fr.wikipedia.org/wiki/Filariose_de_Bancroft) | Onchocerciasis |
+%     % | Rabies | Schistosomiasis | Soil-transmitted helminthiasis | 
+%     % Cysticercosis | Trachoma | Scabies and other ectoparasites |
+%     % | Snakebite envenoming | Mycetoma and deep mycoses |
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%
+% \subsection{A few examples}
+% 
+% 
+% \begin{frame}{The Black Death}
+% \end{frame}
+% 
+% \begin{frame}{The British Plague of 1547}
+% \end{frame}
+% 
+% \begin{frame}{The Plague of Marseille of 1720}
+% \end{frame}
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
@@ -173,6 +177,12 @@ Often endemic diseases, sometimes major causes of death, but out of sight of ric
 \end{itemize}
 \vfill
 Etymology: \emph{the study of what is upon the people}, derived from the Greek \emph{epi} (\emph{upon}, \emph{among}), \emph{demos} (\emph{people}, \emph{district}) and \emph{logos} (\emph{study}, \emph{word}, \emph{discourse})
+\end{frame}
+
+\begin{frame}{What does ChatGPT say?}
+\begin{quote}
+Epidemiology is the scientific discipline that focuses on the study of the distribution, determinants, and patterns of health-related events, conditions, and diseases within populations. It involves the systematic collection, analysis, and interpretation of data to understand how diseases and health-related issues spread and impact different groups of people. Epidemiologists use various research methods and statistical techniques to investigate factors such as the causes of diseases, risk factors, disease transmission, and the effectiveness of interventions and preventive measures. The findings from epidemiological studies are essential for public health decision-making, healthcare planning, and the development of strategies to control and prevent the spread of diseases.
+\end{quote}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%
@@ -401,9 +411,9 @@ Measles cases in the USA
 \end{minipage}
 \begin{minipage}{0.47\textwidth}
 \bbullet \href{https://gallica.bnf.fr/ark:/12148/bpt6k3558n/f220.item}{BNF scan} or \href{https://julien-arino.github.io/assets/pdf/Bernoulli-1760.pdf}{pdf}
-\vskip0.5cm
+\vskip1cm
 \bbullet Probably the first epidemic model
-\vskip0.5cm
+\vskip1cm
 \bbullet About petite vérole (smallpox) inoculation    
 \end{minipage}
 \end{frame}
@@ -415,9 +425,9 @@ Measles cases in the USA
 \end{minipage}
 \begin{minipage}{0.47\textwidth}
 \bbullet On 20 August 1897, observed malaria parasites in the gut of a mosquito fed several days earlier on a malaria positive human
-\vskip0.5cm
+\vskip1cm
 \bbullet Nobel Prize for Medicine 1902
-\vskip0.5cm
+\vskip1cm
 \bbullet Started considering malaria eradication using mathematical models; for some history, read \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3320609/pdf/ppat.1002588.pdf}{this 2012 paper}
 \end{minipage}
 \end{frame}
@@ -494,7 +504,7 @@ Measles cases in the USA
 
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
-\subsection{Use of data in epidemiology}
+\subsection{Use of data in mathematical epidemiology}
 
 \begin{frame}{Has happened all along, undergoing a transformation}
 \bbullet Epidemiology has long relied on data
@@ -628,7 +638,7 @@ f(S,I)
 \]
 The function can also explicitly depend on the total population $N$, i.e., $f(S,I,N)$
 \vfill
-We return to incidence functions in \href{no.se}{Lecture XY}
+We return to incidence functions in \href{no.se}{Lecture 06}
 \vfill
 For now, just know the most common incidence functions are
 \begin{itemize}
@@ -695,14 +705,14 @@ This model is typically called the Kermack-McKendrick (KMK) SIR model
 \vfill
   From \eqref{sys:KMK_2d_dI}
   \begin{itemize}
-    \item either $\bar S=\gamma/\beta$ 
-    \item or $\bar I=0$
+    \item either $S^\star=\gamma/\beta$ 
+    \item or $I^\star=0$
   \end{itemize}
   \vfill
   Substitute into \eqref{sys:KMK_2d_dS}
   \begin{itemize}
-    \item in the first case, $(\bar S,\bar I)=(\gamma/\beta,0)$ 
-    \item in the second case, any $\bar S\geq 0$ is an EP
+    \item in the first case, $(S^\star,I^\star)=(\gamma/\beta,0)$ 
+    \item in the second case, any $S^\star\geq 0$ is an EP
   \end{itemize}
   \vfill
   The second case is an \emph{issue}: the usual linearisation does not work when there is a \emph{continuum} of equilibria as the EP are not \emph{isolated}
@@ -958,9 +968,10 @@ xlab = "Time (days)", ylab = "Prevalence")
 \begin{frame}{Final size of an epidemic}
   For a nonnegative valued integrable function $w(t)$, denote
   $$
-  w_\infty = \lim_{t\to\infty}w(t),\qquad\hat w = \int_0^\infty w(t)\ dt
+  w_0=w(0),\qquad  w_\infty = \lim_{t\to\infty}w(t),\qquad\hat w = \int_0^\infty w(t)\ dt
   $$
-  Denote $w_0=w(0)$. In the subsystem
+  \vfill
+  In the subsystem
   \begin{align}
   S' &= -\beta SI \tag{\ref{sys:KMK_2d_dS}} \\
   I' &= \beta SI-\gamma I \tag{\ref{sys:KMK_2d_dI}} 
@@ -1364,7 +1375,9 @@ To make $\R_0^{\text{v}}$ less than 1
 %%%%%%%%%%%%%%%%%%%%
 \section{The endemic SIRS model with demography}
 
-
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{The model(s)}
 \begin{frame}{Two potential variations on the Kermack-McKendrick model}
 \bbullet Add \emph{vital dynamics}, i.e., consider demographic processes
 \vfill
@@ -1709,7 +1722,7 @@ From \eqref{sys:SIRS_EP_dI}, either $I^\star=0$ or $\beta S-(d+\gamma)=0$, i.e.,
 \vfill
 When $I^\star=0$, substituting $I^\star=0$ into \eqref{sys:SIRS_EP_dR} implies that $R^\star=0$ and, in turn, substituting $I^\star=R^\star=0$ into \eqref{sys:SIRS_EP_dR} gives $S^\star=b/d$. This gives the disease-free equilibrium (DFE)
 \begin{equation}\label{eq:SIRS_DFE}
-(S^\star,I^\star,R^\star)=
+\bE_0:=(S^\star,I^\star,R^\star)=
 \left(\frac bd, 0, 0\right)
 \end{equation}
 \end{frame}
@@ -1827,7 +1840,7 @@ Denote
   \end{lstlisting}
 \end{frame}
 
-<<KMK_final_size,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+<<KMK_one_sim_prevalence,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
 library(deSolve)
 rhs_SIRS <- function(t, x, p) {
   with(as.list(c(x, p)), {
@@ -1841,7 +1854,8 @@ rhs_SIRS <- function(t, x, p) {
 # Initial conditions
 N0 = 1000
 I0 = 1
-IC = c(S = N0-I0, I = I0, R = 0)
+R0 = 0
+IC = c(S = N0-(I0+R0), I = I0, R = R0)
 # "Known" parametres
 d = 1/(80*365.25)
 b = N0 * d
@@ -1849,17 +1863,21 @@ gamma = 1/14
 nu = 1/365.25
 # Set beta s.t. R_0 = 1.5
 R_0 = 1.5
-beta = R_0 * (d + gamma) / S0
+beta = R_0 * (d + gamma) / (N0-I0-R0)
 params = list(b = b, d = d, gamma = gamma, beta = beta, nu = nu)
 times = seq(0, 365, 1)
 # Call the numerical integrator
 sol <- ode(y = IC, times = times, func = rhs_SIRS, 
            parms = params, method = "ode45")
+# Plot the result
+plot(sol[,"time"], sol[,"I"], 
+     type = "l", lwd = 2,
+     xlab = "Time (days)", ylab = "Prevalence")
 @
 
 \begin{frame}{}
   \begin{center}
-    \includegraphics[width=\textwidth]{FIGS/sol_endemic_SIS_R015.png}
+    \includegraphics[width=\textwidth]{FIGS/lecture-01-KMK_one_sim_prevalence}
   \end{center}
 \end{frame}
 

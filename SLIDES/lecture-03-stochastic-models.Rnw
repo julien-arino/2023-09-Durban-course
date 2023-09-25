@@ -154,6 +154,143 @@ h(t)=-\frac{d}{dt}\ln\S(t)
 \]
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{Risques comp\'etitifs}
+On suppose maintenant que le syst\`eme commence dans l'\'etat $A$ au
+temps $t=0$, et que selon lequel des deux \'evenements $\mathcal{E}_1$
+ou $\mathcal{E}_2$ a lieu en premier, il passe dans l'\'etat $B_1$ ou
+$B_2$, respectivement.
+
+Soient les deux variables al\'eatoires $T_A$, \emph{temps pass\'e}
+dans l'\'etat $A$ (ou \emph{temps de s\'ejour} en $A$),
+$T_{AB_1}$, le \emph{temps avant passage} \`a l'\'etat $B_1$ et
+$T_{AB_2}$ le \emph{temps avant passage} \`a l'\'etat $B_2$.
+
+Si l'on consid\`ere l'\'etat $A$, on ne peut \'evidemment pas observer
+les variables $T_{AB_1}$ ou $T_{AB_2}$. Ce qui est observable est le
+temps de s\'ejour en $A$
+\[
+T^*_A=\min\left( T_{AB_1},T_{AB_2} \right)
+\]
+(where $^*$ indique une quantit\'e observable).
+}
+
+\frame{
+\begin{eqnarray*}
+\Surv(t)-\Surv(a)&=&\Proba{\textrm{survivre pendant }
+ (a,t)\textrm{ en ayant surv\'ecu jusqu'\`a }a} \\
+&=& \exp\left(-\int_a^t h(u)du\right)
+\end{eqnarray*}
+}
+
+\frame{\frametitle{Cas d'une distribution al\'eatoire}
+Supposons que la variable al\'eatoire $T$ suive une distribution
+exponentielle $f(t)=\theta e^{-\theta t}$ pour $t\geq 0$, avec
+$\theta>0$.
+Alors la fonction de survie pour l'\'etat $A$ prend la forme
+$\Surv(t)=e^{-\theta t}$, pour $t\geq 0$, et le temps de s\'ejour
+moyen dans l'\'etat $A$ est
+\[
+\tau=\int_0^\infty e^{-\theta t}dt=\frac 1\theta
+\]
+}
+
+
+\frame{\frametitle{Cas d'une distribution de Dirac}
+Si, d'autre part, pour une constante $\omega>0$,
+\[
+\Surv(t)=
+\left\{
+\begin{array}{ll}
+1, & 0\leq t\leq\omega \\
+0, & \omega<t
+\end{array}
+\right.
+\]
+ce qui veut dire que $T$ a une distribution de Dirac
+$\delta_\omega(t)$, et le temps de s\'ejour moyen est une constante,
+\[
+\tau=\int_0^\omega dt=\omega
+\]
+Ces deux distributions sont des extr\^emes.
+}
+
+%%%%%%%%%%%%%%%%%%%
+\frame{\frametitle{La condition initiale}
+Dans le cas d'une \'equation telle \eqref{eq:SIS_dim_inf_I},
+d\'eterminer la condition initiale $I_0(t)$ n'est pas une t\^ache
+ais\'ee. On utilise pour ce faire
+l'\emph{\^age dans la classe infectieuse}.
+Soit $i(t,\tau)$ la densit\'e d'individus dans la classe d'infection
+$\tau$, proportion des individus dans la classe d'infection $\tau$ qui
+sont toujours infectieux \`a l'instant $t$. On a alors
+\[
+\left(\frac{\partial}{\partial t}+\frac{\partial}{\partial
+   \tau}\right)i(t,\tau)
+=-(\eta(\tau)+d)i(t,\tau)
+\]
+Ici, $\eta(\tau)$ est le coefficient de taux de gu\'erison (peut
+d\'ependre de $\tau$).
+}
+
+\frame{
+La proportion toujours dans la classe $I$ \`a l'\^age d'infection $\tau$
+\'egale \`a
+\[
+P(\tau)=\exp\left(-\int_0^\tau \eta(q)-ddq\right)
+\]
+dont on suppose qu'elle v\'erifie les hypoth\`eses g\'en\'erales sur
+les fonctions de gu\'erison.
+L'influx dans la classe d'\^age d'infection z\'ero est
+\[
+i(t,0)=\beta \frac{S(t)I(t)}N
+\]
+Par ailleurs, $i(0,\tau)\geq 0$ est sp\'ecifi\'ee.
+}
+
+
+%\frame{
+%On peut donc int\'egrer le long des charact\'eristiques, ce qui donne
+%\begin{align*}
+%i(t,\tau) &= i(t-\tau,0)\exp\left(
+%-\int_{t-\tau}^t d\;dq -\int_0^\tau \eta(q)dq
+%\right),\quad \textrm{lorsque }0\leq \tau \leq t, \\
+%i(t,\tau) &= i(0,\tau-t)\exp\left(
+%-\int_{0}^t d\;dq -\int_{\tau-t}^\tau \eta(q)dq
+%\right),\quad \textrm{lorsque }t\leq \tau<\infty,
+%\end{align*}
+%}
+
+
+%\frame{
+%Maintenant, le nombre d'infectieux au temps $t$ est donn\'e en
+%fonction de la classe d'\^age d'infection par $I(t)=\int_0^\infty
+%i(t,\tau)d\tau$. Subdivisant cette int\'egrale et utilisant les
+%valeurs qui pr\'ec\`edent, on a donc
+%\begin{align*}
+%I(t) = & \int_0^t
+%i(t-\tau,0)\exp\left(
+%-\int_{t-\tau}^t d\;dq -\int_0^\tau \eta(q)dq
+%\right)d\tau \\
+%&+ \int_t^\infty
+%i(0,\tau-t)\exp\left(
+%-\int_{0}^t d\;dq -\int_{\tau-t}^\tau \eta(q)dq
+%\right)d\tau
+%\end{align*}
+%}
+
+%\frame{
+%Changeons la variable d'int\'egration ($u=t-\tau$), utilisons $S=N-I$ et les
+%d\'efinitions de $i(t,0)$ et de $P(\tau)$. Cela donne
+%\begin{align*}
+%I(t) = & \int_0^t
+%\beta\frac{(N-I(u))I(u)}{N} \exp\left(
+%-\int_{t-\tau}^t d\;dq\right)P(t-u)du \\
+%&+ \exp\left(-\int_{0}^t d\;dq\right)
+%\int_t^\infty
+%i(0,u)\frac{P(t+u)}{P(u)}du
+%\end{align*}
+%}
 
 
 %%%%%%%%%%%%%%%%%%%
@@ -420,203 +557,6 @@ differential equation (DDE)
 I'(t)=\beta\frac{(N-I(t))I(t)}{N}
 -\beta\frac{(N-I(t-\omega))I(t-\omega)}{N}.
 \]
-\end{frame}
-
-
-
-
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-\subsection{A model with vaccination}
-
-\begin{frame}\frametitle{A model with vaccine efficacy and waning}
-\begin{itemize}
-\item Exponential distribution of recovery times (rate $\gamma$)
-\vfill
-\item Susceptible individuals are vaccinated (number of vaccinated at time $t$ is denoted $V(t)$)
-\vfill
-\item Vaccination wanes, a fraction $P(t)$ of the vaccinated at time $t=0$ remain protected by the vaccine
-\vfill
-\item Vaccination is imperfect, $0\leq 1-\sigma\leq 1$ is the vaccine \textbf{efficacy}
-\end{itemize}
-\vfill
-{\tiny
-\begin{itemize}
-\setlength{\itemsep}{-5pt}
-\item JA, Cooke, PvdD \& Velasco-Hernández. \href{https://julien-arino.github.io/assets/pdf/papers/2004_ArinoCookeVelascoPvdD-DCDSB4.pdf}{An epidemiology model that includes a leaky vaccine with a general waning function} \emph{DCDS-B} \textbf{4}(2): 479-495 (2004)
-\end{itemize}}
-\end{frame}
-
-\begin{frame}\frametitle{Model structure}
-\begin{figure}[htbp]
-  \begin{center}
-    \includegraphics[width=0.65\textwidth]{FIGS/vaccination_newborns_integral}
-  \end{center}
-\end{figure}
-\end{frame}
-
-\begin{frame}\frametitle{}
-\begin{itemize}
-\item Disease transmission: standard incidence
-\vfill
-\item Vaccination of newborns
-\vfill
-\item Birth and death rate equal (\imply constant total population)
-\end{itemize}
-
-\textbf{Assumptions on $P$}: $P(t)$ is a nonnegative and nonincreasing
-function with $P(0^+)=1$, and such that $\int_0^\infty P(u)du$ is
-positive and finite
-\vfill
-Constant total population $\Rightarrow$ $S(t)=N-I(t)-V(t)$; further, we
-switch to \textbf{proportions}: $S$, $I$ and $V$ represent the
-proportions in the population, and $N=1$ ($S$ used in equations for
-conciseness)
-\end{frame}
-
-\begin{frame}\frametitle{The SIS model with vaccination} 
-\begin{subequations}\label{genmodel}
-\begin{align}
-  \frac{dI(t)}{dt}&= \beta(S(t)+\sigma V(t))I(t)-(d+\gamma)I(t)
-  \label{genmodelI}\\ 
-  V(t)&= V_0(t) \label{genmodelV} \\
-  &\quad +\int_0^t(\phi S(u)+\alpha d)P(t-u)e^{-d(t-u)}
-  e^{-\sigma\beta\int_u^tI(x)dx}du \nonumber
-\end{align}
-\end{subequations}
-\vfill
-\begin{itemize}
-\item $\alpha d$ proportion of vaccinated newborns,
-\item $\phi S(u)$ proportion of vaccinated susceptibles, 
-\item $P(t-u)$ fraction of the proportion vaccinated still in the $V$
-  class $t-u$ time units after going in,
-\item $e^{-d(t-u)}$ fraction of the proportion vaccinated
-not dead due to natural causes,
-\item $e^{-\sigma\beta\int_u^t I(x)dx}$ fraction of the proportion
-  vaccinated not gone to the infective class.
-\end{itemize} 
-\end{frame}
-
-\begin{frame}\frametitle{Obtaining the initial condition}
-Let $v(t,\tau)$ be the (density) proportion of individuals in vaccination class-age $\tau$ still vaccinated at time $t$,
-then
-\[
-\left(\frac{\partial}{\partial t}+\frac{\partial}{\partial\tau}\right)
-v(t,\tau)=
--(\sigma\beta I(t)+d+\eta(\tau))v(t,\tau)
-\]
-where $V(t)=\int_0^\infty v(t,\tau)d\tau$. $\eta(\tau)$ is the vaccine waning rate coefficient, with proportion still in the vaccination class-age $\tau$ being $P(\tau)=\exp\left(-\int_0^\tau\eta(q)dq\right)$.
-It is assumed that $P$ is a survival function.
-\vfill
-Inflow in class-age zero is 
-\[
-v(t,0)=\phi S(t)+\alpha d
-\]
-and $v(0,\tau)\geq 0$ is assumed.
-\end{frame}
-
-\begin{frame}
-Integrating along characteristics, dividing the integral for $V(t)$ at $t$, substituting in the solutions, and changing integration variables, we get
-\begin{equation}
-V_0(t)=e^{-\int_0^t(\sigma\beta I(x)+d)dx} \int_0^\infty
-v(0,u)\frac{P(t+u)}{P(u)}du 
-\label{eq:V0}
-\end{equation}
-The ratio $P(t+u)/P(u)=\exp\left(\int_u^{t+u}\eta(q)dq\right)$ is well defined for $t+u\geq u\geq 0$ and bounded above by 1. 
-\vfill
-Since $V(0)$ is finite, the integral in $V_0(t)$ converges, and thus $V_0(t)$ is nonnegative,
-nonincreasing and $\lim_{t\to\infty}V_0(t)=0$
-\end{frame}
-
-\begin{frame}\frametitle{}
-With the assumed initial conditions in $\mathcal{D}$, it can be shown
-that the system defined by (\ref{genmodelI}) and (\ref{genmodelV})
-is equivalent to the system defined by (\ref{genmodelI}) and
-\begin{align}
-\frac{d}{dt}V(t) &= \frac{d}{dt}V_0(t) \label{eq:Vprime_genmodel}\\
-&\quad +\phi S(t)+\alpha d-(d+\sigma\beta I(t))(V(t)-V_0(t)) 
-+ Q(t)\nonumber
-\end{align}
-where to simplify notation, we denote
-\[
-Q(t)=\int_0^t (\phi S(u)+\alpha d) d_t(P(t-u))e^{-d(t-u)}
-e^{-\sigma\beta\int_u^t I(x)dx}du
-\]
-\vfill
-The system defined
-by (\ref{genmodelI}) and (\ref{eq:Vprime_genmodel}) is 
-of standard form, therefore results of
-Hale ensure the local
-existence, uniqueness and continuation of solutions of model
-(\ref{genmodel})
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}\frametitle{Case reducing to an ODE system}
-Assume $P(v)=e^{-\theta v}$, $\theta>0$. 
-$V_0(t)=V_0(0)e^{-(d+\theta)t}e^{-\int_0^t\sigma\beta I(x)dx}$ from
-(\ref{eq:V0}). Then (\ref{genmodelI}) and
-(\ref{eq:Vprime_genmodel}) give the ODE system
-\begin{subequations}\label{ODEmodel}
-\begin{align}
-\frac{dI}{dt} &= 
-\beta(1-I-(1-\sigma)V)I-(d+\gamma)I
-\label{ODEmodelI}\\
-\frac{dV}{dt} &= 
-\phi(1-I-V)-\sigma\beta IV -(d+\theta)V+\alpha d
-\label{ODEmodelV}
-\end{align}
-\end{subequations}
-which with no newborn vaccination ($\alpha=0$) is the model studied in
-Kribs-Zaletta \& Velasco-Hernandez, MBS, 2000
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}\frametitle{Step function case: a delay integral model}
-Suppose that
-\[ 
-P(v)=
-\left\{
-\begin{array}{l}
-1\textrm{ if }v\in[0,\omega] \\
-0\textrm{ otherwise} 
-\end{array}
-\right.
-\]
-Since $V_0(t)=0$ for $t>\omega$, with $S=1-I-V$ the
-integral equation 
-(\ref{genmodelV}) becomes, for $t>\omega$
-\begin{equation}
-  V(t)=\int_{t-\omega}^t(\phi (1-I(u)-V(u))+\alpha d)e^{-d(t-u)}
-  e^{-\sigma\beta\int_u^tI(x)dx}du
-  \label{eq:VoftStepCase}
-\end{equation}
-\end{frame}
-
-\begin{frame}
-Differentiating this last expression (see equation
-(\ref{eq:Vprime_genmodel})) gives the model as the two
-dimensional system, for $t>\omega$
-\begin{align*}
-  \frac{d}{dt}I(t) &= 
-  \beta(1-I(t)-(1-\sigma)V(t))I(t)-(d+\gamma)I(t) \\
-  \frac{d}{dt}V(t) &=
-  \phi(1-I(t)-V(t)) \\
-  &\qquad-\phi(1-I(t-\omega)-V(t-\omega))e^{-d\omega}
-  e^{-\sigma\beta\int_{t-\omega}^t I(x)dx} \\
-  &\qquad -\sigma\beta IV-dV
-  +\alpha d\left(1-e^{-d\omega}e^{-\sigma\beta\int_{t-\omega}^t I(x)dx}
-  \right)
-\end{align*}
-Hereafter, shift time by $\omega$ so that these equations hold for $t>0$
 \end{frame}
 
 

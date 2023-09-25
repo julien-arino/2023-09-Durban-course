@@ -19,10 +19,14 @@
 \end{frame}
 \addtocounter{page}{-1}
 
-\begin{frame}
+% The outline page
+{
+\setbeamercolor{background canvas}{bg=outline_colour}
+\begin{frame}{Outline}
     \tableofcontents[hideallsubsections]
 \end{frame}
 \addtocounter{page}{-1}
+}
 
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
@@ -37,6 +41,18 @@
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 \subsection{SIS models}
+
+
+\begin{frame}{Note on demography}
+\bbullet We have already discussed some different possible forms for demography
+\vfill
+\bbullet In the models with demography here, unless otherwise required, we use demography such that for the total population
+\[
+N' = b - dN
+\]
+\end{frame}
+
+
 \begin{frame}{Simplifying the SIRS model}
 \begin{minipage}{0.2\textwidth}
   \def\skip{*-1.5}
@@ -45,30 +61,64 @@
     \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
     \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
     %% Fake nodes for arrows
-    \node [above=1cm of S] (birth) {};
+    \node [above=0.75cm of S] (birth) {};
     \node [left=0.5cm of S] (dS) {};
     \node [left=0.5cm of I] (dI) {};
     %% Flows
-    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b(N)$} (S);
+    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
     \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
-    \path [line, very thick] (I) to node [midway, above] (TextNode) {$dI$} (dI);
+    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
     \path [line, very thick, bend right] (S) to node [midway, left] (TextNode) {$\beta SI$} (I);
     \path [line, very thick, bend right] (I) to node [midway, right] (TextNode) {$\gamma I$} (S);
   \end{tikzpicture}    
 \end{minipage}
 \begin{minipage}{0.75\textwidth}
 \bbullet We have already seen the epidemic KMK SIR model and the endemic SIRS model
-\vskip0.3cm
-\bbullet By making some simplifications, we can obtain the SIS model: assume the time spent in the $R$ compartment goes to zero, i.e., $\nu\to\infty$
+\vskip0.5cm
+\bbullet By making some simplifications of the endemic SIRS model, we obtain the SIS model: assume the time spent in the $R$ compartment goes to zero, i.e., $\nu\to\infty$
 \end{minipage}
 \vfill
 The main characteristics of the model are the same as the SIRS
+\end{frame}
+
+\begin{frame}
+\begin{minipage}{0.2\textwidth}
+  \def\skip{*-1.5}
+  \begin{tikzpicture}[scale=1, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
+    %% Fake nodes for arrows
+    \node [above=0.75cm of S] (birth) {};
+    \node [left=0.5cm of S] (dS) {};
+    \node [left=0.5cm of I] (dI) {};
+    %% Flows
+    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
+    \path [line, very thick, bend right] (S) to node [midway, left] (TextNode) {$\beta SI$} (I);
+    \path [line, very thick, bend right] (I) to node [midway, right] (TextNode) {$\gamma I$} (S);
+  \end{tikzpicture}    
+\end{minipage}
+\begin{minipage}{0.75\textwidth}
+\begin{subequations}\label{sys:SIS}
+\begin{align}
+S' &= b +\gamma I -dS - \beta SI \label{sys:SIS_dS} \\
+I' &= \beta SI -(d+\gamma) I
+\end{align}
+\end{subequations}
+with initial conditions $S(0)=S_0\geq 0$ and $I(0)=I_0\geq 0$
+\end{minipage}
+\vfill
+Clearly, the DFE is similar as for the SIRS
+\[
+\bE_0:=(S^\star,I^\star)=(N^\star,0)
+\]
+with $N^\star = b/d$. Also easy to check (exercise!) that
 \[
 \R_0 = \frac{\beta}{d+\gamma}
 \]
-and determines whether we go to the DFE $(N^\star,0)$ or to the endemic equilibrium
 \end{frame}
-
 
 %%%%%%%%%%%%%%
 %%%%%%%%%%%%%%
@@ -76,7 +126,7 @@ and determines whether we go to the DFE $(N^\star,0)$ or to the endemic equilibr
 
 \frame{\frametitle{Incubation periods}
 \begin{itemize}
-\item SIS and SIR: progression from S to I instantaneous
+\item SIS and SIR: progression from S to I is instantaneous
 \vfill
 \item Several incubation periods:
 \end{itemize}
@@ -150,6 +200,7 @@ Mathematically, $\R_0$ is a bifurcation parameter aggregating some of the model 
 \begin{itemize}
 \item
 As a consequence, $\R_0$ is found by considering the spectrum of the Jacobian matrix of the system evaluated at the DFE
+\vfill
 \item
 The matrix quickly becomes hard to deal with (size and absence of ``pattern'') and the form obtained is not unique, which is annoying when trying to interpret $\R_0$
 \end{itemize}
@@ -224,15 +275,27 @@ f(S,I,N) \\
 
 
 \frame{
-Compute the Jacobian matrices of vectors $\F$ and $\V$, giving
+Denote
+\[
+f_L^\star:=
+\left.\frac{\partial}{\partial L}f
+\right|_{(S,I,R)=\bE_0}
+\quad\quad 
+f_I^\star:=
+\left.\frac{\partial}{\partial I}f
+\right|_{(S,I,R)=\bE_0}
+\]
+the values of the partials of the incidence function at the DFE $\bE_0$
+\vfill
+Compute the Jacobian matrices of vectors $\F$ and $\V$ at the DFE $\bE_0$
 \begin{equation}
 F=\left(
 \begin{matrix}
-\frac{\partial\bar f}{\partial L}
-& \frac{\partial\bar f}{\partial I} \\
+f_L^\star & f_I^\star \\
 0 & 0
 \end{matrix}
-\right),\quad
+\right)
+\quad\text{and}\quad
 V=\left(
 \begin{matrix}
 \varepsilon+d & 0 \\
@@ -240,17 +303,6 @@ V=\left(
 \end{matrix}
 \right)
 \end{equation}
-where we denote
-\[
-\frac{\partial\bar f}{\partial L}:=
-\frac{\partial f}{\partial L}(\bar
-S,\bar I,\bar N)
-\quad\quad 
-\frac{\partial\bar f}{\partial I}:=
-\frac{\partial f}{\partial I}(\bar
-S,\bar I,\bar N)
-\]
-and $(\bar S,\bar I,\bar N)$ are the values of $S,I$ and $N$ at the DFE.
 }
 
 \frame{
@@ -395,11 +447,11 @@ $R$ does not play a role in the dynamics of \eqref{sys:SEIR_vert_transmission}, 
 
 \frame{\frametitle{Equilibria}
 \begin{itemize}
-\item DFE: $E_0=(1,0,0)$.
-\item EEP: $E^*=(S^*,L^*,I^*)$ with
+\item DFE: $\bE_0=(1,0,0)$.
+\item EEP: $\bE_\star=(S^\star,L^\star,I^\star)$ with
 {\footnotesize
 \[
-S^*=\frac 1{\R_0^v}\quad L^*=\frac{d}{\varepsilon+d}\left(1-\frac
+S^\star=\frac 1{\R_0^v}\quad L^\star=\frac{d}{\varepsilon+d}\left(1-\frac
   1{\R_0^v}\right) 
 \quad
 I^*=\frac{d\varepsilon}{(\varepsilon+d)(\gamma+d)}\left(1-\frac
@@ -411,94 +463,44 @@ where
 \R_0^v=\frac{\beta\varepsilon}
 {(\gamma+d)(\varepsilon+d)-qd(\varepsilon+d)-pd\varepsilon}
 \]
-is the basic reproduction number with vertical transmission.
+is the basic reproduction number with vertical transmission
 \vfill
-We have $\R_0=\R_0^v$ iff $p=q=0$ or $\R_0^v=\R_0=1$.
+We have $\R_0=\R_0^v$ $\iff$ $p=q=0$ or $\R_0^v=\R_0=1$
 \vfill
-$E^*$ exists (in a biologically plausible way) only when $\R_0^v>1$.
+$\bE_\star$ exists (in a biologically plausible way) only when $\R_0^v>1$
 }
 
 
 \frame{
 Consider the Goh Lyapunov function
 \[
-V=\sum a_i(x_i-x_i^* \ln x_i)
+V=\sum a_i(x_i-x_i^\star \ln x_i)
 \]
 \vfill
 \begin{theorem}
 \begin{itemize}
-\item If $\R_0>1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $E^*$.
-\item If $\R_0\leq 1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $E_0$, $E^*$ is not biologically plausible.
+\item If $\R_0>1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $\bE_\star$
+\item If $\R_0\leq 1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $\bE_0$, $\bE_\star$ is not biologically plausible
 \end{itemize}
 \end{theorem}
 }
 
-
-\frame{\frametitle{SEIRS -- Mukherjee et al}
-Mukherjee, Chattopadhyay et Tapaswi tentent une approche par les
-fonctions de Lyapounov. Ils consid\`erent le syst\`eme
-(\ref{sys:SLIRS}) dans le cas d'une incidence sous la forme
-$f(S,I,N)=\beta S^q I^p$. 
-Apr\`es avoir \'etabli l'uniforme bornitude du syst\`eme, ils
-d\'efinissent la fonction suivante: 
-\[
-V(S,E,I)=\frac 12\left(
-(S-S^*)^2+(E-E^*)^2+(I-I^*)^2\right)
-\]
-}
-
-\frame{
-ce qui leur permet, en d\'efinissant la matrice
-\[
-A=\left(
-\begin{array}{ccc}
-\beta I^{*p}g(S)+d+\nu & \frac 12 (\nu-\beta I^{*p}g(S)) & \frac 12
-(\beta S^q h(I)+\nu) \\
-\frac 12(\nu-\beta I^{*p}g(S) & \varepsilon+d & -\frac 12 (\beta S^q
-h(I)+\varepsilon) \\
-\frac 12 (\beta S^q h(I)+\nu) & -\frac 12(\beta S^qh(I)+\varepsilon) &
-\gamma+d
-\end{array}
-\right)
-\]
-avec les fonctions $g$ et $h$ telles que
-\[
-S^q-S^{*q}=(S-S^*)g(S),\quad I^p-I^{*p}=(I-I^*)h(I)
-\]
-d'obtenir le r\'esultat qui suit.
-}
-
-\frame{
-\begin{theorem}\label{th:MCT}
-La fonction $V$ est telle que $V'<0$ si
-\begin{enumerate}
-\item $4(\beta I^{*p}g(S)+d+\nu)(\varepsilon+d)>(\nu-\beta
-I^{*p}g(S))^2$,
-\item $\det A>0$.
-\end{enumerate}
-\end{theorem}
-Il est bien entendu qu'un r\'esultat comme le
-Th\'eor\`eme~\ref{th:MCT} est difficile \`a utiliser en pratique, et
-ce syst\`eme a donc fait l'objet d'autres \'etudes.
-}
-
-
-\frame{
-Li, Muldowney and van den Driessche study an SLIRS model with incidence of the form
+\begin{frame}{Li, Muldowney and van den Driessche} 
+Study an SLIRS model with incidence of the form
 \begin{equation}\label{eq:g_incidence}
 f(S,I,N)=\beta g(I)S
 \end{equation}
 where $g$ is such that $g(0)=0$, $g(I)>0$ for $I\in(0,1]$ and $g\in
-C^1(0,1]$.
+C^1(0,1]$
 \vfill
-They normalise the total population, so that $S+L+I+R=1$. 
+They normalise the total population, so that $S+L+I+R=1$
 \vfill
 They make the following asumption about $g$:
 \begin{description}
 \item[(H)]$c=\lim_{I\to 0^+} \frac{g(I)}{I}\leq +\infty$; when
-$0<c<+\infty$, $g(I)\leq cI$ for all sufficiently small $I$.
+$0<c<+\infty$, $g(I)\leq cI$ for all sufficiently small $I$
 \end{description}
-}
+\end{frame}
 
 \frame{
 We have 
@@ -513,69 +515,47 @@ Since $\dfrac{\partial\bar g}{\partial I}=\lim_{I\to 0^+}
 {(d+\varepsilon)(d+\gamma)}
 \]
 \vfill
-The LAS results already established hold here, since \eqref{eq:g_incidence} is a special case of the function $f$ with which the results were obtained.
+The LAS results already established hold here, since \eqref{eq:g_incidence} is a special case of the function $f$ with which the results were obtained
 }
 
 
 \frame{
-\begin{theorem}\label{th:persist_SEIRS}
-Si $g(I)$ satisfait l'hypoth\`ese \textbf{H}, le syst\`eme
-(\ref{sys:SLIRS}) avec incidence (\ref{eq:g_incidence}) est
-uniform\'ement persistant si, et seulement si, $\R_0>1$.
-\end{theorem}
-\vfill
-Le syst\`eme est \emph{uniform\'ement persistant} si il existe
-$0<\epsilon_0<1$ telle que toute solution $(S(t),E(t),I(t),R(t))$ de
-(\ref{sys:SLIRS}) de condition initiale $(S(0),E(0),I(0),R(0))\in
-\overset{\circ}{\Gamma}$ v\'erifie
+The system is \defword{uniformly persistent} if there exists $0<\varepsilon_0<1$ s.t. any solution $(S(t),L(t),I(t),R(t))$ of \eqref{sys:SLIRS} with initial condition $(S(0),L(0),I(0),R(0))\in
+\overset{\circ}{\Gamma}$ satisfies
 \begin{equation}\label{eq:SEIRS_persist}
 \begin{array}{c}
-\liminf_{t\to\infty} S(t)\geq \epsilon_0,\quad 
-\liminf_{t\to\infty} E(t)\geq \epsilon_0 \\
-\liminf_{t\to\infty} I(t)\geq \epsilon_0,\quad 
-\liminf_{t\to\infty} R(t)\geq \epsilon_0
+\liminf_{t\to\infty} S(t)\geq \varepsilon_0,\quad 
+\liminf_{t\to\infty} E(t)\geq \varepsilon_0 \\
+\liminf_{t\to\infty} I(t)\geq \varepsilon_0,\quad 
+\liminf_{t\to\infty} R(t)\geq \varepsilon_0
 \end{array}
 \end{equation}
+\vfill
+\begin{theorem}\label{th:persist_SEIRS}
+If $g(I)$ satisfies hypothesis (\textbf{H}), then \eqref{sys:SLIRS} with incidence \eqref{eq:g_incidence} is uniformly persistent iff $\R_0>1$
+\end{theorem}
 }
 
 
 \frame{
 \begin{theorem}\label{th:gas_SEIRS}
-Supposons que l'incidence (\ref{eq:g_incidence}) satisfait
-\textbf{H}, et que
+Suppose that incidence \eqref{eq:g_incidence} satisfies (\textbf{H}) and that
 \begin{equation}\label{eq:gI}
-|g'(I)|I\leq g(I) \textrm{ pour }I\in(0,1]
+|g'(I)|I\leq g(I) \textrm{ for }I\in(0,1]
 \end{equation}
-Supposons en outre que $\R_0>1$, et que l'une des conditions
+Suppose additionally that $\R_0>1$ and that one of the following conditions holds
 \begin{gather*}
 \gamma\nu<\epsilon_0(\beta\eta_0+\gamma+d)(\beta\eta_0+\nu+d) \\
 \varepsilon-\gamma-d<\nu
 \end{gather*}
-est v\'erifi\'ee, where
+where
 \[
-\eta_0=\min_{I\in[\epsilon_0,1]}g(I)>0
+\eta_0=\min_{I\in[\varepsilon_0,1]}g(I)>0
 \]
-et $\epsilon_0$ d\'efini par (\ref{eq:SEIRS_persist}).
-Alors il n'y a pas de courbe ferm\'ee rectifiable qui soit invariante
-par rapport \`a (\ref{sys:SLIRS}). De plus, chaque semi-trajectoire de
-(\ref{sys:SLIRS}) dans $\Gamma$ converge vers un \'equilibre.
+and $\varepsilon_0$ is defined by \eqref{eq:SEIRS_persist}
+\vfill
+Then there are no closed rectifiable curve that is invariant under \eqref{sys:SLIRS}. Furthermore, every semi-trajectory of \eqref{sys:SLIRS} in $\Gamma$ converges to an EP
 \end{theorem}
-}
-
-
-
-\frame{\frametitle{Remarques}
-\begin{itemize}
-\item 
-Le mod\`ele SEIRS, et plus encore ses sous-syst\`emes, ont fait
-l'objet de beaucoup de travail. Les premiers travaux remontent \`a
-Kermack et McKendrick, et concernent le
-mod\`ele SIR sans d\'emographie (mais avec infection des individus
-remis).
-\item
-Je ne connais pas de SEIRS \`a population constante qui ait un
-comportement exotique.
-\end{itemize}
 }
 
 
@@ -645,25 +625,31 @@ $\implies$ model with SIR but also L(atent) and (A)symptomatic individuals, in w
 Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic} (2006)
 \end{frame}
 
+
 \begin{frame}
 \centering
-  \begin{tikzpicture}[auto, %node distance = 2cm, auto,
-    cloud/.style={minimum width={width("N-1")+2pt},
-      draw, ellipse,fill=gray!20}]
+\resizebox{\textwidth}{!}{
+  \begin{tikzpicture}[%transform canvas={scale=1.3},
+      auto,
+      cloud/.style={minimum width={width("N-1")+2pt},
+      draw, 
+      ellipse,
+      fill=gray!20}]
     \node [cloud, fill=green!90] (S) {$S$};
     \node [cloud, right=2cm of S, fill=red!30] (L) {$L$};
     \node [cloud, above right=of L, fill=red!90] (I) {$I$};
     \node [cloud, below right=of L, fill=red!60] (A) {$A$};
     \node [cloud, below right=of I, fill=blue!90] (R) {$R$};
-      \node [cloud, right=1.5cm of I, draw=none, fill=none] (h1) {};
+    \node [cloud, right=1.5cm of I, draw=none, fill=none] (h1) {};
     %% Infections
     \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta S(I+\delta A)$} (L);
     \path [line, very thick] (L) to node [midway, above, sloped] (TextNode) {$p\kappa L$} (I);
     \path [line, very thick] (L) to node [midway, above, sloped] (TextNode) {$(1-p)\kappa L$} (A);
     \path [line, very thick] (I) to node [midway, above, sloped] (TextNode) {$f\alpha I$} (R);
     \path [line, very thick] (A) to node [midway, above, sloped] (TextNode) {$\eta A$} (R);
-      \path [line, very thick] (I) to node [midway, above, sloped] (TextNode) {$(1-f)\alpha I$} (h1);
+    \path [line, very thick] (I) to node [midway, above, sloped] (TextNode) {$(1-f)\alpha I$} (h1);
   \end{tikzpicture}
+}
 \end{frame}
 
 \begin{frame}{Basic reproduction number}
@@ -1031,7 +1017,7 @@ and the final size relation is
 \frac{(1-\gamma)S_U(0)}{S_U(\infty)}
 \right)
 = \\ 
-\frac{\beta}{\alpha_U}[(1-\gamma)S_U(0)-S_U(\infty)]
+\frac{\beta}{\alpha_U}[(1-\gamma)S_U(0)-S_U(\infty)] \\
 +\frac{\sigma_I\beta}{\alpha_V}[\gamma S_V(0)-S_V(\infty)]+\frac{\beta}{\alpha_U}I_0 \\
 \end{multline*}
 \[
