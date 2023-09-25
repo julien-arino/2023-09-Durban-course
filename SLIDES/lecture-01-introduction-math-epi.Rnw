@@ -15,6 +15,8 @@
 <<set-options,echo=FALSE>>=
 # Are we plotting for a dark background
 plot_blackBG = FALSE
+# Source the useful functions file
+source("../CODE/useful_functions.R")
 @
 
 
@@ -1725,26 +1727,8 @@ When $I^\star=0$, substituting $I^\star=0$ into \eqref{sys:SIRS_EP_dR} implies t
 \bE_0:=(S^\star,I^\star,R^\star)=
 \left(\frac bd, 0, 0\right)
 \end{equation}
-\end{frame}
-
-\begin{frame}{Seeking equilibria (2)}
-Now consider the second EP, where $S^\star=(d+\gamma)/\beta$. First, write \eqref{sys:SIRS_EP_dR} as $I^\star=(d+\nu)R/\gamma$
 \vfill
-Substitute $S^\star=(d+\gamma)/\beta$ and $I^\star=(d+\nu)R/\gamma$ into \eqref{sys:SIRS_EP_dS}, giving
-\begin{align*}
-0 &= b+\nu R^\star-d\frac{d+\gamma}{\beta}
--\beta\frac{d+\gamma}{\beta}\frac{d+\nu}{\gamma}R^\star \\
-&= b-d\frac{d+\gamma}{\beta}
--\frac{(d+\gamma)(d+\nu)-\gamma\nu}{\gamma}R^\star
-\end{align*}
-Thus
-\begin{equation}\label{eq:SIRS_R_star}
-R^\star =
-\left(b-d\frac{d+\gamma}{\beta}\right)
-\frac{\gamma}{(d+\gamma)(d+\nu)-\gamma\nu}
-\end{equation}
-\vfill
-We return to \eqref{eq:SIRS_R_star} later
+We return to $S^\star=(d+\gamma)/beta$ in a while
 \end{frame}
 
 
@@ -1806,6 +1790,42 @@ Denote
 \end{frame}
 
 
+\begin{frame}{Seeking equilibria (2)}
+Now consider the second EP where $S^\star=(d+\gamma)/\beta=N^\star/\R_0$
+\vfill
+Write \eqref{sys:SIRS_EP_dR} as $R^\star=\gamma I^\star/(d+\nu)$
+\vfill
+Since $S^\star+I^\star+R^\star=N^\star$, this means that
+\[
+N^\star-S^\star-I^\star = \gamma I^\star/(d+\nu)
+\]
+so substituting $S^\star = N^\star/\R_0$,
+\[
+\left(1+\frac{\gamma}{d+\nu}\right)I^\star = \left(1-\frac{1}{\R_0}\right)N^\star
+\]
+So finally
+\[
+I^\star = \left(1-\frac{1}{\R_0}\right)\
+\frac{d+\nu}{d+\nu+\gamma}\ N^\star
+\]
+\end{frame}
+
+
+\begin{frame}{The EEP}
+The \defword{endemic equilibrium} (EEP) of \eqref{sys:SIRS} is
+\begin{multline}\label{eq:SIRS_EEP}
+\bE_\star:=(S^\star,I^\star,R^\star) = \\
+\left(
+\frac{1}{\R_0}\ N^\star,
+\left(1-\frac{1}{\R_0}\right)\
+\frac{d+\nu}{d+\nu+\gamma}\ N^\star,
+N^\star-(S^\star+I^\star)
+\right)
+\end{multline}
+\vfill
+Remark that $\bE_\star$ is \defword{not biologically relevant} when $\R_0\leq 1$
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1816,35 +1836,49 @@ Denote
 
 \begin{frame}[fragile]
 \begin{lstlisting}
-  library(deSolve)
-  rhs_SIS <- function(t, x, p) {
-    with(as.list(c(x, p)), {
-      N = S + I
-      dS = d*(N-S) + gamma * I - d * S - beta * S * I / N
-      dI = beta * S * I / N - (d + gamma) * I
-      return(list(c(dS, dI)))
-    })
-  }
-  # "Known" parametres
-  d = 1/(80 * 365.25)
-  gamma = 1/14
-  # Set beta s.t. R_0 = 1.5
-  R_0 = 1.5
-  beta = R_0 * (d + gamma)
-  params = list(d = d, gamma = gamma, beta = beta)
-  IC = c(S = 1000, I = 1)
-  times = seq(0, 365, 1)
-  # Call the numerical integrator
-  sol <- ode(y = IC, times = times, func = rhs_SIS, 
-             parms = params, method = "ode45")
-  \end{lstlisting}
-\end{frame}
-
-<<KMK_one_sim_prevalence,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
 library(deSolve)
 rhs_SIRS <- function(t, x, p) {
   with(as.list(c(x, p)), {
-    N = S + I + R
+    dS = b + nu * R - d * S - beta * S * I
+    dI = beta * S * I - (d + gamma) * I
+    dR = gamma * I - (d + nu) * R
+    return(list(c(dS, dI, dR)))
+  })
+}
+# Initial conditions
+N0 = 1000
+I0 = 1
+R0 = 0
+IC = c(S = N0-(I0+R0), I = I0, R = R0)
+# "Known" parametres
+d = 1/(80*365.25)
+b = N0 * d
+gamma = 1/14
+nu = 1/365.25
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+# Set beta s.t. R_0 = 1.5
+R_0 = 1.5
+beta = R_0 * (d + gamma) / (N0-I0-R0)
+params = list(b = b, d = d, gamma = gamma, beta = beta, nu = nu)
+times = seq(0, 365, 1)
+# Call the numerical integrator
+sol <- ode(y = IC, times = times, func = rhs_SIRS, 
+           parms = params, method = "ode45")
+# Plot the result
+plot(sol[,"time"], sol[,"I"], 
+     type = "l", lwd = 2,
+     xlab = "Time (days)", ylab = "Prevalence")
+\end{lstlisting}
+\end{frame}
+
+<<SIRS_one_sim_prevalence,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+library(deSolve)
+rhs_SIRS <- function(t, x, p) {
+  with(as.list(c(x, p)), {
     dS = b + nu * R - d * S - beta * S * I
     dI = beta * S * I - (d + gamma) * I
     dR = gamma * I - (d + nu) * R
@@ -1865,7 +1899,7 @@ nu = 1/365.25
 R_0 = 1.5
 beta = R_0 * (d + gamma) / (N0-I0-R0)
 params = list(b = b, d = d, gamma = gamma, beta = beta, nu = nu)
-times = seq(0, 365, 1)
+times = seq(0, 500, 1)
 # Call the numerical integrator
 sol <- ode(y = IC, times = times, func = rhs_SIRS, 
            parms = params, method = "ode45")
@@ -1873,11 +1907,12 @@ sol <- ode(y = IC, times = times, func = rhs_SIRS,
 plot(sol[,"time"], sol[,"I"], 
      type = "l", lwd = 2,
      xlab = "Time (days)", ylab = "Prevalence")
+crop_figure("FIGS/lecture-01-SIRS_one_sim_prevalence")
 @
 
 \begin{frame}{}
   \begin{center}
-    \includegraphics[width=\textwidth]{FIGS/lecture-01-KMK_one_sim_prevalence}
+    \includegraphics[width=\textwidth]{FIGS/lecture-01-SIRS_one_sim_prevalence}
   \end{center}
 \end{frame}
 
@@ -1888,9 +1923,90 @@ What I advise not to do: illustrate a mathematical result without adding anythin
 Let us make things a bit better. See the \href{https://raw.githubusercontent.com/julien-arino/petit-cours-epidemio-mathematique/main/CODE/ODE_SIS_multiple_solutions.R}{code}
 \end{frame}
 
+<<SIRS_3_sims_prevalence,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+# Compute the EPs
+valeur_PE = function(params) {
+  with(as.list(c(params)), {
+    OUT = list()
+    if (R_0<1) {
+      OUT$S_EP = Pop
+      OUT$I_EP = 0
+      OUT$col = "dodgerblue4"
+    } else {
+      OUT$S_EP = 1/R_0*Pop
+      OUT$I_EP = (1-1/R_0)*Pop
+      OUT$col = "darkorange4"
+    }
+    return(OUT)
+  })
+}
+# RHS function set in previous chunk
+
+# Put the parameters in a list
+# "Known" parametres
+params = list()
+params$Pop = N0
+params$d = 1/(80 * 365.25)
+params$b = params$Pop * params$d
+params$gamma = 1/14
+params$nu = 1/365.25
+params$t_f = 1000
+params$I_0 = I0
+# Note that we did not set R_0 or beta. This is done in a loop
+
+# IC. "Static" part (N0, I0, R0) of IC are set in previous chunk
+IC = c(S = N0-(I0+R0), I = I0, R = R0)
+
+# Times at which the solution will be returned.
+tspan = seq(from = 0, to = params$t_f, by = 0.1)
+
+# Now simulate the ODE. Loop on several values of R_0
+R_0 = c(0.8, 1.5, 2.5)
+# Save results in a list together with EP values
+sol_ODE = list()
+EP = list()
+# Now loop on R_0
+for (r_0 in R_0) {
+  # Name for list entry
+  entry_name = sprintf("$R_0$=%1.1f",r_0)
+  # Keep the current value of R_0 to compute EPs
+  params$R_0 = r_0
+  # R0=(beta/(d+gamma)) => beta=R0*(d+gamma)
+  params$beta = r_0 * (params$d+params$gamma) / (N0-I0-R0)
+  # Call numerical integrator
+  sol_ODE[[entry_name]] = ode(y = IC,
+                              func = rhs_SIRS,
+                              times = tspan,
+                              parms = params)
+  EP[[entry_name]] = valeur_PE(params)
+  EP[[entry_name]]$lty = which(r_0 == R_0)
+}
+
+# Get maximum value of I across all simulations for plot. Note the use of lapply.
+max_I = max(unlist(lapply(sol_ODE, function(x) max(x[,"I"]))))
+
+# Plot
+y_axis = plot_hr_yaxis(sol_ODE[[1]][,"time"], sol_ODE[[1]][,"I"],
+                       y_range = c(0, max_I),
+                       type = "l", lwd = 5, col = EP[[1]]$col, lty = EP[[1]]$lty,
+                       xlab = "Time (days)", ylab = "Prevalence")
+points(x = params$t_f, y = EP[[1]]$I_EP*y_axis$factor, 
+       col = EP[[1]]$col, pch = 19, cex = 2)
+for (i in 2:length(sol_ODE)) {
+  lines(sol_ODE[[i]][,"time"], sol_ODE[[i]][,"I"]*y_axis$factor,
+        type = "l", lwd = 5, col = EP[[i]]$col, lty = EP[[i]]$lty)
+  points(x = params$t_f, y = EP[[i]]$I_EP*y_axis$factor, 
+         col = EP[[i]]$col, pch = 19, cex = 2)
+}
+legend("topleft", legend = TeX(names(EP)), cex = 0.8,
+       col = unlist(lapply(EP, function(x) x$col)),
+       lty = unlist(lapply(EP, function(x) x$lty)),
+       lwd = c(3,3,3))
+@
+
 \begin{frame}{}
   \begin{center}
-    \includegraphics[width=\textwidth]{FIGS/ODE_SIS_multiple_solutions_blackBG.png}
+    \includegraphics[width=\textwidth]{FIGS/lecture-01-SIRS_3_sims_prevalence}
   \end{center}
 \end{frame}
 
@@ -1902,9 +2018,35 @@ We are going to show something important: the bifurcation diagram
 We saw that when $\R_0<1$, $I\to 0$, whereas when $\R_0>1$, $I\to (1-1/\R_0)N$. Let us represent this (\href{https://raw.githubusercontent.com/julien-arino/petit-cours-epidemio-mathematique/main/CODE/SIS_PEI_vs_R0.R}{code})
 \end{frame}
 
+<<SIRS_bifurcation_R0,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+# Values of the EPs
+value_EPs = function(R_0, N) {
+  EP_I = ifelse(R_0 < 1, 0, (1-1/R_0)*N)
+  return(EP_I)
+}
+
+R_0 = seq(0.5, 5, by = 0.01)
+EP_I = value_EPs(R_0, N = 1000)
+# We also show the DFE when R_0>1, so prepare this
+R_0_geq_1 = R_0[which(R_0>=1)]
+DFE = rep(0, length(R_0_geq_1))
+
+plot(R_0, EP_I,
+     type = "l", lwd = 3,
+     xlab = TeX("$R_0$"),
+     las = 1,
+     ylab = "Prevalence at equilibrium")
+lines(R_0_geq_1, DFE,
+      type = "l", lwd = 3,
+      lty = 2)
+legend("topleft", legend = c("LAS EP", "Unstable EP"),
+       lty = c(1, 2), lwd = c(2,2),
+       bty = "n")
+@
+
 \begin{frame}
   \begin{center}
-    \includegraphics[width=\textwidth]{FIGS/endemic_SIS_EE_vs_R0_blackBG}
+    \includegraphics[width=\textwidth]{FIGS/lecture-01-SIRS_bifurcation_R0}
   \end{center}
 \end{frame}
 
@@ -1912,9 +2054,9 @@ We saw that when $\R_0<1$, $I\to 0$, whereas when $\R_0>1$, $I\to (1-1/\R_0)N$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{An SIR model with vaccination}
+\subsection{An SIRS model with vaccination}
 
-\begin{frame}{An SIR model with vaccination}
+\begin{frame}{An SIRS model with vaccination}
 Take SIRS model \eqref{sys:SIRS} and assume the following
 \begin{itemize}
 \item Vaccination takes newborn individuals and moves them directly into the removed compartment, without them becoming infected/infectious
@@ -2011,7 +2153,7 @@ d+\nu & \nu \\ 0 & d
 \begin{frame}
 As a consequence, the DFE takes the form
 \begin{equation}\label{eq:SIRS_vacc_DFE}
-E_0^v := (S^\star,I^\star,R^\star) =
+\bE_0^v := (S^\star,I^\star,R^\star) =
 \left(
 \left(1-p+\frac{p\nu}{d+\nu}\right)N^\star,0,
 \frac{pd}{d+\nu}N^\star
