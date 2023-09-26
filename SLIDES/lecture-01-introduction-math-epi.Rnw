@@ -35,131 +35,6 @@ source("../CODE/useful_functions.R")
 \addtocounter{page}{-1}
 }
 
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-% \section{Epidemics}
-% 
-% %%%%%%%%%%%%%%%%%%%%
-% %%%%%%%%%%%%%%%%%%%%
-% \subsection{General historical remarks}
-% \begin{frame}{Among the first events recorded}
-% - Epidemic events are among the first events recorded in History
-% \vfill
-% - Indeed their effects were devastating at a time when medicine virtually did not exist and thus were easily observed
-% \end{frame}
-% 
-% \begin{frame}{First known epidemics (\href{https://en.wikipedia.org/wiki/List_of_epidemics}{from Wikipedia})}
-% 
-% \footnotesize
-% \begin{tabular}{p{1.5cm}p{1.5cm}p{2cm}p{2cm}p{2cm}}
-% Event & Date & Location & Disease & Death toll (estimate) \\
-% \hline
-% Plague of Megiddo & 1350 BCE & Megiddo, land of Canaan & Unknown & Unknown \\
-% \href{https://en.wikipedia.org/wiki/Plague_of_Athens}{Plague of Athens} & 429–426 BCE & Greece, Libya, Egypt, Ethiopia & Possibly typhus, typhoid fever or VHF &  75,000–100,000 \\
-% \href{https://en.wikipedia.org/wiki/412_BC_epidemic}{412 BCE epidemic} & 412 BCE & Greece, Roman Republic & Possibly influenza & Unknown
-% \end{tabular}
-% % | [Antonine Plague](https://en.wikipedia.org/wiki/Antonine_Plague) | 165–180 CE (possibly up to 190 CE) | Roman Empire | Possibly smallpox | 5–10 million |
-% % | Jian'an Plague | 217 CE | Han dynasty | Possibly typhoid fever or VHF | Unknown |
-% % | [Plague of Cyprian](https://en.wikipedia.org/wiki/Plague_of_Cyprian) | 250–266 CE | Europe | Possibly smallpox | Unknown |
-% % | [Plague of Justinian](https://en.wikipedia.org/wiki/Plague_of_Justinian) (1st plague pandemic) | 541–549 CE | Europe and West Asia | Bubonic plague | 15–100 million (25–60% of population of Europe) | 
-% % | [Roman Plague of 590](https://en.wikipedia.org/wiki/Roman_Plague_of_590) (1st plague pandemic) | 590 CE | Rome, Byzantine Empire | Bubonic plague | Unknown |
-% % | [Plague of Sheroe](https://en.wikipedia.org/wiki/Plague_of_Sheroe) (1st plague pandemic) | 627–628 CE | Bilad al-Sham | Bubonic plague | 25,000+ |
-% % | [Plague of Amwas](https://en.wikipedia.org/wiki/Plague_of_Amwas) (1st plague pandemic) | 638–639 CE | Byzantine Empire, West Asia, Africa | Bubonic plague | 25,000+ |
-% % | [Plague of 664](https://en.wikipedia.org/wiki/Plague_of_664) (1st plague pandemic)  | 664–689 CE | British Isles | Bubonic plague | Unknown |
-% % | Plague of 698–701 (1st plague pandemic) | 698–701 CE | Byzantine Empire, West Asia, Syria, Mesopotamia | Bubonic plague |Unknown |
-% % | [735–737 Japanese smallpox epidemic](https://en.wikipedia.org/wiki/735%E2%80%93737_Japanese_smallpox_epidemic) | 735–737 CE | Japan | Smallpox | 2 million (approx. 1/3 of Japanese population) | 
-% % | Plague of 746–747 (1st plague pandemic) | 746–747 CE | Byzantine Empire, West Asia, Africa | Bubonic plague |Unknown |
-% \end{frame}
-% 
-% \begin{frame}{Epidemics with major human cost}
-% 
-%     % | Rang | Épidémie/pandémie | Maladie | Coût humain | Mortalité globale | Mortalité régionale | Date | Lieux |
-%     % |:\end{frame}
-%     
-%     
-%     % \begin{frame}
-%     % :|\end{frame}
-%     
-%     
-%     % \begin{frame}
-%     % |\end{frame}
-%     
-%     
-%     % \begin{frame}
-%     % |---|---|---|:---:|---|
-%     % | 1 | Grande peste | Peste bubonique | 75-200 M |17-54% | 30-60% de la population européenne | 1346-1353 | Europe, Asie et Afrique du Nord |
-%     % | 2 | Grippe espagnole | Influenza A/H1N1 |  17-100 M |1-5.4% | | 1918-1920 | Monde |
-%     % | 3 | Peste de Justinien | Peste bubonique | 15-100 M |7-56% | 25-60% de la population Européenne | 541-549 |Afrique du Nord, Europe et Asie de l'Est |
-%     % | 4 | VIH/SIDA | VIH/SIDA | 36.3 M (en 2020) | Changement population totale trop important pour calculer | | 1981-présent | Monde |
-%     % | 5 | COVID-19 | SARS-CoV-2 | 6.3-25 M (au 21 mai 2022) | 0.1-0.3% || 2019-présent | Monde |
-%     % | 6 | 3ème pandémie de peste | Peste bubonique | 12-15 M | | | 1855-1960 | Monde |
-%     % | 7 | Épidémie de Cocoliztli de 1545-1548 | Cocoliztli | 5-15 M | 1-3% | 27-80% de la population du Mexique | 1545-1548 | Mexique |
-%     % | 8 | Peste Antonine | Variole ou rougeole | 5-10 M | 3-6 | 25-33% de la population Romaine | 165-180 (peut être 190) | Empire Romain |
-%     % | 9 | Épidémie de variole du Mexique de 1520 | Variole | 5-8 M | 1-2% | 23-37% de la population du Mexique |1519-1520 | Mexique |
-%     % | 10 | Épidémie de typhus de Russie de 1918-1922 | Typhus | 2-3 M | 0.1-0.16% | 1-1.6% de la population Russe |1918-1922 | URSS |
-%     % | 11 | Pandémie d'influenza de 1957-1958 | Influenza A/H2N2 | 1-4 M | 0.03–0.1%| | 1957-1958 | Monde |
-%     % | 12 | Grippe de Hong Kong | Influenza A/H3N2 | 1-4 M | 0.03-0.1% | | 1968-1969 | Monde |
-%     % | 13 | Épidémie de Cocoliztli de 1576 | Cocoliztli | 2-2.5 M | 0.4-0.5% | 50% de la population du Mexique | 1576-1580 | Mexique |
-%     % | 14 | Épidémie japonaise de variole de 735-737 | Variole | 2 M | 1% | 33% de la population du Japon | 735-737 | Japon |
-%     % | 15 | Peste perse de 1772-1773 | Peste bubonique | 2 M | 0.2–0.3% | | 1772-1773 | Perse |
-%     % | 16 | Peste de Naples (1656) | Peste bubonique | 1.25 M | 0.2% | | 1656-1658 | Sud de l'Italie |
-%     % | 17 | Pandémie de choléra de 1846-1860 | Choléra | 1+ M | 0.08% | | 1846-1860 | Monde |
-%     % | 18 | Peste italienne de 1629-1631 | Peste bubonique |1 M | 0.2% | | 1629-1631 | Italie |
-%     % | 19 | Pandémie de grippe de 1889-1890 |Influenza (en doute) | 1 M | 0.07% | | 1889-1890 | Monde |
-%     
-% \end{frame}
-%     
-% %%%%%%%%%%%%%%%%%%%%
-% %%%%%%%%%%%%%%%%%%%%
-% \subsection{Unfortunately epidemics are not yet historical}
-% \begin{frame}{``Forgotten'' killers}
-% \bbullet Tuberculosis (TB). In 2020, estimated 10 M cases of active TB, leading to 1.5 M deaths
-% \vfill
-% \bbullet Malaria: 229 M cases and 409,000 deaths in 2019
-% \end{frame}
-%     
-%     
-% \begin{frame}{Neglected tropical diseases (NTD)}
-% Often endemic diseases, sometimes major causes of death, but out of sight of rich countries. De \href{https://fr.wikipedia.org/wiki/Maladies_tropicales_négligées}{Wikipedia}, sachant que la liste précise varie selon les auteurs :
-%     
-%     % <style scoped>
-%     % table {
-%     %     height: 100%;
-%     %     width: 100%;
-%     %     font-size: 20px;
-%     % }
-%     % </style>
-%     
-%     % | | | | 
-%     % |---|---|---|
-%     % | [Ulcère de Buruli](https://fr.wikipedia.org/wiki/Ulc%C3%A8re_de_Buruli) | [Maladie de Chagas](https://fr.wikipedia.org/wiki/Maladie_de_Chagas) | Dengue & Chikungunya | 
-%     % | [Dracunculose](https://fr.wikipedia.org/wiki/Dracunculose) | Echinococcosis | Yaws |
-%     % | Fascioliasis | [Trypanosomiase](https://fr.wikipedia.org/wiki/Maladie_du_sommeil) | [Leishmaniose](https://fr.wikipedia.org/wiki/Leishmaniose) | 
-%     % | [Lèpre](https://fr.wikipedia.org/wiki/L%C3%A8pre) | [Filariose lymphatique](https://fr.wikipedia.org/wiki/Filariose_de_Bancroft) | Onchocerciasis |
-%     % | Rabies | Schistosomiasis | Soil-transmitted helminthiasis | 
-%     % Cysticercosis | Trachoma | Scabies and other ectoparasites |
-%     % | Snakebite envenoming | Mycetoma and deep mycoses |
-% \end{frame}
-% 
-% %%%%%%%%%%%%%%%%%%%%
-% %%%%%%%%%%%%%%%%%%%%
-% \subsection{A few examples}
-% 
-% 
-% \begin{frame}{The Black Death}
-% \end{frame}
-% 
-% \begin{frame}{The British Plague of 1547}
-% \end{frame}
-% 
-% \begin{frame}{The Plague of Marseille of 1720}
-% \end{frame}
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
@@ -261,13 +136,13 @@ $\implies$ $I(t)$ in an epidemiological model is \textbf{prevalence}, not \textb
 
 \begin{frame}
     \includegraphics[width=\textwidth]{FIGS/41591_2020_1092_Fig1_HTML.png}
-%"https://doi.org/10.1038/s41591-020-1092-0"
+    %"https://doi.org/10.1038/s41591-020-1092-0"
 \end{frame}
 
 
 \begin{frame}
     \includegraphics[width=\textwidth]{FIGS/371_27_f1.jpeg}
-% "https://doi.org/10.1126/science.abf8832")
+    % "https://doi.org/10.1126/science.abf8832"
 \end{frame}
 
 
@@ -631,6 +506,23 @@ If we are interested in the possibility that an epidemic occurs
 \end{frame}
 
 
+\begin{frame}{The state variables}
+We formulate the model as a system of \defword{differential equations}
+\vfill
+Differential equationsL unknowns are \emph{functions} (instead of scalars, like in algebraic equations)
+\vfill
+At time $t\geq 0$ (we typically assume time starts at $t=0$, but could also consider $t\geq t_0>0$), the \defword{state variables}, in the current model, are the numbers of individuals who are
+\begin{itemize}
+\item susceptible to the disease: $S(t)$
+\item infected and infectious with the disease: $I(t)$
+\item removed from the infectious comparment: $R(t)$
+\end{itemize}
+\vfill
+Often, we drop the dependence on $t$ if it is not explicitly required and write $S,I,R$
+\end{frame}
+
+
+
 \begin{frame}{Important -- Incidence functions}
 Incidence is the rate at which new cases arise, the incidence function then describes how contacts lead to new infections
 \vfill
@@ -650,13 +542,37 @@ For now, just know the most common incidence functions are
 \end{frame}
 
 
+
 \begin{frame}{The Kermack-McKendrick model}
 This model is typically called the Kermack-McKendrick (KMK) SIR model 
+  \begin{align*}
+    \frac{d}{dt}S(t) &= -\beta S(t)I(t) \\
+    \frac{d}{dt}I(t) &= \beta S(t)I(t)-\gamma I(t) \\
+    \frac{d}{dt}R(t) &= \gamma I(t) 
+    \end{align*}  
+\vfill
+\begin{center}
+  \begin{tikzpicture}[scale=1.25, transform shape]
+    \node [circle, fill=green!50, text=black] (S) {$S(t)$};
+    \node [circle, right=1.5cm of S, fill=red!90, text=black] (I) {$I(t)$};
+    \node [circle, right=1.5cm of I, fill=blue!90, text=black] (R) {$R(t)$};
+    %% Flows
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta S(t)I(t)$} (I);
+    \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I(t)$} (R);
+  \end{tikzpicture}    
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}{The Kermack-McKendrick model}
+As indicated, we often drop dependence on $t$ of the state variables; we also write $X':=dX(t)/dt$. So the KMK model is usually written
+\vfill
 \begin{subequations}\label{sys:KMK}
   \begin{align}
-    S' &= -\beta SI \tag{1a}\label{sys:KMK_dS} \\
-    I' &= \beta SI-\gamma I  \tag{1b}\label{sys:KMK_dI} \\
-    R' &= \gamma I  \tag{1c}\label{sys:KMK_dR}
+    S' &= -\beta SI \label{sys:KMK_dS} \\
+    I' &= \beta SI-\gamma I \label{sys:KMK_dI} \\
+    R' &= \gamma I \label{sys:KMK_dR}
     \end{align}  
 \end{subequations}
 \vfill
@@ -1620,46 +1536,6 @@ $\implies$ a solution with $I_0>0$ cannot enter the plane $\{I=0\}$. Indeed, sup
 This contradicts uniqueness of solutions to \eqref{sys:SIRS}
 \end{frame}
 
-% \begin{frame}{Invariance of $\IR_+^3$ under the flow (2)} 
-% \begin{quote}
-%   This implies that a solution with $S(0)>0$ and $I(0)>0$ cannot reach the axis $\{I=0\}$  
-% \end{quote}
-% \vfill
-% Suppose that $S(0)=S_0>0$ and $I(0)=I_0>0$ and that there exists $t_\star>0$ such that $S(t_\star)=S_\star$ and $I(t_\star)=0$
-% \begin{center}
-%   \tikzset{
-%   clockwise arrows/.style={
-%     postaction={
-%       decorate,
-%       decoration={
-%         markings,
-%         mark=between positions 0.1 and 0.9 step 40pt with {\arrow{>}},
-%    }}}}
-%   \begin{tikzpicture}
-%     \draw[->,very thick] (0,0)--(4.5,0) node[below]{\large $S$};
-%     \draw[->,very thick] (0,0)--(0,4) node[left]{\large $I$};
-%     %
-%     \draw (0.5,3) node {\textbullet};
-%     \draw (3.5,0) node {\textbullet};
-%     %
-%     \node  [color=white] at (0.1,2.95) [anchor=north west] {$(S_0,I_0)$};
-%     \node  at (2.2,0) [anchor=south west] {$(S_\star,I_\star)$};
-%     %Hobby package  
-%     \draw [ultra thick, clockwise arrows] (0.5,3) to [ curve through ={(1,3.5) . . (2,2) . . (3.5,1)}] (3.5,0);% curve 
-%   \end{tikzpicture}
-% \end{center}
-% \end{frame}
-% 
-% \begin{frame}{Invariance of $\IR_+^2$ under the flow (3)} 
-% However, in $S=S_\star$ and $I=0$, another solution is present, the one such that $S(0)=S_\star$ and $I(0)=0$ 
-% \vfill
-% Indeed, with these IC, we have $S(t)=S_\star$ and $I(t)=0$ for all $t\geq 0$
-% \vfill
-% This contradicts uniqueness of solutions 
-% \vfill
-% $\Rightarrow$ $I(t)>0$ if $I(0)>0$
-% \end{frame}
-
 \begin{frame}{Invariance of $\IR_+^3$ under the flow (2)} 
 We saw that $I(t)>0$ if $I(0)>0$
 \vfill
@@ -1868,18 +1744,52 @@ N^\star-(S^\star+I^\star)
 As you can probably guess, if $\R_0>1$, then $\bE_\star$ is not only biologically relevant by actually also LAS
 \vfill
 Recall the Jacobian
-\begin{equation}
+\begin{align}
 \tag{\ref{eq:SIRS_Jacobian}}
-J_{(S,I,R)} =
+J_{(S,I,R)} &=
 \begin{pmatrix}
 -d-\beta I & -\beta S & \nu \\
 \beta I & \beta S-(d+\gamma) & 0 \\
 0 & \gamma & -(d+\nu)
+\end{pmatrix} \\
+&= \begin{pmatrix}
+-\beta I & -\beta S & \nu \\
+\beta I & \beta S-\gamma & 0 \\
+0 & \gamma & -\nu
 \end{pmatrix}
-\end{equation}
-
+-d\II  \nonumber
+\end{align}
+\vfill
+From this, we get that $-d$ is an eigenvalue of $J$
+\begin{itemize}
+\item there is a theorem that tells us that if $\lambda\in\sigma(M)$, then $\lambda+k\in\sigma(M+k\II)$ \qquad($\sigma(M)$ is the spectrum of $M$, the set of eigenvalues of $M$)
+\item the first matrix on the second line has all column sums zero so has a zero eigenvalue
+\end{itemize}
 \end{frame}
 
+\begin{frame}
+We could continue and after some blood, sweat and tears, get that $J_{\bE_\star}$ has its eigenvalues with negative real parts when $\bE_\star$ is biologically relevant, i.e., when $\R_0>1$
+\vfill
+With even more blood, sweat and tears, we can actually show that the result is \emph{global}
+\vfill We express that on the next slide
+\end{frame}
+
+\begin{frame}
+\begin{theorem}\label{th:SIRS_GAS_behaviour}
+Let the basic reproduction number be defined by \eqref{eq:SIRS_R0} and consider the DFE \eqref{eq:SIRS_DFE} and the EEP \eqref{eq:SIRS_EEP}
+\vskip1cm
+\begin{itemize}
+\item If $\R_0<1$, then $\bE_0$ is globally asymptotically stable (GAS) and $\bE_\star$ is not biologically relevant
+\item If $\R_0>1$, then $\bE_0$ is unstable and $\bE_\star$ is GAS
+\end{itemize}
+\end{theorem}
+\vfill
+In other words
+\begin{itemize}
+\item when $\R_0<1$, then all solutions go to the DFE, the disease goes \defword{extinct}
+\item when $\R_0>1$, then all solutions go to the EEP, the disease becomes \defword{endemic}
+\end{itemize}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2052,7 +1962,7 @@ for (i in 2:length(sol_ODE)) {
   points(x = params$t_f, y = EP[[i]]$I_EP*y_axis$factor, 
          col = EP[[i]]$col, pch = 19, cex = 2)
 }
-legend("topleft", legend = TeX(names(EP)), cex = 0.8,
+legend("topright", legend = TeX(names(EP)), cex = 0.8,
        col = unlist(lapply(EP, function(x) x$col)),
        lty = unlist(lapply(EP, function(x) x$lty)),
        lwd = c(3,3,3))
