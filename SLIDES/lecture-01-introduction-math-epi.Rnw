@@ -201,7 +201,7 @@ Recall part of the definition on Wikipedia
 
 
 \begin{frame}{A terminologically heavy domain}
-A few pointers:
+A few pointers for modellers:
 \vfill
 - Moghadas and Laskowski. \href{https://nccid.ca/wp-content/uploads/sites/2/2015/03/ReviewTermsFluWEB.pdf}{Review of terms used in modelling influenza infection}. NCCID 2014
 \vfill
@@ -747,7 +747,7 @@ This model is typically called the Kermack-McKendrick (KMK) SIR model
   $$
   I(S)=\frac\gamma\beta \ln S-S+C
   $$
-  with $C\in\mathbb{R}$
+  with $C\in\IR$
   \vfill
   IC $I(S_0)=I_0$ $\Rightarrow$ $C=S_0+I_0-\dfrac \gamma\beta \ln S_0$ and the solution to \eqref{sys:KMK} is, as a function of $S$
   \begin{align*}
@@ -887,7 +887,7 @@ beta = 1.5 * gamma / S0
 params = list(gamma = gamma, beta = beta)
 IC = c(S = S0, I = 1, R = 0)
 times = seq(0, 365, 1)
-sol <- ode(IC, times, rhs_SIR_KMK, params)  
+sol_KMK <- ode(IC, times, rhs_SIR_KMK, params)  
 @
 
 \begin{frame}[fragile]{}
@@ -908,13 +908,13 @@ beta = 1.5 * gamma / S0
 params = list(gamma = gamma, beta = beta)
 IC = c(S = S0, I = 1, R = 0)
 times = seq(0, 365, 1)
-sol <- ode(IC, times, rhs_SIR_KMK, params)  
+sol_KMK <- ode(IC, times, rhs_SIR_KMK, params)  
 \end{lstlisting}
 \end{frame}
 
 <<KMK_R0eq1dot5,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
 library(latex2exp)
-plot(sol[, "time"], sol[, "I"], 
+plot(sol_KMK[, "time"], sol_KMK[, "I"], 
      type = "l", lwd = 2,
      main = TeX("Kermack-McKendrick SIR, $R_0=1.5$"),
      xlab = "Time (days)", ylab = "Prevalence")
@@ -922,7 +922,7 @@ plot(sol[, "time"], sol[, "I"],
 
 \begin{frame}[fragile]{}
 \begin{lstlisting}
-plot(sol[, "time"], sol[, "I"], type = "l",
+plot(sol_KMK[, "time"], sol_KMK[, "I"], type = "l",
 main = TeX("Kermack-McKendrick SIR, $R_0=1.5$"),
 xlab = "Time (days)", ylab = "Prevalence")
 \end{lstlisting}
@@ -1339,25 +1339,25 @@ IC: (S(0),I(0),R(0)) = ((1-p)S_0,I_0,pS_0)
     \R_0=\frac{\beta}{\gamma}S_0
   \end{equation}
   \vfill
-  With vaccination, denoting $\R_0^{\text{v}}$ the reproduction number,
+  With vaccination, denoting $\R_{\text{v}}$ the reproduction number,
   \begin{equation}
-    \R_0^{\text{v}} = \frac{\beta}{\gamma}(1-p)S_0
+    \R_{\text{v}} = \frac{\beta}{\gamma}(1-p)S_0
   \end{equation}
   \vfill
-  Since $p\in[0,1]$, $\R_0^{\text{v}}\leq\R_0$
+  Since $p\in[0,1]$, $\R_{\text{v}}\leq\R_0$
 \end{frame}
 
 
 \begin{frame}{Herd immunity}
   Therefore
   \begin{itemize}
-    \item $\R_0^{\textrm{v}}<\R_0$ if $p>0$ 
-    \item To control the disease, $\R_0^{\text{v}}$ must take a value less than 1
+    \item $\R_{\text{v}}<\R_0$ if $p>0$ 
+    \item To control the disease, $\R_{\text{v}}$ must take a value less than 1
   \end{itemize}
   \vfill
-To make $\R_0^{\text{v}}$ less than 1
+To make $\R_{\text{v}}$ less than 1
   \begin{equation}\label{eq:herd_immunity}
-    \R_0^{\text{v}}<1 \iff p> 1-\frac{1}{\R_0}
+    \R_{\text{v}}<1 \iff p> 1-\frac{1}{\R_0}
   \end{equation}
   \vfill
   By vaccinating a fraction $p>1-1/\R_0$ of the susceptible population, we thus are in a situation where an epidemic peak is precluded (or, at the very least, the final size is reduced)
@@ -1604,7 +1604,7 @@ If we had instead considered an incidence of the form $f(S,I,N)=\beta SI/N$ and,
 \end{frame}
 
 
-\begin{frame}{Invariance of $\mathbb{R}_+^3$ under the flow (1)}
+\begin{frame}{Invariance of $\IR_+^3$ under the flow (1)}
 Let us start by assuming that $I(0)=I_0=0$. Then \eqref{sys:SIRS_dI} remains $I'=0$, meaning that the $SR$-plane (i.e., the set $\{I=0\}$) is positively invariant under the flow of \eqref{sys:SIRS}
 \vfill
 On that plane, \eqref{sys:SIRS} reduce to
@@ -1620,7 +1620,7 @@ $\implies$ a solution with $I_0>0$ cannot enter the plane $\{I=0\}$. Indeed, sup
 This contradicts uniqueness of solutions to \eqref{sys:SIRS}
 \end{frame}
 
-% \begin{frame}{Invariance of $\mathbb{R}_+^3$ under the flow (2)} 
+% \begin{frame}{Invariance of $\IR_+^3$ under the flow (2)} 
 % \begin{quote}
 %   This implies that a solution with $S(0)>0$ and $I(0)>0$ cannot reach the axis $\{I=0\}$  
 % \end{quote}
@@ -1650,7 +1650,7 @@ This contradicts uniqueness of solutions to \eqref{sys:SIRS}
 % \end{center}
 % \end{frame}
 % 
-% \begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (3)} 
+% \begin{frame}{Invariance of $\IR_+^2$ under the flow (3)} 
 % However, in $S=S_\star$ and $I=0$, another solution is present, the one such that $S(0)=S_\star$ and $I(0)=0$ 
 % \vfill
 % Indeed, with these IC, we have $S(t)=S_\star$ and $I(t)=0$ for all $t\geq 0$
@@ -1660,7 +1660,7 @@ This contradicts uniqueness of solutions to \eqref{sys:SIRS}
 % $\Rightarrow$ $I(t)>0$ if $I(0)>0$
 % \end{frame}
 
-\begin{frame}{Invariance of $\mathbb{R}_+^2$ under the flow (2)} 
+\begin{frame}{Invariance of $\IR_+^3$ under the flow (2)} 
 We saw that $I(t)>0$ if $I(0)>0$
 \vfill
 Suppose now that $S=0$. Equation \eqref{sys:SIRS_dS} is then
@@ -1673,14 +1673,22 @@ So if $S(0)=S_0>0$, then $S(t)>0$ for all $t$. If, on the other hand, $S_0=0$, t
 We say the vector field points \emph{inward}
 \vfill
 $\implies$ $S$ cannot become zero
+\vfill
+Do the same for $R$
 \end{frame}
 
-\begin{frame}{To summarise, for invariance} 
-\bbullet If $(S(0),I(0))\in\mathbb{R}_+\times(\mathbb{R}_+\setminus\{0\})$, then $\forall t>0$,
-$$(S(t),I(t))\in(\mathbb{R}_+\setminus\{0\})^2$$
+\begin{frame}{To summarise, for invariance}
+For simplicity, denote $\IR^\star=\IR\setminus\{0\}$
 \vfill
-\bbullet If $(S(0),I(0))\in\mathbb{R}_+\times\{0\}$, then $\forall t\geq 0$, 
-$$(S(t),I(t))=(S(0),0)$$
+\bbullet If $(S(0),I(0),R(0))\in\IR_+\times \IR_+^\star\times\IR_+$, then $\forall t>0$,
+\[
+(S(t),I(t),R(t))\in(\IR_+^\star)^3
+\]
+\vfill
+\bbullet If $(S(0),I(0),R(0))\in\IR_+\times\{0\}\times\IR_+$, then $\forall t\geq 0$, 
+\[
+(S(t),I(t),R(t))\in\IR_+^\star\times\{0\}\times\IR_+
+\]
 \vfill
 The model is therefore satisfactory in that it does not allow solutions to become negative
 \end{frame}
@@ -1704,7 +1712,7 @@ So we can work at the limit $N^\star$ where $R=N^\star-(S+I)$ and thus drop the 
 
 
 \begin{frame}{Boundedness}
-It follows from what we just saw that the positive cone $\mathbb{R}_+^3$ is (positively) invariant under the flow of \eqref{sys:SIRS}
+It follows from what we just saw that the positive cone $\IR_+^3$ is (positively) invariant under the flow of \eqref{sys:SIRS}
 \vfill
 Since $N(t)\to N^\star$, we deduce that solutions of \eqref{sys:SIRS} are bounded
 \end{frame}
@@ -1728,7 +1736,7 @@ When $I^\star=0$, substituting $I^\star=0$ into \eqref{sys:SIRS_EP_dR} implies t
 \left(\frac bd, 0, 0\right)
 \end{equation}
 \vfill
-We return to $S^\star=(d+\gamma)/beta$ in a while
+We return to $S^\star=(d+\gamma)/\beta$ in a while
 \end{frame}
 
 
@@ -1754,7 +1762,7 @@ J_{(S,I,R)} =
 The LAS of the DFE depends on the sign of the real parts of the eigenvalues of \eqref{eq:SIRS_Jacobian} at that equilibrium point, so we evaluate
 \begin{equation}
 \label{eq:SIRS_Jacobian_DFE}
-J_{E_0} =
+J_{\bE_0} =
 \begin{pmatrix}
 -d & -\beta S^\star & \nu \\
 0 & \beta S^\star-(d+\gamma) & 0 \\
@@ -1827,6 +1835,52 @@ Remark that $\bE_\star$ is \defword{not biologically relevant} when $\R_0\leq 1$
 \end{frame}
 
 
+\begin{frame}
+\begin{theorem}\label{th:SIRS_LAS_DFE}
+Let the basic reproduction number be
+\begin{equation}\tag{\ref{eq:SIRS_R0}}
+\R_0 = \frac\beta{d+\gamma}\ N^\star
+\end{equation}
+and consider the EP of \eqref{sys:SIRS}: the DFE
+\begin{equation}\tag{\ref{eq:SIRS_DFE}}
+\bE_0=
+\left(\frac bd, 0, 0\right)
+\end{equation}
+and the EEP
+\begin{equation}\tag{\ref{eq:SIRS_EEP}}
+\bE_\star=
+\left(
+\frac{1}{\R_0}\ N^\star,
+\left(1-\frac{1}{\R_0}\right)\
+\frac{d+\nu}{d+\nu+\gamma}\ N^\star,
+N^\star-(S^\star+I^\star)
+\right)
+\end{equation}
+\vskip0.5cm
+\begin{itemize}
+\item If $\R_0<1$, then $\bE_0$ is LAS and $\bE_\star$ is not biologically relevant
+\item If $\R_0>1$, then $\bE_0$ is unstable and $\bE_\star$ is biologically relevant
+\end{itemize}
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+As you can probably guess, if $\R_0>1$, then $\bE_\star$ is not only biologically relevant by actually also LAS
+\vfill
+Recall the Jacobian
+\begin{equation}
+\tag{\ref{eq:SIRS_Jacobian}}
+J_{(S,I,R)} =
+\begin{pmatrix}
+-d-\beta I & -\beta S & \nu \\
+\beta I & \beta S-(d+\gamma) & 0 \\
+0 & \gamma & -(d+\nu)
+\end{pmatrix}
+\end{equation}
+
+\end{frame}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1866,10 +1920,10 @@ beta = R_0 * (d + gamma) / (N0-I0-R0)
 params = list(b = b, d = d, gamma = gamma, beta = beta, nu = nu)
 times = seq(0, 365, 1)
 # Call the numerical integrator
-sol <- ode(y = IC, times = times, func = rhs_SIRS, 
-           parms = params, method = "ode45")
+sol_SIRS <- ode(y = IC, times = times, func = rhs_SIRS, 
+                parms = params, method = "ode45")
 # Plot the result
-plot(sol[,"time"], sol[,"I"], 
+plot(sol_SIRS[,"time"], sol_SIRS[,"I"], 
      type = "l", lwd = 2,
      xlab = "Time (days)", ylab = "Prevalence")
 \end{lstlisting}
@@ -1901,10 +1955,10 @@ beta = R_0 * (d + gamma) / (N0-I0-R0)
 params = list(b = b, d = d, gamma = gamma, beta = beta, nu = nu)
 times = seq(0, 500, 1)
 # Call the numerical integrator
-sol <- ode(y = IC, times = times, func = rhs_SIRS, 
-           parms = params, method = "ode45")
+sol_SIRS <- ode(y = IC, times = times, func = rhs_SIRS, 
+                parms = params, method = "ode45")
 # Plot the result
-plot(sol[,"time"], sol[,"I"], 
+plot(sol_SIRS[,"time"], sol_SIRS[,"I"], 
      type = "l", lwd = 2,
      xlab = "Time (days)", ylab = "Prevalence")
 crop_figure("FIGS/lecture-01-SIRS_one_sim_prevalence")
@@ -1934,7 +1988,7 @@ valeur_PE = function(params) {
       OUT$col = "dodgerblue4"
     } else {
       OUT$S_EP = 1/R_0*Pop
-      OUT$I_EP = (1-1/R_0)*Pop
+      OUT$I_EP = (1-1/R_0)*(d+nu)/(d+nu+gamma)*Pop
       OUT$col = "darkorange4"
     }
     return(OUT)
@@ -1950,7 +2004,7 @@ params$d = 1/(80 * 365.25)
 params$b = params$Pop * params$d
 params$gamma = 1/14
 params$nu = 1/365.25
-params$t_f = 1000
+params$t_f = 1200
 params$I_0 = I0
 # Note that we did not set R_0 or beta. This is done in a loop
 
