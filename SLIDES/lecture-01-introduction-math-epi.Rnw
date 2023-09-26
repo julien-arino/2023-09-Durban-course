@@ -2022,8 +2022,10 @@ legend("topleft", legend = c("LAS EP", "Unstable EP"),
 
 \begin{frame}{An SIRS model with vaccination}
 Take SIRS model \eqref{sys:SIRS} and assume the following
+\vfill
 \begin{itemize}
 \item Vaccination takes newborn individuals and moves them directly into the removed compartment, without them becoming infected/infectious
+\vfill
 \item A fraction $p$ is vaccinated at birth
 \end{itemize}
 \end{frame}
@@ -2143,11 +2145,13 @@ So we define
 
 \begin{frame}{Herd immunity}
   Therefore 
-  - $\R_0^{\textrm{v}}<\R_0$ if $p>0$
-  - To control the disease, $\R_0^{\text{v}}$ must take a value less than 1, i.e.,
+  \begin{itemize}
+  \item $\R_0^{\textrm{v}}<\R_0$ if $p>0$
+  \item To control the disease, $\R_{\text{v}}$ must take a value less than 1, i.e.,
   \begin{equation}
-    \R_0^{\text{v}}<1 \iff p> 1-\frac{1}{\R_0}
+    \R_{\text{v}}<1 \iff p> 1-\frac{1}{\R_0}
   \end{equation}
+  \end{itemize}
   \vfill
   By vaccinating a fraction $p>1-1/\R_0$ of newborns, we thus are in a situation where the disease is eventually eradicated
   \vfill
