@@ -1180,6 +1180,251 @@ Problem: we have antivirals to use against influenza, either prophylactically or
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
+\section{Vector-borne diseases}
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{Two Ross-Macdonald-type models}
+\begin{frame}
+See, e.g., Simoy \& Aparicio, \href{https://doi.org/10.1016/j.actatropica.2020.105452}{Ross-Macdonald models: Which one should we use?}, \emph{Acta Tropica} (2020)
+\vfill
+Ross introduced the model in 1911. Later ``tweaked'' by Macdonald to include mosquito latency period
+\vfill
+Here, I show a version in the paper cited, with some notation changed
+\end{frame}
+
+\begin{frame}
+\centering
+\resizebox{\textwidth}{!}{
+  \def\horskip{*2}
+  \def\verskip{*2}
+  \begin{tikzpicture}[%transform canvas={scale=1.3},
+      auto,
+      cloud/.style={minimum width={width("N-1")+2pt},
+      draw, 
+      ellipse,
+      fill=gray!20}]
+    %% Hosts
+    \node [cloud, fill=green!50] at (0,0) (SH) {$S_H$};
+    \node [cloud, fill=red!50] at (1\horskip,0) (IH) {$I_H$};
+    \node [cloud, fill=blue!50] at (2\horskip,0) (RH) {$R_H$};
+    %% Vectors
+    \node [cloud, fill=green!50] at (0,-1\verskip) (SV) {$S_V$};
+    \node [cloud, fill=red!50] at (1\horskip,-1\verskip) (IV) {$I_V$};
+    %% Births
+    \node [left=0.75cm of SH] (birthH) {};
+    \node [left=0.75cm of SV] (birthV) {};
+    %% Deaths
+    \node [below=0.25\verskip of SH] (dSH) {};
+    \node [below=0.25\verskip of IH] (dIH) {};
+    \node [below=0.25\verskip of RH] (dRH) {};
+    \node [below=0.25\verskip of SV] (dSV) {};
+    \node [below=0.25\verskip of IV] (dIV) {};
+    %%
+    \path [line, very thick] (SH) to node [midway,above,sloped] (TextNode) {$\beta_HI_V\frac{S_H}{H}$} (IH);
+    \path [line, very thick] (IH) to node [midway,above,sloped] (TextNode) {$\gamma_H I_H$} (RH);
+    \path [line, very thick] (SV) to node [midway,below,sloped] (TextNode) {$\beta_VS_V\frac{I_H}{H}$} (IV);
+    \path [line, dotted, very thick] (IV) to node [midway,below,sloped] (TextNode) {} (SH);
+    \path [line, dotted, very thick] (IH) to node [midway,above,sloped] (TextNode) {} (SV);
+    %% Demography
+    \path [line, very thick] (birthH) to node [midway,above] (TextNode) {$b_H$} (SH);
+    \path [line, very thick] (birthV) to node [midway,above] (TextNode) {$b_V$} (SV);
+    \path [line, very thick] (SH) to node [near end,left] (TextNode) {$d_HS_H$} (dSH);
+    \path [line, very thick] (IH) to node [near end,right] (TextNode) {$d_HI_H$} (dIH);
+    \path [line, very thick] (RH) to node [near end,right] (TextNode) {$d_HR_H$} (dRH);
+    \path [line, very thick] (SV) to node [near end,left] (TextNode) {$d_VS_V$} (dSV);
+    \path [line, very thick] (IV) to node [near end,right] (TextNode) {$d_VI_V$} (dIV);
+  \end{tikzpicture}
+}
+\end{frame}
+
+\begin{frame}{Reproduction number}
+\begin{equation}\label{eq:vector_host_1}
+\R_0 =
+\frac{\beta_H\beta_V}{(\gamma_H+\gamma_V)d_V}\
+\frac{V^\star}{H^\star}
+\end{equation}
+where $H^\star$ and $V^\star$ are the total host and vector populations, respectively
+\end{frame}
+
+
+\begin{frame}
+\centering
+\resizebox{\textwidth}{!}{
+  \def\horskip{*2}
+  \def\verskip{*2}
+  \begin{tikzpicture}[%transform canvas={scale=1.3},
+      auto,
+      cloud/.style={minimum width={width("N-1")+2pt},
+      draw, 
+      ellipse,
+      fill=gray!20}]
+    %% Hosts
+    \node [cloud, fill=green!50] at (0,0) (SH) {$S_H$};
+    \node [cloud, fill=red!10] at (1\horskip,0) (LH) {$L_H$};
+    \node [cloud, fill=red!50] at (2\horskip,0) (IH) {$I_H$};
+    \node [cloud, fill=blue!50] at (3\horskip,0) (RH) {$R_H$};
+    %% Vectors
+    \node [cloud, fill=green!50] at (0,-1\verskip) (SV) {$S_V$};
+    \node [cloud, fill=red!10] at (1\horskip,-1\verskip) (LV) {$L_V$};
+    \node [cloud, fill=red!50] at (2\horskip,-1\verskip) (IV) {$I_V$};
+    %% Births
+    \node [left=0.75cm of SH] (birthH) {};
+    \node [left=0.75cm of SV] (birthV) {};
+    %% Deaths
+    \node [above=0.5\verskip of SH] (dSH) {};
+    \node [above=0.5\verskip of LH] (dLH) {};
+    \node [above=0.5\verskip of IH] (dIH) {};
+    \node [above=0.5\verskip of RH] (dRH) {};
+    \node [below=0.5\verskip of SV] (dSV) {};
+    \node [below=0.5\verskip of LV] (dLV) {};
+    \node [below=0.5\verskip of IV] (dIV) {};
+    %%
+    \path [line, very thick] (SH) to node [midway,above,sloped] (TextNode) {$\beta_HI_V\frac{S_H}{H}$} (LH);
+    \path [line, very thick] (LH) to node [midway,above,sloped] (TextNode) {$\varepsilon_H L_H$} (IH);
+    \path [line, very thick] (IH) to node [midway,above,sloped] (TextNode) {$\gamma_H I_H$} (RH);
+    \path [line, very thick] (SV) to node [midway,below,sloped] (TextNode) {$\beta_VS_V\frac{I_H}{H}$} (LV);
+    \path [line, very thick] (LV) to node [midway,below,sloped] (TextNode) {$\varepsilon_V L_V$} (IV);
+    \path [line, dotted, very thick] (IV) to node [midway,below,sloped] (TextNode) {} (SH);
+    \path [line, dotted, very thick] (IH) to node [midway,above,sloped] (TextNode) {} (SV);
+    %% Demography
+    \path [line, very thick] (birthH) to node [midway,above] (TextNode) {$b_H$} (SH);
+    \path [line, very thick] (birthV) to node [midway,above] (TextNode) {$b_V$} (SV);
+    \path [line, very thick] (SH) to node [near end,right] (TextNode) {$d_HS_H$} (dSH);
+    \path [line, very thick] (LH) to node [near end,right] (TextNode) {$d_HL_H$} (dLH);
+    \path [line, very thick] (IH) to node [near end,right] (TextNode) {$d_HI_H$} (dIH);
+    \path [line, very thick] (RH) to node [near end,right] (TextNode) {$d_HR_H$} (dRH);
+    \path [line, very thick] (SV) to node [near end,right] (TextNode) {$d_VS_V$} (dSV);
+    \path [line, very thick] (LV) to node [near end,right] (TextNode) {$d_VL_V$} (dLV);
+    \path [line, very thick] (IV) to node [near end,right] (TextNode) {$d_VI_V$} (dIV);
+  \end{tikzpicture}
+}
+\end{frame}
+
+\begin{frame}{Reproduction number}
+\begin{equation}\label{eq:vector_host_2}
+\R_0 =
+\frac{\beta_H\beta_V}{(\gamma_H+\gamma_V)d_V}\
+\frac{\varepsilon_V}{d_V+\varepsilon_V}\
+\frac{\varepsilon_H}{d_H+\varepsilon_H}\
+\frac{V^\star}{H^\star}
+\end{equation}
+where $H^\star$ and $V^\star$ are the total host and vector populations, respectively
+\vfill
+Here
+\[
+f_X = \frac{\varepsilon_X}{d_X+\varepsilon_X}
+\]
+are the fractions of latent individuals (of type $X=\{V,H\}$) who survive the latency period
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{A little complexification of Ross-Macdonald}
+
+\begin{frame}{Recall this guy?}
+\centering
+\resizebox{\textwidth}{!}{
+  \def\horskip{*2}
+  \def\verskip{*2}
+  \begin{tikzpicture}[%transform canvas={scale=1.3},
+      auto,
+      cloud/.style={minimum width={width("N-1")+2pt},
+      draw, 
+      ellipse,
+      fill=gray!20}]
+    %% Hosts
+    \node [cloud, fill=green!50] at (0,0) (SH) {$S_H$};
+    \node [cloud, fill=red!50] at (1\horskip,0) (IH) {$I_H$};
+    \node [cloud, fill=blue!50] at (2\horskip,0) (RH) {$R_H$};
+    %% Vectors
+    \node [cloud, fill=green!50] at (0,-1\verskip) (SV) {$S_V$};
+    \node [cloud, fill=red!50] at (1\horskip,-1\verskip) (IV) {$I_V$};
+    %% Births
+    \node [left=0.75cm of SH] (birthH) {};
+    \node [left=0.75cm of SV] (birthV) {};
+    %% Deaths
+    \node [below=0.25\verskip of SH] (dSH) {};
+    \node [below=0.25\verskip of IH] (dIH) {};
+    \node [below=0.25\verskip of RH] (dRH) {};
+    \node [below=0.25\verskip of SV] (dSV) {};
+    \node [below=0.25\verskip of IV] (dIV) {};
+    %%
+    \path [line, very thick] (SH) to node [midway,above,sloped] (TextNode) {$\beta_HI_V\frac{S_H}{H}$} (IH);
+    \path [line, very thick] (IH) to node [midway,above,sloped] (TextNode) {$\gamma_H I_H$} (RH);
+    \path [line, very thick] (SV) to node [midway,below,sloped] (TextNode) {$\beta_VS_V\frac{I_H}{H}$} (IV);
+    \path [line, dotted, very thick] (IV) to node [midway,below,sloped] (TextNode) {} (SH);
+    \path [line, dotted, very thick] (IH) to node [midway,above,sloped] (TextNode) {} (SV);
+    %% Demography
+    \path [line, very thick] (birthH) to node [midway,above] (TextNode) {$b_H$} (SH);
+    \path [line, very thick] (birthV) to node [midway,above] (TextNode) {$b_V$} (SV);
+    \path [line, very thick] (SH) to node [near end,left] (TextNode) {$d_HS_H$} (dSH);
+    \path [line, very thick] (IH) to node [near end,right] (TextNode) {$d_HI_H$} (dIH);
+    \path [line, very thick] (RH) to node [near end,right] (TextNode) {$d_HR_H$} (dRH);
+    \path [line, very thick] (SV) to node [near end,left] (TextNode) {$d_VS_V$} (dSV);
+    \path [line, very thick] (IV) to node [near end,right] (TextNode) {$d_VI_V$} (dIV);
+  \end{tikzpicture}
+}
+\end{frame}
+
+
+\begin{frame}{Let us add a few arrows}
+\centering
+\resizebox{\textwidth}{!}{
+  \def\horskip{*2}
+  \def\verskip{*2}
+  \begin{tikzpicture}[%transform canvas={scale=1.3},
+      auto,
+      cloud/.style={minimum width={width("N-1")+2pt},
+      draw, 
+      ellipse,
+      fill=gray!20}]
+    %% Hosts
+    \node [cloud, fill=green!50] at (0,0) (SH) {$S_H$};
+    \node [cloud, fill=red!50] at (1\horskip,0) (IH) {$I_H$};
+    \node [cloud, fill=blue!50] at (2\horskip,0) (RH) {$R_H$};
+    %% Vectors
+    \node [cloud, fill=green!50] at (0,-1\verskip) (SV) {$S_V$};
+    \node [cloud, fill=red!50] at (1\horskip,-1\verskip) (IV) {$I_V$};
+    %% Births
+    \node [left=0.75cm of SH] (birthH) {};
+    \node [left=0.75cm of SV] (birthV) {};
+    %% Deaths
+    \node [below=0.25\verskip of SH] (dSH) {};
+    \node [below=0.25\verskip of IH] (dIH) {};
+    \node [below=0.25\verskip of RH] (dRH) {};
+    \node [below=0.25\verskip of SV] (dSV) {};
+    \node [below=0.25\verskip of IV] (dIV) {};
+    %%
+    \path [line, very thick] (SH) to node [midway,above,sloped] (TextNode) {$\beta_HI_V\frac{S_H}{H}$} (IH);
+    \path [line, very thick] (IH) to node [midway,above,sloped] (TextNode) {$\gamma_H I_H$} (RH);
+    \path [line, very thick] (SV) to node [midway,below,sloped] (TextNode) {$\beta_VS_V\frac{I_H}{H}$} (IV);
+    \path [line, dotted, very thick] (IV) to node [midway,below,sloped] (TextNode) {} (SH);
+    \path [line, dotted, very thick] (IH) to node [midway,above,sloped] (TextNode) {} (SV);
+    \draw [>=latex,->, thick, rounded corners] (IH) -- (1\horskip,0.75) -- (0,0.75) node[midway,above,sloped] {$\nu R$} -- (SH);
+    \draw [>=latex,->, thick, rounded corners] (RH) -- (2\horskip,1.5) -- (-0.35,1.5) node[midway,above,sloped] {$\nu R$} -- (SH.north west);
+    %% Demography
+    \path [line, very thick] (birthH) to node [midway,above] (TextNode) {$b_H$} (SH);
+    \path [line, very thick] (birthV) to node [midway,above] (TextNode) {$b_V$} (SV);
+    \path [line, very thick] (SH) to node [near end,left] (TextNode) {$d_HS_H$} (dSH);
+    \path [line, very thick] (IH) to node [near end,right] (TextNode) {$d_HI_H$} (dIH);
+    \path [line, very thick] (RH) to node [near end,right] (TextNode) {$d_HR_H$} (dRH);
+    \path [line, very thick] (SV) to node [near end,left] (TextNode) {$d_VS_V$} (dSV);
+    \path [line, very thick] (IV) to node [near end,right] (TextNode) {$d_VI_V$} (dIV);
+  \end{tikzpicture}
+}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\section{Immunology}
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
 \section{A few other models}
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
@@ -1443,7 +1688,7 @@ legend("bottomright", legend = c("H(t)", "E(t)"),
 \begin{frame}
   Let
   \begin{equation}
-    \label{eq:R0_capasso}
+    \tag{\ref{eq:R0_capasso}}
     \R_0 = \frac{g'_+(0)c_H}{d_E\gamma_H}
   \end{equation}
   \begin{theorem}
@@ -1652,7 +1897,7 @@ shinyApp(ui = ui, server = server)
 \begin{frame}
   Let
   \begin{equation}
-    \label{eq:R0_capasso_periodic}
+    \tag{\ref{eq:R0_capasso_periodic}}
     \R_0^{min} = \frac{c_Hp_{min}h'_+(0)}{d_E\gamma_H},\quad 
     \R_0^{max} = \frac{c_Hp_{max}h'_+(0)}{d_E\gamma_H}
   \end{equation}
