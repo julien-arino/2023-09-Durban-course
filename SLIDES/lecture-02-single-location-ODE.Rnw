@@ -869,7 +869,7 @@ where $K$ is the initial total population
 
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
-\subsection{Examples}
+\subsection{A variation on the SLIAR model}
 
 \begin{frame}{The SLIAR model}
 \bbullet Paper we have already seen: Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic} (2006)
@@ -965,6 +965,9 @@ If $\bI_0=(L_0,I_0,A_0)$, then
 
 
 
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{A model with vaccination}
 \begin{frame}{A model with vaccination}
 Fraction $\gamma$ of $S_0$ are vaccinated before the epidemic; vaccination reduces probability and duration of infection, infectiousness and reduces mortality
 \begin{subequations}
@@ -1037,6 +1040,55 @@ S_V(\infty) = \gamma S_U(0)\left(
 \]
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{Antiviral resistance}
+
+\begin{frame}{Adapting treatment to counter emergence of resistance}
+Arino, Bowman \& Moghadas.
+\vfill
+This work was undertaken at the request of the Public Health Agency of Canada during the pandemic preparadness phase prior to the 2009 p-H1N1 pandemic
+\vfill
+Problem:
+\end{frame}
+
+
+\begin{frame}
+\centering
+\resizebox{\textwidth}{!}{
+  \begin{tikzpicture}[%transform canvas={scale=1.3},
+      auto,
+      cloud/.style={minimum width={width("N-1")+2pt},
+      draw, 
+      ellipse,
+      fill=gray!20}]
+    %% S
+    \node [cloud, fill=green!90] at (0,0) (S) {$S$};
+    %% Untreated, resistant
+    \node [cloud, fill=red!90] at (3,1) (A_r) {$A_r$};
+    \node [cloud, fill=red!60] at (3,-1) (I_rU) {$I_{rU}$};
+    \node [cloud, fill=blue!60] at (6,0) (R_rU) {$R_{rU}$};
+    %% Untreated, sensitive
+    \node [cloud, fill=red!90] at (-3,1) (A) {$A$};
+    \node [cloud, fill=red!60] at (-3,-1) (I_U) {$I_U$};
+    \node [cloud, fill=blue!60] at (-6,0) (R_U) {$R_U$};
+    %% Treated
+    \node [cloud, fill=red!90] at (-1.5,-3) (I_T) {$I_T$};
+    \node [cloud, fill=red!90] at (1.5,-3) (I_rT) {$I_{rT}$};
+    \node [cloud, fill=red!90] at (0,-6) (I_Tr) {$I_{Tr}$};
+    %% Resistance
+    \node [cloud, fill=blue!60] at (-4.5,-3) (R_T) {$R_T$};
+    \node [cloud, fill=blue!60] at (4.5,-3) (R_rT) {$R_{rT}$};
+    \node [cloud, fill=blue!60] at (3,-6) (R_Tr) {$R_{Tr}$};
+    %%
+    %% Infections
+    \path [line, very thick] (S) to node [midway,above,sloped] (TextNode) {$(1-p)fS$} (A);
+    \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$(1-q)pfS$} (I_U);
+    \path [line, very thick] (S) to node [midway,above,sloped] (TextNode) {$(1-p)gS$} (A_r);
+    \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$(1-q)pgS$} (I_rU);
+  \end{tikzpicture}
+}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
