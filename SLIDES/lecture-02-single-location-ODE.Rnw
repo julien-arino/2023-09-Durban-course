@@ -167,6 +167,35 @@ There is no vertical transmssion: all ``newborns'' are susceptible
 }
 
 \frame{\frametitle{SLIRS}
+\begin{minipage}{0.2\textwidth}
+  \def\skip{*-1.5}
+  \begin{tikzpicture}[scale=1, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!50, text=black] at (0,1\skip) (L) {$L$};
+    \node [circle, fill=red!90, text=black] at (0,2\skip) (I) {$I$};
+    \node [circle, fill=blue!50, text=black] at (0,3\skip) (R) {$R$};
+    %% Fake nodes for arrows
+    \node [above=0.75cm of S] (birth) {};
+    \node [left=0.5cm of S] (dS) {};
+    \node [left=0.5cm of L] (dL) {};
+    \node [left=0.5cm of I] (dI) {};
+    \node [left=0.5cm of R] (dR) {};
+    %% Flows (demography)
+    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (L) to node [midway, below] (TextNode) {$dL$} (dL);
+    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
+    \path [line, very thick] (R) to node [midway, below] (TextNode) {$dR$} (dR);
+    %% Flows (demography)
+    \path [line, very thick] (S) to node [midway, left] (TextNode) {$f(S,I,N)$} (L);
+    \path [line, very thick] (L) to node [midway, left] (TextNode) {$\varepsilon L$} (I);
+    \path [line, very thick] (I) to node [midway, left] (TextNode) {$\gamma I$} (R);
+    \draw [>=latex,->, thick, rounded corners] (R) -- (0.75,3\skip) -- (0.75,0) node[midway,above,sloped] {$\nu R$} -- (S);
+  \end{tikzpicture}    
+\end{minipage}
+\quad
+\begin{minipage}{0.7\textwidth}
 The model is as follows:
 \begin{subequations}\label{sys:SLIRS}
 \begin{align}
@@ -183,6 +212,7 @@ Meaning of the parameters:
 \item $1/\gamma$ average duration of infectious period
 \item $1/\nu$ average duration of immune period
 \end{itemize}
+\end{minipage}
 }
 
 
@@ -611,6 +641,39 @@ In the case of the SLIS model, the behaviour is not modified by this function
 In the case where immunity is temporary (SLIRS), they find (numerically) a Hopf bifurcation
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{A better vaccination model}
+\begin{frame}{SLIRS with vaccination}
+\centering
+  \def\skip{*2.5}
+  \begin{tikzpicture}[scale=1.5, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!90, text=black] at (1\skip,0) (I) {$I$};
+    \node [circle, fill=blue!50, text=black] at (2\skip,0) (R) {$R$};
+    \node [circle, fill=red!50, text=black] at (0.5\skip,-1\skip) (V) {$V$};
+    %% Fake nodes for arrows
+    \node [left=0.75cm of S] (birth) {};
+    \node [below=0.5cm of S] (dS) {};
+    \node [below=0.5cm of I] (dI) {};
+    \node [below=0.5cm of R] (dR) {};
+    \node [below=0.5cm of V] (dV) {};
+    %% Flows (demography)
+    \path [line, very thick] (birth) to node [midway, above] (TextNode) {$b$} (S);
+    \path [line, very thick] (S) to node [midway, left] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (I) to node [midway, right] (TextNode) {$dI$} (dI);
+    \path [line, very thick] (R) to node [midway, left] (TextNode) {$dR$} (dR);
+    \path [line, very thick] (V) to node [midway, left] (TextNode) {$dV$} (dV);
+    %% Flows
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta SI/N$} (I);
+    \path [line, very thick, bend left=10] (S) to node [near start, right] (TextNode) {$\phi S$} (V);
+    \path [line, very thick, bend left=10] (V) to node [near start, left] (TextNode) {$\varphi V$} (S);
+    \path [line, very thick] (V) to node [midway, above, sloped] (TextNode) {$\sigma\beta SI/N$} (I);
+    \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I$} (R);
+    \draw [>=latex,->, thick, rounded corners] (R) -- (2\skip,0.75) -- (0,0.75) node[midway,above,sloped] {$\nu R$} -- (S);
+  \end{tikzpicture}    
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -1045,11 +1108,11 @@ S_V(\infty) = \gamma S_U(0)\left(
 \subsection{Antiviral resistance}
 
 \begin{frame}{Adapting treatment to counter emergence of resistance}
-Arino, Bowman \& Moghadas.
+Arino, Bowman \& Moghadas. \href{https://bmcinfectdis.biomedcentral.com/counter/pdf/10.1186/1471-2334-9-8.pdf}{Antiviral resistance during pandemic influenza: implications for stockpiling and drug use}. BMC Infectious Disease (2009)
 \vfill
 This work was undertaken at the request of the Public Health Agency of Canada during the pandemic preparadness phase prior to the 2009 p-H1N1 pandemic
 \vfill
-Problem:
+Problem: we have antivirals to use against influenza, either prophylactically or curatively. Using these antivirals may promote the emergence of antiviral-resistant strains. How do we minimise this risk?
 \end{frame}
 
 
@@ -1086,8 +1149,31 @@ Problem:
     \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$(1-q)pfS$} (I_U);
     \path [line, very thick] (S) to node [midway,above,sloped] (TextNode) {$(1-p)gS$} (A_r);
     \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$(1-q)pgS$} (I_rU);
+    \path [line, very thick] (S) to node [midway,above,sloped] (TextNode) {$qpfS$} (I_T);
+    \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$qpgS$} (I_rT);
+    %% Removals
+    \path [line, very thick] (A) to node [midway,below,sloped] (TextNode) {$\mu_AA$} (R_U);
+    \path [line, very thick] (I_U) to node [midway,below,sloped] (TextNode) {$(d_U+\mu_U)I_U$} (R_U);
+    \path [line, very thick] (A_r) to node [midway,below,sloped] (TextNode) {$\mu_AA_r$} (R_rU);
+    \path [line, very thick] (I_rU) to node [midway,below,sloped] (TextNode) {$(d_{rU}+\mu_U)I_{rU}$} (R_rU);
+    \path [line, very thick] (I_T) to node [midway,below,sloped] (TextNode) {$(d_T+\mu_T)I_T$} (R_T);
+    \path [line, very thick] (I_rT) to node [midway,below,sloped] (TextNode) {$(d_{rU}+\mu_U)I_{rT}$} (R_rT);
+    \path [line, very thick] (I_Tr) to node [midway,below,sloped] (TextNode) {$(d_{Ur}+\mu_U)I_{Tr}$} (R_Tr);
+    %% I_T transitions
+        \path [line, very thick] (I_T) to node [midway,below,sloped] (TextNode) {$\alpha I_T$} (I_Tr);
+    \path [line, very thick] (I_Tr) to node [midway,below,sloped] (TextNode) {$\gamma I_{Tr}$} (I_rT);
   \end{tikzpicture}
 }
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[height=\textheight]{FIGS/ABM-role-of-resistance}
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[height=\textheight]{FIGS/ABM-heatmaps}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%
