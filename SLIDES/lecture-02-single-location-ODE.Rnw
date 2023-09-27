@@ -13,6 +13,15 @@
 \SweaveOpts{concordance=TRUE}
 \SweaveOpts{prefix.string = FIGS/lecture-02}
 
+<<set-options,echo=FALSE>>=
+# Are we plotting for a dark background
+plot_blackBG = FALSE
+# Source the useful functions file
+source("../CODE/useful_functions.R")
+# Grab the required libraries
+library(deSolve)
+@
+
 % The title page
 \begin{frame}[noframenumbering,plain]
   \titlepage
@@ -603,6 +612,7 @@ In the case where immunity is temporary (SLIRS), they find (numerically) a Hopf 
 \end{frame}
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -1025,6 +1035,1017 @@ S_V(\infty) = \gamma S_U(0)\left(
 \frac{S_U(\infty)}{(1-\gamma)S_0}
 \right)^{\sigma_S}
 \]
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\section{A few other models}
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{A model of Capasso for ETP}
+
+\begin{frame}{A minimal model of V. Capasso}
+  \begin{center}
+    \def\vertskip{*1.75}
+    \def\horzskip{*2}
+    \begin{tikzpicture}[scale=1.5, transform shape]
+      \node [circle, fill=gray!10, text=black] at (-1\horzskip,0\vertskip) (H) {$H$};
+      \node [circle, fill=gray!10, text=black] at (1\horzskip,0\vertskip) (E) {$E$};
+      %% Flows between
+      \path [line, very thick, bend left] (H) to node [near end, above] (TextNode) {$c_HH$} (E);
+      \path [line, very thick, bend left] (E) to node [near end, below] (TextNode) {$g(E)$} (H);
+      %% Flows out of
+      \path [line, very thick] (H) to node [midway, above] (TextNode) {$\gamma_HH$} (-1.75\horzskip,0\vertskip);
+      \path [line, very thick] (E) to node [midway, below] (TextNode) {$d_EE$} (1.75\horzskip,0\vertskip);
+      %% Vertical line
+      \draw [dashed, very thick, color=red] (0\horzskip,-1\vertskip) -- (0\horzskip,1\vertskip);
+      %% Text
+      \node [color=red] at (-1\horzskip,-1\vertskip) {Human population};
+      \node [color=red] at (1\horzskip,-1\vertskip) {Environment};
+    \end{tikzpicture}    
+  \end{center}  
+  $1/\gamma_H$ mean infectious period, $1/d_E$ mean lifetime of the agent in the environment, $c_H$ growth rate of the agent due to the human population, $g(E)$ ``force of infection'' (I would say ``incidence'') of the agent on human population
+\end{frame}
+
+\begin{frame}{Incidence function}
+  \begin{equation}
+    \label{eq:incidence_function_Capasso}
+    g(E) = N\beta ph(E)
+  \end{equation}
+  where
+  \begin{itemize}
+    \item $N$ total human population
+    \item $\beta$ fraction of susceptible individuals in $N$
+    \item $p$ fraction exposed to contaminated environment per unit time (``probability per unit time to have a ``snack'' of contaminated food'')
+    \item $h(E)$ probability for an exposed susceptible to get the infection
+  \end{itemize}
+  Typically, we would assume $p$ and $\beta$ independent of $E$ and $H$ and $h$ to be saturating
+\end{frame}
+
+\begin{frame}
+  To ensure \eqref{eq:incidence_function_Capasso} satisfies these conditions, we can assume
+  \begin{itemize}
+    \item $0<g(e_1)<g(e_2)$ for $0<e_1<e_2$
+    \item $g(0)=0$
+    \item $g''(z)<0$ for all $z>0$
+    \item $0<g'_+(0)<\infty$  (right derivative)
+    \item $\lim_{z\to\infty}\frac{g(z)}{z}<\frac{d_E\gamma_H}{c_H}$
+  \end{itemize}
+  \vfill
+  Of course, we also assume $d_E,c_H,\gamma_H>0$
+\end{frame}
+
+\begin{frame}{The model}
+  \begin{subequations}
+    \label{sys:capasso_EH}
+    \begin{align}
+      E' &= c_HH-d_EE \label{sys:capasso_EH_dE} \\
+      H' &= g(E)-\gamma_HH \label{sys:capasso_EH_dH}
+    \end{align}
+  \end{subequations}
+  \begin{center}
+    \def\vertskip{*1.75}
+    \def\horzskip{*2}
+    \begin{tikzpicture}[scale=1, transform shape]
+      \node [circle, fill=gray!10, text=black] at (-1\horzskip,0\vertskip) (H) {$H$};
+      \node [circle, fill=gray!10, text=black] at (1\horzskip,0\vertskip) (E) {$E$};
+      %% Flows between
+      \path [line, very thick, bend left] (H) to node [near end, above] (TextNode) {$c_HH$} (E);
+      \path [line, very thick, bend left] (E) to node [near end, below] (TextNode) {$g(E)$} (H);
+      %% Flows out of
+      \path [line, very thick] (H) to node [midway, above] (TextNode) {$\gamma_HH$} (-1.75\horzskip,0\vertskip);
+      \path [line, very thick] (E) to node [midway, below] (TextNode) {$d_EE$} (1.75\horzskip,0\vertskip);
+      %% Vertical line
+      \draw [dashed, very thick, color=red] (0\horzskip,-1\vertskip) -- (0\horzskip,1\vertskip);
+      %% Text
+      \node [color=red] at (-1\horzskip,-1\vertskip) {Human population};
+      \node [color=red] at (1\horzskip,-1\vertskip) {Environment};
+    \end{tikzpicture}    
+  \end{center}
+  \vfill
+  Pay attention to the flows..! $E'$ does not have a $-g(E)$ and $H'$ does not have $-c_HH$. Why?
+\end{frame}
+
+\begin{frame}
+  Let
+  \begin{equation}
+    \label{eq:R0_capasso}
+    \R_0 = \frac{g'_+(0)c_H}{d_E\gamma_H}
+  \end{equation}
+  \begin{theorem}
+    \begin{itemize}
+      \item If $0<\R_0<1$, then \eqref{sys:capasso_EH} admits only the trivial equilibrium in the positive orthant, which is GAS
+      \item If $\R_0>1$, then two EP exist: $(0,0)$, which is unstable, and $z^\star=(E^\star,H^\star)$ with $E^\star,H^\star>0$, GAS in $\IR_+^2\setminus\{0,0\}$
+    \end{itemize}
+  \end{theorem}
+\end{frame}
+
+
+\begin{frame}{Adding a periodic component}
+  Assume $p$ in \eqref{eq:incidence_function_Capasso} takes the form 
+  \begin{equation}
+    p(t)=p(t+\omega)>0,\quad t\in\IR
+  \end{equation}
+  i.e., $p$ has period $\omega$. So we now consider the incidence
+  \begin{equation}
+    \label{eq:incidence_Capasso_periodic}
+    g(t,E)=p(t)h(E)
+  \end{equation}
+  with $h$ having the properties prescribed earlier.
+  Letting 
+  \begin{equation}
+    p_{min} := \min_{0\leq t\leq\omega}p(t),\quad
+    p_{max} := \max_{0\leq t\leq\omega}p(t)
+  \end{equation}
+  then we require that 
+  \begin{equation}
+    \lim_{z\to\infty}\frac{g(z)}{z}<\frac{d_E\gamma_H}{c_Hp_{max}}
+  \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  Let
+  \begin{equation}
+    \label{eq:R0_capasso_periodic}
+    \R_0^{min} = \frac{c_Hp_{min}h'_+(0)}{d_E\gamma_H},\quad 
+    \R_0^{max} = \frac{c_Hp_{max}h'_+(0)}{d_E\gamma_H}
+  \end{equation}
+  \begin{theorem}
+    \begin{itemize}
+      \item If $0<\R_0^{max}<1$, then \eqref{sys:capasso_EH} with incidence \eqref{eq:incidence_Capasso_periodic} always goes to extinction
+      \item If $\R_0^{min}>1$, then a unique nontrivial periodic endemic state exists for \eqref{sys:capasso_EH} with incidence \eqref{eq:incidence_Capasso_periodic}
+    \end{itemize}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}[fragile]{Simulating (in \code{R}) -- Incidence function}
+\begin{lstlisting}
+h = function(E, params) {
+  # Use Michaelis Menten (Holling type II) growth
+  OUT = params$g_max * E / (params$g_half+E)
+  return(OUT)
+}
+g = function(E, params) {
+  OUT = params$N * params$beta * params$p * h(E,params)
+  return(OUT)
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The right hand side}
+\begin{lstlisting}
+rhs_Capasso_ODE = function(t, x, params) {
+  with(as.list(c(x, params)), {
+    dE = c_H*H-d_E*E
+    dH = g(E, params)-gamma_H*H
+    list(c(dE, dH))
+  })
+}  
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Setting parameters}
+\begin{lstlisting}
+# Put parameters in a list
+params = list()
+params$N = 1000       # Total population
+params$gamma_H = 1/10 # Infectious period
+params$d_E = 1/5      # Lifetime agent
+params$c_H = 0.1      # Flow from humans
+# Human characteristics and behaviour
+params$beta = 0.2 # Fraction susceptible
+params$p = 0.1    # Probability of having "snack"
+# Growth function
+params$g_max = 10
+params$g_half = 100
+# Final time
+params$t_f = 150  
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Running and plotting (base)}
+\begin{lstlisting}
+IC <- c(E = 10, H = 0)
+tspan = seq(from = 0, to = params$t_f, by = 0.1)
+
+sol_ODE = ode(y = IC,
+              func = rhs_Capasso_ODE,
+              times = tspan,
+              parms = params)
+
+plot(sol_ODE[,"time"], sol_ODE[,"H"],
+      type = "l", lwd = 2,
+      xlab = "Time (days)", ylab = "Value")
+lines(sol_ODE[,"time"], sol_ODE[,"E"], 
+      lwd = 2, lty = 3)
+legend("bottomright", legend = c("H(t)", "E(t)"),
+        lwd = c(2,2), lty = c(1,3), inset = 0.01)
+\end{lstlisting}
+\end{frame}
+
+<<Capasso_ETP_1,eval=TRUE,echo=FALSE,fig=TRUE,width=8,height=5,include=FALSE>>=
+h = function(E, params) {
+  # Use Michaelis Menten (Holling type II) growth
+  OUT = params$g_max * E / (params$g_half+E)
+  return(OUT)
+}
+g = function(E, params) {
+  OUT = params$N * params$beta * params$p * h(E,params)
+  return(OUT)
+}
+rhs_Capasso_ODE = function(t, x, params) {
+  with(as.list(c(x, params)), {
+    dE = c_H*H-d_E*E
+    dH = g(E, params)-gamma_H*H
+    list(c(dE, dH))
+  })
+}  
+
+# Put parameters in a list
+params = list()
+params$N = 1000       # Total population
+params$gamma_H = 1/10 # Infectious period
+params$d_E = 1/5      # Lifetime agent
+params$c_H = 0.1      # Flow from humans
+# Human characteristics and behaviour
+params$beta = 0.2 # Fraction susceptible
+params$p = 0.1    # Probability of having "snack"
+# Growth function
+params$g_max = 10
+params$g_half = 100
+# Final time
+params$t_f = 150  
+IC <- c(E = 10, H = 0)
+tspan = seq(from = 0, to = params$t_f, by = 0.1)
+
+sol_ODE = ode(y = IC,
+              func = rhs_Capasso_ODE,
+              times = tspan,
+              parms = params)
+
+plot(sol_ODE[,"time"], sol_ODE[,"H"],
+      type = "l", lwd = 2,
+      xlab = "Time (days)", ylab = "Value")
+lines(sol_ODE[,"time"], sol_ODE[,"E"], 
+      lwd = 2, lty = 3)
+legend("bottomright", legend = c("H(t)", "E(t)"),
+        lwd = c(2,2), lty = c(1,3), inset = 0.01)
+@
+
+\begin{frame}
+  \begin{center}
+    \includegraphics[width=\textwidth]{FIGS/lecture-02-Capasso_ETP_1}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  Let
+  \begin{equation}
+    \label{eq:R0_capasso}
+    \R_0 = \frac{g'_+(0)c_H}{d_E\gamma_H}
+  \end{equation}
+  \begin{theorem}
+    \begin{itemize}
+      \item If $0<\R_0<1$, then \eqref{sys:capasso_EH} admits only the trivial equilibrium in the positive orthant, which is GAS
+      \item If $\R_0>1$, then two EP exist: $(0,0)$, which is unstable, and $z^\star=(E^\star,H^\star)$ with $E^\star,H^\star>0$, GAS in $\IR_+^2\setminus\{0,0\}$
+    \end{itemize}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}[fragile]{Computing $\R_0$}
+  With the chosen $g$, we have
+  \[
+    g'(E) = 
+    \frac{N \beta pg_{half} g_{max}}
+    {(g_{half}+E)^2}
+  \]
+  whence
+  \[
+    g_+'(0)=\frac{N \beta pg_{max}}
+    {g_{half}}
+  \]
+  and thus
+  \begin{equation}
+    \R_0 = \frac{N \beta pg_{max}}
+    {g_{half}}\;\frac{c_H}{d_E\gamma_H}
+  \end{equation}
+\begin{lstlisting}
+R0 = function(params) {
+  with(as.list(params), {
+    R0 = N*beta*p*g_max*c_H / (g_half*d_E*gamma_H)
+    return(R0)
+  })
+}  
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}{Showing things dynamically using Shiny}
+  Shiny is an \code{R} library (made by RStudio) to easily make interactive displays
+  \vfill
+  See some documentation \href{https://shiny.rstudio.com/}{here}
+  \vfill
+  Some examples \href{https://shiny.rstudio.com/gallery/}{here} and \href{https://github.com/rstudio/shiny-examples}{here}
+  \vfill
+  Create a subdirectory with the name of your app and a file called \code{app.R} in there
+\end{frame}
+
+
+\begin{frame}{Structure of a Shiny app}
+  Need to use library \code{shiny}
+  \vfill
+  Define two elements
+  \begin{itemize}
+    \item \code{ui}, which sets up the user interface
+    \item \code{server}, which handles the computations, generation of figures, etc.
+  \end{itemize}
+  \vfill
+  I explain different elements as we progress. See the code in the \code{CODE} folder and \code{Capasso\_simpleETP\_shiny} subdirectory
+\end{frame}
+
+
+\begin{frame}[fragile]{The \code{ui} part}
+Here, we use \code{fluidPage} to create the UI. There are other functions: \code{fillPage}, \code{fixedPage}, \code{flowLayout}, \code{navbarPage}, \code{sidebarLayout}, \code{splitLayout} and \code{verticalLayout}
+\vfill
+\begin{lstlisting}
+# Define UI
+ui <- fluidPage(
+)  
+\end{lstlisting}
+\vfill
+We now fill this function
+\end{frame}
+
+\begin{frame}[fragile]{A title and some sliders}
+\begin{lstlisting}
+# Application title
+titlePanel("Simple ETP model of Capasso"),
+# Sidebar with slider inputs for some parameters
+sidebarLayout(
+    sidebarPanel(
+      sliderInput("inv_gamma_H",
+                  "Average infectious period (days):",
+                  min = 0,
+                  max = 30,
+                  value = 10),
+      sliderInput("c_H",
+                  "Flow from humans:",
+                  min = 0,
+                  max = 2,
+                  value = 0.1),
+\end{lstlisting}
+\vfill
+Plus other sliders for all other parameters
+\end{frame}
+
+\begin{frame}[fragile]{Note the little trick...}
+\begin{lstlisting}
+sliderInput("inv_gamma_H",
+"Average infectious period (days):",
+min = 0,
+max = 30,
+value = 10),
+\end{lstlisting}
+\vfill
+I want to give a user friendly version of the parameter value, using the number of days rather than the inverse, whereas the model uses the latter. So I prefix the variable name by \code{inv\_} and then process as follows in the \code{server} part
+\begin{lstlisting}
+params <- list()
+for (param_name in names(input)) {
+  if (grepl("inv_", param_name)) {
+    new_param_name = gsubs("inv_", "", param_name)
+    params[[new_param_name]] = 1/input[[param_name]]
+  } else {
+    params[[param_name]] = input[[param_name]]
+  }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  The simulation functions can be outside of \code{ui} or \code{server}, this makes the code neater
+  \vfill
+  These functions are the same as before (right hand side, g, h, R0), so they are not shown here
+\end{frame}
+    
+
+\begin{frame}[fragile]{The \code{server} part}
+\begin{lstlisting}
+# Define server logic required to draw the result
+server <- function(input, output) {
+  ##
+  ## Expression that generates the plot
+  ##
+  output$a_odePlot <- renderPlot({
+    params <- list()
+    params$N = 1000 # We could let this vary, we don't here..
+    for (param_name in names(input)) {
+      if (grepl("inv_", param_name)) {
+        new_param_name = gsub("inv_", "", param_name)
+        params[[new_param_name]] = 1/input[[param_name]]
+      } else {
+        params[[param_name]] = input[[param_name]]
+      }
+    }
+    # Initial conditions and time span
+    IC <- c(E = 10, H = 0)
+    tspan <- seq(from = 0, to = params$tf, by = 0.1)  
+\end{lstlisting}
+\end{frame}
+  
+
+\begin{frame}[fragile]{The \code{server} part (continued)}
+\begin{lstlisting}
+    # Compute solution
+    sol_ODE = ode(y = IC,
+                  func = rhs_Capasso_ODE,
+                  times = tspan,
+                  parms = params)
+    # Make the plot
+    y_max = max(max(sol_ODE[,"H"]),sol_ODE[,"E"])
+    plot(sol_ODE[,"time"], sol_ODE[,"H"],
+          type = "l", lwd = 2,
+          xlab = "Time (days)", ylab = "Value",
+          ylim = c(0, y_max),
+          main = sprintf("R_0=%1.2f", round(R0(params),2)))
+    lines(sol_ODE[,"time"], sol_ODE[,"E"], 
+          lwd = 2, lty = 3)
+    legend("topleft", legend = c("H(t)", "E(t)"),
+            lwd = c(2,2), lty = c(1,3), inset = 0.01)
+  })
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Finally, run the code}
+\begin{lstlisting}
+# Run the application 
+shinyApp(ui = ui, server = server)
+\end{lstlisting}
+\end{frame}
+  
+
+\begin{frame}{Adding a periodic component}
+  Assume $p$ in \eqref{eq:incidence_function_Capasso} takes the form 
+  \begin{equation}
+    p(t)=p(t+\omega)>0,\quad t\in\IR
+  \end{equation}
+  i.e., $p$ has period $\omega$. So we now consider the incidence
+  \begin{equation}
+    \label{eq:incidence_Capasso_periodic}
+    g(t,E)=p(t)h(E)
+  \end{equation}
+  with $h$ having the properties prescribed earlier.
+  Letting 
+  \begin{equation}
+    p_{min} := \min_{0\leq t\leq\omega}p(t),\quad
+    p_{max} := \max_{0\leq t\leq\omega}p(t)
+  \end{equation}
+  then we require that 
+  \begin{equation}
+    \lim_{z\to\infty}\frac{g(z)}{z}<\frac{d_E\gamma_H}{c_Hp_{max}}
+  \end{equation}
+\end{frame}
+
+
+\begin{frame}
+  Let
+  \begin{equation}
+    \label{eq:R0_capasso_periodic}
+    \R_0^{min} = \frac{c_Hp_{min}h'_+(0)}{d_E\gamma_H},\quad 
+    \R_0^{max} = \frac{c_Hp_{max}h'_+(0)}{d_E\gamma_H}
+  \end{equation}
+  \begin{theorem}
+    \begin{itemize}
+      \item If $0<\R_0^{max}<1$, then \eqref{sys:capasso_EH} with incidence \eqref{eq:incidence_Capasso_periodic} always goes to extinction
+      \item If $\R_0^{min}>1$, then a unique nontrivial periodic endemic state exists for \eqref{sys:capasso_EH} with incidence \eqref{eq:incidence_Capasso_periodic}
+    \end{itemize}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}[fragile]{How to add periodicity in numerics?}
+\begin{lstlisting}
+p_t = function(t, params) {
+  angle = 2*pi/params$p_period
+  OUT = cos(angle*t) # Make the base cos wave
+  OUT = OUT/2*(params$p_max-params$p_min) # Scale
+  OUT = OUT-min(OUT)+params$p_min # Shift up
+  return(OUT)
+}   
+g = function(E, params, t) {
+  OUT = params$N * params$beta * p_t(t, params) * h(E,params)
+  return(OUT)
+}
+R0 = function(params) {
+  with(as.list(params), {
+    R0 = list()
+    R0$min = N*beta*p_min*g_max*c_H / (g_half*d_E*gamma_H)
+    R0$max = N*beta*p_max*g_max*c_H / (g_half*d_E*gamma_H)
+    return(R0)
+  })
+}  
+\end{lstlisting}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{A model for zoonotic transmission of waterborne disease}
+
+\begin{frame}{Zoonotic transmission of waterborne disease}
+  Waters, Hamilton, Sidhu, Sidhu, Dunbar. \href{https://doi-org.uml.idm.oclc.org/10.1007/s11538-015-0136-y}{Zoonotic transmission of waterborne disease: a mathematical model}. 
+  \emph{Bull Math Biol}  (2016)
+
+  Used for instance to model Giardia transmission from possums to humans
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \def\vertskip{*2}
+    \def\horzskip{*3}
+    \begin{tikzpicture}[scale=1, transform shape]
+      \node [rectangle, fill=gray!10, text=black] at (-1\horzskip,0\vertskip) (S_H) {Susceptible humans};
+      \node [rectangle, fill=gray!10, text=black] at (1\horzskip,0\vertskip) (I_H) {Infectious humans};
+      \node [rectangle, fill=gray!10, text=black] at (-1\horzskip,2\vertskip) (S_A) {Susceptible animals};
+      \node [rectangle, fill=gray!10, text=black] at (1\horzskip,2\vertskip) (I_A) {Infectious animals};
+      \node [rectangle, fill=gray!10, text=black] at (0\horzskip,1\vertskip) (W) {Live oo/cysts in water};
+      %% Flows 
+      \path [line, very thick] (S_H.south east) to node [midway, below] (TextNode) {P2P transmission} (I_H.south west);
+      \path [line, dashed, very thick] (S_H.north east) to node [near end, above] (TextNode) {conversion of oo/cysts to infection} (I_H.north west);
+      \path [line, very thick, bend left] (I_H) to node [midway, below] (TextNode) {recovery} (S_H);
+      \path [line, very thick] (S_A.north east) to node [midway, above] (TextNode) {A2A transmission} (I_A.north west);
+      \path [line, very thick] (I_A.south west) to node [midway, below] (TextNode) {recovery} (S_A.south east);
+      %% Flows of W
+      \path [line, dashed, very thick] (W) to node [midway, above] (TextNode) {Death of oo/cysts in water} (-2\horzskip,1\vertskip);
+      \path [line, dashed, very thick] (W) to node [near start, left] (TextNode) {pick up rate} (0\horzskip,0.35\vertskip);
+      \path [line, dashed, very thick] (I_A) to node [midway, below] (TextNode) {deposit rate} (W);
+    \end{tikzpicture}    
+  \end{center}  
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \def\vertskip{*2}
+    \def\horzskip{*2}
+    \begin{tikzpicture}[scale=1.25, transform shape]
+      \node [circle, fill=gray!10, text=black] at (-1\horzskip,0\vertskip) (S_H) {$S_H$};
+      \node [circle, fill=gray!10, text=black] at (1\horzskip,0\vertskip) (I_H) {$I_H$};
+      \node [circle, fill=gray!10, text=black] at (-1\horzskip,2\vertskip) (S_A) {$S_A$};
+      \node [circle, fill=gray!10, text=black] at (1\horzskip,2\vertskip) (I_A) {$I_A$};
+      \node [circle, fill=gray!10, text=black] at (0\horzskip,1\vertskip) (W) {$W$};
+      %% Flows between
+      \path [line, very thick] (S_H) to node [midway, below] (TextNode) {$\beta_H$} (I_H);
+      \path [line, dashed, very thick, bend left] (S_H) to node [near end, above] (TextNode) {$\rho$} (I_H);
+      \path [line, very thick, bend left] (I_H) to node [midway, below] (TextNode) {$\gamma_HI_H$} (S_H);
+      \path [line, very thick, bend left] (S_A) to node [midway, above] (TextNode) {$\beta_A$} (I_A);
+      \path [line, very thick, bend left] (I_A) to node [midway, above] (TextNode) {$\gamma_AI_A$} (S_A);
+      %% Flows of W
+      \path [line, dashed, very thick] (W) to node [midway, above] (TextNode) {$\mu W$} (-0.75\horzskip,1\vertskip);
+      \path [line, dashed, very thick] (W) to node [near start, left] (TextNode) {$\eta$} (0\horzskip,0.35\vertskip);
+      \path [line, dashed, very thick] (I_A) to node [midway, below, sloped] (TextNode) {$\alpha I_A$} (W);
+    \end{tikzpicture}    
+  \end{center}  
+\end{frame}
+
+
+\begin{frame}{The full model}
+  \begin{subequations}
+    \label{sys:WaterHamilton_etal}
+    \begin{align}
+      S_A' &= -\beta_AS_AI_A+\gamma_AI_A \\
+      I_A' &= \beta_AS_AI_A-\gamma_AI_A \\
+      W' &= \alpha I_A-\eta W(S_H+I_H)-\mu W \\
+      S_H' &= -\rho\eta WS_H-\beta_HS_HI_H+\gamma_HI_H \\
+      I_H' &= \rho\eta WS_H+\beta_HS_HI_H-\gamma_HI_H 
+    \end{align}
+  \end{subequations}
+  \vfill
+  Considered with $N_A=S_A+I_A$ and $N_H=S_H+I_H$ constant
+\end{frame}
+
+\begin{frame}{Simplified model}
+  Because $N_A$ and $N_H$ are constant, \eqref{sys:WaterHamilton_etal} can be simplified:
+  \begin{subequations}
+    \label{sys:WaterHamilton_etal_simplified}
+    \begin{align}
+      I_A' &= \beta_AN_AI_A-\gamma_AI_A-\beta_AI_A^2 \\
+      W' &= \alpha I_A-\eta WN_H-\mu W \\
+      I_H' &= \rho\eta W(N_H-I_H)+\beta_HN_HI_H-\gamma_HI_H-\beta_HI_H^2 
+    \end{align}
+  \end{subequations}
+  \vfill
+  Three EP: DFE $(0,0,0)$; endemic disease in humans because of H2H transmission; endemic in both H and A because of W
+\end{frame}
+
+
+\begin{frame}
+  Three EP: DFE $(0,0,0)$; endemic disease in humans because of H2H transmission; endemic in both H and A because of W
+  \vfill
+  Let
+  \begin{equation}
+    \R_{0A} = \frac{\beta_A}{\gamma_A}N_A\quad\text{and}\quad
+    \R_{0H} = \frac{\beta_H}{\gamma_H}N_H
+  \end{equation}
+  \vfill
+  \begin{itemize}
+    \item DFE LAS if $\R_{0A}<1$ and $\R_{0H}<1$, unstable if $\R_{0A}>1$ or $\R_{0H}>1$
+    \item If $\R_{0H}>1$ and $\R_{0A}<1$, \eqref{sys:WaterHamilton_etal_simplified} goes to EP with endemicity only in humans
+    \item Endemic EP with both A and H requires $\R_{0A}>1$ and $\R_{0H}<1$
+  \end{itemize}
+  Note that proof is \textbf{not} global
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsection{A few models of schistosomiasis}
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsubsection{A first model of Woolhouse}
+\begin{frame}{A model of Woolhouse}
+  Woolhouse. \href{}{On the application of mathematical models of schistosome transmission dynamics. I. Natural transmission}. \emph{Acta Tropica} \textbf{49}:241-270 (1991)
+\end{frame}
+
+\begin{frame}{The model}
+  Population of $H$ individuals using a body of water containing $N$ snails
+  \vfill
+  $i_H$ mean number of schistosomes per person and $i_S$ the proportion of patent infections in snails 
+  (prevalence)
+  \vfill
+  \begin{subequations}
+    \label{sys:Woolhouse}
+    \begin{align}
+      i_H' &= \alpha Ni_S-\gamma i_H \\
+      i_S' &= \beta Hi_H(1-i_S)-\mu_2 i_S
+    \end{align}
+  \end{subequations}
+  \begin{itemize}
+    \item $\alpha$ number of schistosomes produced per person per infected snail per unit time
+    \item $1/\gamma$ average life expectancy of a schistosome
+    \item $1/\mu_2$ average life expectancy of an infected snail
+    \item $\beta$ transmission parameter
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  Let the basic reproductive rate for schistosomes be
+  \begin{equation}
+    \label{eq:R0_Woolhouse}
+    \R_0 = \frac{\alpha N\beta H}{\gamma\mu_2}
+  \end{equation}
+  \vfill
+  \eqref{sys:Woolhouse} has two EP
+  \begin{itemize}
+    \item $(i_H^\star,i_S^\star)=(0,0)$, LAS when $\R_0<1$ and unstable when $\R_0>1$
+    \item $(i_H^\star,i_S^\star)=\left(\dfrac{\alpha N}{\gamma}-\dfrac{\mu_2}{\beta H},1-\dfrac{1}{\R_0}\right)$, which only ``exists'' when $\R_0>1$ (and is LAS then)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\subsubsection{A second model of Woolhouse -- Latency}
+\begin{frame}{Extending the model}
+  Interval between infection of a snail and onset of patency (release of cercariae) is \emph{prepatent} or \emph{latent} period
+  \begin{subequations}
+    \label{sys:Woolhouse2}
+    \begin{align}
+      i_H' &= \alpha Ni_S-\gamma i_H \\
+      \ell_S' &= \beta Hi_H(1-\ell_S-i_S)-\sigma\ell_S-\mu_1\ell_S \\
+      i_S' &= \sigma\ell_S-\mu_2 i_S
+    \end{align}
+  \end{subequations}
+  \begin{itemize}
+    \item $1/\sigma$ average duration of prepatent period
+    \item $f=\sigma/(\sigma+\mu_1)$ fraction of infected snails surviving prepatent period
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  The basic reproductive rate for schistosomes is now
+  \begin{equation}
+    \label{eq:R0_Woolhouse2}
+    \R_0 = f\frac{\alpha N\beta H}{\gamma\mu_2}
+  \end{equation}
+  \vfill
+  \eqref{sys:Woolhouse2} has endemic EP
+  \[
+    (i_H^\star,i_S^\star)=\left(\dfrac{\alpha N\sigma}{\gamma(\sigma+\mu_2)}-\dfrac{\mu_2(\sigma+\mu_1)}{\beta H(\sigma+\mu_2)},\frac{\sigma}{\sigma+\mu_2}\left(1-\dfrac{1}{\R_0}\right)\right)
+  \]
+\end{frame}
+
+\begin{frame}
+  Also has models
+  \begin{itemize}
+    \item where snails lose infectiousness (assumed to happen sometimes)
+    \item with larval population dynamics
+    \item single variable models
+    \item human immigration and emigration
+    \item reservoir hosts
+  \end{itemize}
+  \vfill
+  Really worth a read
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\section{Something different -- Discrete-time}
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A tetanus model of Cvjetanovi\'c}
+  \begin{center}
+    \def\vertskip{*-2}
+    \def\horzskip{*2}
+    \begin{tikzpicture}[scale=0.75, transform shape]
+      \node [rectangle, fill=gray!10, text=black] at (-2\horzskip,0\vertskip) (S_nb) {Newborn};
+      \node [rectangle, fill=gray!10, text=black] at (2\horzskip,0\vertskip) (S) {Susceptible population};
+      \node [rectangle, fill=gray!10, text=black] at (-2\horzskip,1\vertskip) (L_nb) {Incubating newborn};
+      \node [rectangle, fill=gray!10, text=black] at (2\horzskip,1\vertskip) (L) {Incubating population};
+      \node [rectangle, fill=gray!10, text=black] at (-2\horzskip,2\vertskip) (I_nb) {Sick newborn};
+      \node [rectangle, fill=gray!10, text=black] at (2\horzskip,2\vertskip) (I) {Sick population};
+      \node [rectangle, fill=gray!10, text=black] at (0\horzskip,3\vertskip) (D) {Tetanus deaths};
+      \node [rectangle, fill=gray!10, text=black] at (0\horzskip,4\vertskip) (R) {Active immunity 10 years};
+      \node [rectangle, fill=gray!10, text=black] at (0\horzskip,5\vertskip) (R_p) {Passive immunity 6 months};
+      %% Flows
+      \path [line, very thick] (S_nb) to node [midway, above] (TextNode) {} (S);
+      \path [line, very thick] (S_nb) to node [midway, above] (TextNode) {} (L_nb);
+      \path [line, very thick] (L_nb) to node [midway, above] (TextNode) {} (I_nb);
+      \path [line, very thick] (I_nb) to node [midway, above] (TextNode) {} (D);
+      \path [line, very thick] (I_nb) to node [midway, above] (TextNode) {} (R);
+      \path [line, very thick, bend right=60] (S_nb.west) to node [midway, above] (TextNode) {} (R_p.west);
+      \path [line, very thick] (I_nb) to node [midway, above] (TextNode) {} (S.-170);
+      \path [line, very thick] (I_nb) to node [midway, above] (TextNode) {} (R);
+      \path [line, very thick] (I_nb) to node [midway, above] (TextNode) {} (D);
+      \path [line, very thick] (S) to node [midway, above] (TextNode) {} (L);
+      \path [line, very thick] (L) to node [midway, above] (TextNode) {} (I);
+      \path [line, very thick, bend left=75] (I) to node [midway, above] (TextNode) {} (S);
+      \path [line, very thick] (I) to node [midway, above] (TextNode) {} (R);
+      \path [line, very thick] (I) to node [midway, above] (TextNode) {} (D);
+      \path [line, very thick, bend right=60] (R.east) to node [midway, above] (TextNode) {} (S.-10);      
+      \path [line, very thick, bend right=60, anchor=east] (R_p.east) to node [midway, above] (TextNode) {} (S.east);      
+    \end{tikzpicture}    
+  \end{center}  
+\end{frame}
+
+\begin{frame}{Flow diagram (demography not shown)}
+  \begin{center}
+    \def\vertskip{*-1.75}
+    \def\horzskip{*1}
+    \begin{tikzpicture}[scale=0.8, transform shape]
+      \node [rectangle, fill=gray!10, text=black] at (-2\horzskip,0\vertskip) (S_nb) {$S_b$};
+      \node [rectangle, fill=gray!10, text=black] at (2\horzskip,0\vertskip) (S) {$S$};
+      \node [rectangle, fill=gray!10, text=black] at (-2\horzskip,1\vertskip) (L_nb) {$L_b$};
+      \node [rectangle, fill=gray!10, text=black] at (2\horzskip,1\vertskip) (L) {$L$};
+      \node [rectangle, fill=gray!10, text=black] at (-2\horzskip,2\vertskip) (I_nb) {$I_b$};
+      \node [rectangle, fill=gray!10, text=black] at (2\horzskip,2\vertskip) (I) {$I$};
+      \node [rectangle, fill=gray!10, text=black] at (0\horzskip,3\vertskip) (D) {$D$};
+      \node [rectangle, fill=gray!10, text=black] at (0\horzskip,4\vertskip) (R) {$R$};
+      \node [rectangle, fill=gray!10, text=black] at (0\horzskip,4.9\vertskip) (R_p) {$R_b$};
+      %% Flows (newborn)
+      \path [line, very thick] (S_nb) to node [midway,above] (TextNode) {$b(1-\lambda_b)(T-R)$} (S);
+      \path [line, very thick] (S_nb) to node [midway,right] (TextNode) {$\lambda_bb(T-R)$} (L_nb);
+      \path [line, very thick] (L_nb) to node [midway,above,sloped] (TextNode) {$\varepsilon_bL_b$} (I_nb);
+      \path [line, very thick] (I_nb) to node [midway,above,sloped] (TextNode) {$\pi_{I_bD}\gamma_bI_b$} (D);
+      \path [line, very thick] (I_nb) to node [midway,below,sloped] (TextNode) {$\pi_{I_bR}\gamma_bI_b$} (R);
+      \path [line, very thick, bend right=60] (S_nb.west) to node [midway,above] (TextNode) {$bR$} (R_p.west);
+      \path [line, very thick] (I_nb) to node [sloped,pos=0.4,above] (TextNode) {$\pi_{I_bS}\gamma_bI_b$} (S.-170);
+      \path [line, very thick, bend right=60, anchor=east] (R_p.east) to node [midway,below,sloped] (TextNode) {$\nu_bI_b$} (S.east);      
+      %% Flows (others)
+      \path [line, very thick] (S) to node [midway,right] (TextNode) {$\lambda S$} (L);
+      \path [line, very thick] (L) to node [midway,above,sloped] (TextNode) {$\varepsilon L$} (I);
+      \path [line, very thick, bend left=55] (I) to node [sloped,midway,below] (TextNode) {$\tau_{IS}\gamma I$} (S.south west);
+      \path [line, very thick] (I) to node [midway,below,sloped] (TextNode) {$\pi_{IR}\gamma I$} (R);
+      \path [line, very thick] (I) to node [midway,above,sloped] (TextNode) {$\pi_{ID}\gamma I$} (D);
+      \path [line, very thick, bend right=60] (R.east) to node [midway,below,sloped] (TextNode) {$\nu R$} (S.-10);
+    \end{tikzpicture}    
+  \end{center}  
+\end{frame}
+
+\begin{frame}{The discrete-time tetanus model (notation mine)}
+  \begin{subequations}
+    \begin{align}
+      \Delta S_b &= bT \\
+      \Delta S &= b(1-\lambda_b)(T-R)+\nu R+\nu_bI_b+\nu I+\pi_{I_bS}\gamma_bI_b+\pi_{IS}\gamma I \\ 
+      &\quad -(\lambda+d-\delta_T)S \nonumber \\
+      \Delta L_b &= \lambda_bb(T-R)-(\varepsilon_b+d-\delta_T)L_b \\
+      \Delta L &= \lambda S-(\varepsilon+d-\delta_T)L \\
+      \Delta I_b &= \varepsilon_bL_b-(\gamma_b+d-\delta_T)I \\
+      \Delta I &= \varepsilon L-(\gamma+d-\delta_T)I \\
+      \Delta R &= \pi_{I_bR}\gamma_bI_b+\pi_{IR}\gamma I-(\nu+d-\delta_T)R \\
+      \Delta R_b &= bR-(\nu_b+d-\delta_T)R_b\\
+      \Delta D &= \pi_{I_bD}\gamma_bI_b+\pi_{ID}\gamma I
+    \end{align}
+    where
+    \begin{equation}
+      T = S+L_b+L+I_b+I+R+R_b
+      \quad\text{and}\quad
+      \delta_T = \frac{\Delta D}{T}
+    \end{equation}
+  \end{subequations}
+\end{frame}
+
+\begin{frame}{Parameter assumptions -- Tetanus}
+  \begin{itemize}
+    \item \textbf{Incubation period --} Mean duration 6 days for newborn and 8 days for general population $\Rightarrow$ daily rate of exit (d.r.e.) $\varepsilon_b=0.1667$ and $\varepsilon=0.125$
+    \item \textbf{Period of sickness --} Mean duration 3 days for newborn and 14 days for general population $\Rightarrow$ d.r.e. $\gamma_b=0.3333$ per sick newborn and $\gamma=0.0714$ for sick general in general population
+    \item \textbf{Mortality from tetanus --} Untreated tetanus cases, fatality rate 90\% for newborn $S_b$ and 40\% for general population. Treated: 80\% for newborn and 30\% general population
+    \item \textbf{Immunity --} Tetanus cases do not lead to immunity to reinfection. But as a general rule, recovered people are vaccinated. Convalescents and general population effectively immunised by complete course of vaccination go to $R$ for average 10 years, d.r.e. $\nu=0.000274$ per person.
+    \item \textbf{Immunity of newborns --} Newborn to women vaccinated during pregnancy are temporarily protected by maternal antibodies and pass through $R_b$ for a mean duration of 6 months. D.r.e $\nu_b=0.005479$ per immunised newborn
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Deciding on infection outcome -- $\pi$}
+  Parameters $\pi$ are proportion of individuals who follow a certain route post-infection
+  \vfill
+  \begin{itemize}
+    \item $\pi_{I_b\bullet}$ proportion of infected newborn who
+    \begin{itemize}
+      \item $\pi_{I_bS}$ recover without immunity
+      \item $\pi_{I_bR}$ recover with immunity
+      \item $\pi_{I_bD}$ die (0.9)
+    \end{itemize}
+    $\pi_{I_bS}+\pi_{I_bR}+\pi_{I_bD}=1$
+    \vfill
+    \item $\pi_{I\bullet}$ proportion of infected who
+    \begin{itemize}
+      \item $\pi_{IS}$ recover without immunity
+      \item $\pi_{IR}$ recover with immunity
+      \item $\pi_{ID}$ die (0.4)
+    \end{itemize}
+    $\pi_{IS}+\pi_{IR}+\pi_{ID}=1$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Parameter assumptions -- Demography}
+  Live birth rate 35 per 1,000 population and annual crude death rate 15 per 1,000 population (annual rate of growth 2\%) $\Rightarrow$ daily birth and death rates $b=0.00009889$ and $d=0.0000411$ per person, respectively
+\end{frame}
+
+\begin{frame}{Parameter assumptions -- Force of infection}
+  No H2H transmission $\Rightarrow$ incidence proportional to number of susceptible individuals and force of infection, which quantifies combined effect of all variables involved in infection process:
+  \begin{itemize}
+    \item degree of soil contamination with \emph{Clostridium tetani}
+    \item climate
+    \item frequency of lesions
+    \item proportion of rural population
+    \item socioeconomic conditions
+    \item level of medical care for the wounded and during deliveries
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  Force of infection acting on newborn ($\lambda_b$) and susceptible population ($\lambda$) fixed at 3 different levels adequate for reproducing the following stable annual incidence rates of tetanus cases in the community
+  \begin{itemize}
+    \item For newborn, 200 cases, 400 cases and 600 cases per 100,000 newborn
+    \item For general population (without newborn), 9, 18 and 27 cases
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A crash course on discrete-time systems}
+  We have seen systems of ordinary differential equations (ODE) of the form 
+  \[
+    \frac{d}{dt}x(t)=f(x(t))
+  \]
+  often written omitting dependence on $t$, i.e.,
+  \begin{equation}\label{eq:ODE}
+    x' = f(x)
+  \end{equation}
+  where $x\in\IR^n$ and $f:\IR^n\to\IR^n$. The system is considered together with an initial condition $x(t_0)=x_0\in\IR^n$.
+  \vfill
+  The \textbf{independent} variable $t\in\IR$
+\end{frame}
+
+\begin{frame}
+  A discrete-time system takes the form
+  \begin{equation}\label{eq:DTS}
+    x(t+\Delta t) = f(x(t))
+  \end{equation}
+  where $x(t)\in\IR^n$ and $f:\IR^n\to\IR^n$
+  \vfill
+  In a discrete-time system, $t$ is discrete and can be assumed to be in $\IZ$ or $\IN$ (in practice, before ``recasting'', it is in $\mathbb{Q}$), we often write $x(t+1)=f(x(t))$, assuming $\Delta t=1$..
+  \vfill
+  Together with an initial condition $x(t_0)=x_0\in\IR^n$, this constitutes a sequence that describes the evolution of the state $x$
+\end{frame}
+
+\begin{frame}{Similarities/differences}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{cc}
+      $x'=f(x), x(t_0)=x_0, x\in\IR^n$
+      &
+      $x(t+\Delta t)=f(x(t)), x(t_0)=x_0, x\in\IR^n$ \\
+      Equilibria (EP) $x^\star$ s.t. $f(x^\star)=0_{\IR^n}$ 
+      &
+      Fixed points (FP) $x^\star$ s.t. $f(x^\star)=x^\star$ \\
+      LAS EP $\Leftrightarrow$ $s(Df(x^\star))<0$
+      &
+      LAS FP $\Leftrightarrow$ $\rho(Df(x^\star))<1$ \\
+      
+    \end{tabular}    
+  \end{center}
+  \vfill
+  \textbf{Notation --} 
+  if $A\in\M_n$ is a matrix, $\mathsf{Sp}(A)=\{\lambda\in\IC: A\bv=\lambda\bv,\bv\neq\b0\}$ is its \textbf{spectrum}, i.e., the set of all its eigenvalues and
+  \begin{itemize}
+    \item $s(A)=\max\{\Re(\lambda)$, $\lambda\in\mathsf{Sp}(A)\}$ is its \textbf{spectral abscissa}
+    \item $\rho(A)=\max\{|\lambda|,\lambda\in\mathsf{Sp}(A)\}$ is its \textbf{spectral radius}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Simulating the system}
+The \code{R} package we use for ODE (\code{deSolve}) can also do discrete-time systems, with very little adaptation.. 
+\vfill
+The function call is then of the form 
+\begin{lstlisting}
+sol <- ode(func = tetanus_Cvjetanovic, y = IC, times = 0:30, 
+           parms = params, method = "iteration")
+\end{lstlisting}
+\vfill
+From the help for \code{ode}
+\begin{quote}
+  Method ``iteration'' is special in that here the function \code{func} should return the new value of the state variables rather than the rate of change
+\end{quote}
+\end{frame}
+
+\begin{frame}[fragile]{The right hand side}
+\begin{lstlisting}
+tetanus_Cvjetanovic = function(t, y, params) {
+  with(as.list(c(y, params)), {
+    T = S+L_b+L+I_b+I+R+R_b
+    dD = pi_IbD*gamma_b*I_b+pi_ID*gamma*I
+    delta_T = dD/T
+    dS_b = b*T
+    dS = b*(1-lambda_b)*(T-R)+nu*R+nu_b*I+pi_IbS*gamma_b*I_b +
+      pi_IS*gamma*I-(lambda+d-delta_T)*S
+    dL_b = lambda_b*b*(T-R)-(epsilon_b+d-delta_T)*L_b
+    dL = lambda*S-(epsilon+d-delta_T)*L
+    dI_b = epsilon_b*L_b-(gamma_b+d-delta_T)*I
+    dI = epsilon*L-(gamma+d-delta_T)*I
+    dR = pi_IbR*gamma_b*I_b+pi_IR*gamma*I-(nu+d-delta_T)*R
+    dR_b = b*R-(nu_b+d-delta_T)*R_b
+    list(c(S_b+dS_b,S+dS,L_b+dL_b,L+dL,I_b+dI_b,I+dI,R+dR,R_b+dR_b,D+dD))
+  })
+}
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Set parameters}
+\begin{lstlisting}
+params = list()
+params$epsilon_b = 0.1667
+params$epsilon = 0.125
+params$gamma_b = 1/3
+params$gamma = 0.0714
+params$nu = 0.000274
+params$nu_b = 0.005479
+params$b = 0.00009889
+params$d = 0.0000411
+
+params$pi_IbS = 0.05
+params$pi_IS = 0.3
+params$pi_IbR = 0.05
+params$pi_IR = 0.3
+params$pi_IbD = 0.9
+params$pi_ID = 0.4
+
+params$lambda_b = 0.1
+params$lambda = 0.1  
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{A last few things then run}
+\begin{lstlisting}
+IC = c(S_b = 0,
+  S = 100000,
+  L_b = 0,
+  L = 0,
+  I_b = 0,
+  I = 0,
+  R = 0,
+  R_b = 0,
+  D = 0)
+tspan = 0:30 
+sol <- ode(func = tetanus_Cvjetanovic, y = IC, times = tspan, 
+      parms = params, method = "iteration")
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}{A few remarks about this model}
+To set $\lambda_b$ and $\lambda$, we need to explore numerically model response
+\vfill
+Discrete-time models can be analysed in pretty much the same way as continuous time ones, but this one will be hard: there is no DFFP!
+\vfill
+This means the usual methods for computing $\R_0$ will not work, as there is no DFFP to perturb away from...
 \end{frame}
 
 \end{document}
