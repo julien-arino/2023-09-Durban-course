@@ -1,5 +1,5 @@
 %\SweaveUTF8
-\documentclass[aspectratio=43]{beamer}
+\documentclass[aspectratio=169]{beamer}
 \usepackage{Sweave}
 
 \include{slides_setup_nonLightBoard_whiteBG.tex}
@@ -91,7 +91,7 @@ function} $f$
 \item $\IP(a\leq T\leq b)=\int_a^bf(t)dt$
 \end{itemize}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{FIGS/distrib_a_b}
+\includegraphics[width=0.5\textwidth]{FIGS/distrib_a_b}
 \end{center}
 \end{frame}
 
@@ -101,7 +101,7 @@ The cumulative distribution function (c.d.f.) is a function $F(t)$ that characte
 F(s)=\IP(T\leq s)=\int_{-\infty}^sf(x)dx
 \]
 \begin{center}
-\includegraphics[width=0.6\textwidth]{FIGS/cdf_auc}
+\includegraphics[width=0.5\textwidth]{FIGS/cdf_auc}
 \end{center}
 \end{frame}
 
@@ -136,6 +136,12 @@ Since $\lim_{t\to\infty}t\S(t)=0$, it follows that
 \[
 \frac{1}{\S(t_0)} \int_0^{\infty} t\,f(t+t_0)\,dt 
 \]
+\vfill
+\begin{eqnarray*}
+\S(t)-\S(a)&=&\IP\left\{\textrm{survive during }
+ (a,t)\textrm{ having survived until }a\right\} \\
+&=& \exp\left(-\int_a^t h(u)du\right)
+\end{eqnarray*}
 \end{frame}
 
 \begin{frame}\frametitle{Hazard rate}
@@ -155,142 +161,47 @@ h(t)=-\frac{d}{dt}\ln\S(t)
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{\frametitle{Risques comp\'etitifs}
-On suppose maintenant que le syst\`eme commence dans l'\'etat $A$ au
-temps $t=0$, et que selon lequel des deux \'evenements $\mathcal{E}_1$
-ou $\mathcal{E}_2$ a lieu en premier, il passe dans l'\'etat $B_1$ ou
-$B_2$, respectivement.
-
-Soient les deux variables al\'eatoires $T_A$, \emph{temps pass\'e}
-dans l'\'etat $A$ (ou \emph{temps de s\'ejour} en $A$),
-$T_{AB_1}$, le \emph{temps avant passage} \`a l'\'etat $B_1$ et
-$T_{AB_2}$ le \emph{temps avant passage} \`a l'\'etat $B_2$.
-
-Si l'on consid\`ere l'\'etat $A$, on ne peut \'evidemment pas observer
-les variables $T_{AB_1}$ ou $T_{AB_2}$. Ce qui est observable est le
-temps de s\'ejour en $A$
+\begin{frame}{Competing risks}
+Suppose now that the system starts in state $A$ at time $t=0$ and that depending on which of the two events $\mathcal{E}_1$ or $\mathcal{E}_2$ takes place first, it switches to state $B_1$ or $B_2$, respectively
+\vfill
+Consider the random variables $T_A$, \emph{time spent} in state $A$ (or sojourn time in $A$), $T_{AB_1}$, \emph{time before switch to} $B_1$ and $T_{AB_2}$, \emph{time before switch to} $B_2$
+\vfill
+If we consider state $A$, we cannot observe the variables $T_{AB_1}$ or $T_{AB_2}$. What is observable is the sojourn time in $A$
 \[
 T^*_A=\min\left( T_{AB_1},T_{AB_2} \right)
 \]
-(where $^*$ indique une quantit\'e observable).
-}
+(where $^*$ indicates that a quantity is observable)
+\end{frame}
 
-\frame{
-\begin{eqnarray*}
-\Surv(t)-\Surv(a)&=&\Proba{\textrm{survivre pendant }
- (a,t)\textrm{ en ayant surv\'ecu jusqu'\`a }a} \\
-&=& \exp\left(-\int_a^t h(u)du\right)
-\end{eqnarray*}
-}
+\begin{frame}{Taux d'échec par type d'évènement}
+We have two (or more) types of events whose individual failure rates have to be accounted for
+\begin{align*}
+h_j(t) &= \lim_{\Delta t\to 0} \frac{\mathbb{P}( T<t+\Delta t, S=S_j | T\geq t)}{\Delta t} 
+\end{align*}
+where $\mathbb{P}(T<t+\Delta t, S=S_j | T\geq t)$ is the probability of failure due to cause $S_j$ ($j=1,2$ ici), i.e., $S$ is a discrete r.v. representing the event that is taking place
+\end{frame}
 
-\frame{\frametitle{Cas d'une distribution al\'eatoire}
-Supposons que la variable al\'eatoire $T$ suive une distribution
-exponentielle $f(t)=\theta e^{-\theta t}$ pour $t\geq 0$, avec
-$\theta>0$.
-Alors la fonction de survie pour l'\'etat $A$ prend la forme
-$\Surv(t)=e^{-\theta t}$, pour $t\geq 0$, et le temps de s\'ejour
-moyen dans l'\'etat $A$ est
-\[
-\tau=\int_0^\infty e^{-\theta t}dt=\frac 1\theta
-\]
-}
+\begin{frame}
+By the law of total probability, since only one of the event can take place, if there are $n$ risks, then
+$$
+h(t) = \sum_{i=1}^n h_j(t)
+$$
+or, identically,
+$$
+\mathcal{S}(t)
+=
+\exp\left(
+  -\int_0^t \sum\textstyle_{j=1}^n h_j(s)\ ds
+\right)
+$$
+\end{frame}
 
-
-\frame{\frametitle{Cas d'une distribution de Dirac}
-Si, d'autre part, pour une constante $\omega>0$,
-\[
-\Surv(t)=
-\left\{
-\begin{array}{ll}
-1, & 0\leq t\leq\omega \\
-0, & \omega<t
-\end{array}
-\right.
-\]
-ce qui veut dire que $T$ a une distribution de Dirac
-$\delta_\omega(t)$, et le temps de s\'ejour moyen est une constante,
-\[
-\tau=\int_0^\omega dt=\omega
-\]
-Ces deux distributions sont des extr\^emes.
-}
-
-%%%%%%%%%%%%%%%%%%%
-\frame{\frametitle{La condition initiale}
-Dans le cas d'une \'equation telle \eqref{eq:SIS_dim_inf_I},
-d\'eterminer la condition initiale $I_0(t)$ n'est pas une t\^ache
-ais\'ee. On utilise pour ce faire
-l'\emph{\^age dans la classe infectieuse}.
-Soit $i(t,\tau)$ la densit\'e d'individus dans la classe d'infection
-$\tau$, proportion des individus dans la classe d'infection $\tau$ qui
-sont toujours infectieux \`a l'instant $t$. On a alors
-\[
-\left(\frac{\partial}{\partial t}+\frac{\partial}{\partial
-   \tau}\right)i(t,\tau)
-=-(\eta(\tau)+d)i(t,\tau)
-\]
-Ici, $\eta(\tau)$ est le coefficient de taux de gu\'erison (peut
-d\'ependre de $\tau$).
-}
-
-\frame{
-La proportion toujours dans la classe $I$ \`a l'\^age d'infection $\tau$
-\'egale \`a
-\[
-P(\tau)=\exp\left(-\int_0^\tau \eta(q)-ddq\right)
-\]
-dont on suppose qu'elle v\'erifie les hypoth\`eses g\'en\'erales sur
-les fonctions de gu\'erison.
-L'influx dans la classe d'\^age d'infection z\'ero est
-\[
-i(t,0)=\beta \frac{S(t)I(t)}N
-\]
-Par ailleurs, $i(0,\tau)\geq 0$ est sp\'ecifi\'ee.
-}
-
-
-%\frame{
-%On peut donc int\'egrer le long des charact\'eristiques, ce qui donne
-%\begin{align*}
-%i(t,\tau) &= i(t-\tau,0)\exp\left(
-%-\int_{t-\tau}^t d\;dq -\int_0^\tau \eta(q)dq
-%\right),\quad \textrm{lorsque }0\leq \tau \leq t, \\
-%i(t,\tau) &= i(0,\tau-t)\exp\left(
-%-\int_{0}^t d\;dq -\int_{\tau-t}^\tau \eta(q)dq
-%\right),\quad \textrm{lorsque }t\leq \tau<\infty,
-%\end{align*}
-%}
-
-
-%\frame{
-%Maintenant, le nombre d'infectieux au temps $t$ est donn\'e en
-%fonction de la classe d'\^age d'infection par $I(t)=\int_0^\infty
-%i(t,\tau)d\tau$. Subdivisant cette int\'egrale et utilisant les
-%valeurs qui pr\'ec\`edent, on a donc
-%\begin{align*}
-%I(t) = & \int_0^t
-%i(t-\tau,0)\exp\left(
-%-\int_{t-\tau}^t d\;dq -\int_0^\tau \eta(q)dq
-%\right)d\tau \\
-%&+ \int_t^\infty
-%i(0,\tau-t)\exp\left(
-%-\int_{0}^t d\;dq -\int_{\tau-t}^\tau \eta(q)dq
-%\right)d\tau
-%\end{align*}
-%}
-
-%\frame{
-%Changeons la variable d'int\'egration ($u=t-\tau$), utilisons $S=N-I$ et les
-%d\'efinitions de $i(t,0)$ et de $P(\tau)$. Cela donne
-%\begin{align*}
-%I(t) = & \int_0^t
-%\beta\frac{(N-I(u))I(u)}{N} \exp\left(
-%-\int_{t-\tau}^t d\;dq\right)P(t-u)du \\
-%&+ \exp\left(-\int_{0}^t d\;dq\right)
-%\int_t^\infty
-%i(0,u)\frac{P(t+u)}{P(u)}du
-%\end{align*}
-%}
+\begin{frame}
+As a consequence, if a process is subject to two competing exponential risks with respective distributions with parameters $\theta_1$ and $\theta_2$, the the mean sojourn time in the initial state before being affected by one of the two risks is
+$$
+\frac{1}{\theta_1+\theta_2}
+$$
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%
