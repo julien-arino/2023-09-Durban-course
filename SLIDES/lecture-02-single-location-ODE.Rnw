@@ -673,6 +673,16 @@ with $N^\star = b/d$. Also easy to check (exercise!) that
 \]
 \end{frame}
 
+\begin{frame}{The usual situation}
+\centering
+\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_forward}
+\end{frame}
+
+\begin{frame}{What can happen with vaccination -- Backward bifurcation}
+\centering
+\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_backward}
+\end{frame}
+
 %%%%%%%%%%%%%%
 %%%%%%%%%%%%%%
 \subsection{SLIRS model with constant population}
