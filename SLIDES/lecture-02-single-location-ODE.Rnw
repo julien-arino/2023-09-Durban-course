@@ -1,5 +1,5 @@
 %\SweaveUTF8
-\documentclass[aspectratio=43]{beamer}
+\documentclass[aspectratio=169]{beamer}
 
 \include{slides_setup_nonLightBoard_whiteBG.tex}
 
@@ -124,7 +124,8 @@ S_0(\ln S_0-\ln S_\infty) =
 \subsection{Computing the final size more efficiently}
 
 \begin{frame}{A method for computing $\mathcal{R}_0$ in epidemic models}
-
+\bbullet Arino, Brauer, van den Driessche, Watmough \& Wu, \href{https://julien-arino.github.io/assets/pdf/papers/2007_ArinoBrauerPvdDWatmoughWu-MBE4.pdf}{A final size relation for epidemic models}, \emph{Mathematical Biosciences and Engineering} (2007)
+\vfill
 \bbullet This method is not universal! It works in a relatively large class of models, but not everywhere
 \vfill
 \bbullet If it doesn't work, the next generation matrix method does work, \textbf{but} should be considered only for obtaining the reproduction number, not to deduce LAS
@@ -211,10 +212,6 @@ Let
 If no demography (epidemic model), then just $\R_0$, of course
 \end{frame}  
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Final size relations}
-
 \begin{frame}{Final size relations}
 Assume no demography, then system should be writeable as
 \begin{subequations}
@@ -300,7 +297,7 @@ where $K$ is the initial total population
 \subsection{A variation on the SLIAR model}
 
 \begin{frame}{The SLIAR model}
-\bbullet Paper we have already seen: Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic} (2006)
+\bbullet Paper we have already seen: Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic}, \emph{Journal of the Royal Society Interface} (2006)
 \vfill
 \bbullet However, suppose additionally that $L$ are also infectious
 \end{frame}  
@@ -396,6 +393,13 @@ If $\bI_0=(L_0,I_0,A_0)$, then
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 \subsection{A model with vaccination}
+
+\begin{frame}{A model with vaccination}
+\centering
+\includegraphics[height=0.95\textheight]{FIGS/SLIR_epidemic_with_vaccination}
+\end{frame}  
+
+
 \begin{frame}{A model with vaccination}
 Fraction $\gamma$ of $S_0$ are vaccinated before the epidemic; vaccination reduces probability and duration of infection, infectiousness and reduces mortality
 \begin{subequations}
@@ -412,10 +416,6 @@ R\pprime &= f_U\alpha_UI_I+f_V\alpha_VI_V
 with $S_U(0)=(1-\gamma)S_0$ and $S_V(0)=\gamma S_0$
 \end{frame}  
 
-\begin{frame}
-\centering
-\includegraphics[width=\textwidth]{FIGS/SLIR_epidemic_with_vaccination}
-\end{frame}  
 
 \begin{frame}
 Here, $m=2$, $n=4$,
@@ -473,7 +473,7 @@ S_V(\infty) = \gamma S_U(0)\left(
 \subsection{Antiviral resistance}
 
 \begin{frame}{Adapting treatment to counter emergence of resistance}
-Arino, Bowman \& Moghadas. \href{https://bmcinfectdis.biomedcentral.com/counter/pdf/10.1186/1471-2334-9-8.pdf}{Antiviral resistance during pandemic influenza: implications for stockpiling and drug use}. BMC Infectious Disease (2009)
+Arino, Bowman \& Moghadas, \href{https://bmcinfectdis.biomedcentral.com/counter/pdf/10.1186/1471-2334-9-8.pdf}{Antiviral resistance during pandemic influenza: implications for stockpiling and drug use}, \emph{BMC Infectious Disease} (2009)
 \vfill
 This work was undertaken at the request of the Public Health Agency of Canada during the pandemic preparadness phase prior to the 2009 p-H1N1 pandemic
 \vfill
@@ -514,7 +514,7 @@ Problem: we have antivirals to use against influenza, either prophylactically or
     \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$(1-q)pfS$} (I_U);
     \path [line, very thick] (S) to node [midway,above,sloped] (TextNode) {$(1-p)gS$} (A_r);
     \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$(1-q)pgS$} (I_rU);
-    \path [line, very thick] (S) to node [midway,above,sloped] (TextNode) {$qpfS$} (I_T);
+    \path [line, very thick] (S) to node [near end,above,sloped] (TextNode) {$qpfS$} (I_T);
     \path [line, very thick] (S) to node [midway,below,sloped] (TextNode) {$qpgS$} (I_rT);
     %% Removals
     \path [line, very thick] (A) to node [midway,below,sloped] (TextNode) {$\mu_AA$} (R_U);
@@ -551,38 +551,100 @@ Arino \& Portet, \href{http://dx.doi.org/10.1016/j.idm.2020.04.002}{A simple mod
 Extends the SLIAR model to take into account non-exponentially distributed stage durations (see lecture on Stochastic systems)
 \end{frame}
 
-\begin{frame}{The original model}
+\begin{frame}{The original model (well, almost the first one)}
 \centering
+\def\horzskip{*2}
+\def\vertskip{*2}
 \begin{tikzpicture}[auto, %node distance = 2cm, auto,
 	cloud/.style={minimum width={width("N-1")+2pt},
 		draw, ellipse,fill=red!20}]
-	\node [cloud] (S) {$S$};
-	\node [cloud, right=of S] (L1) {$L_1$};
-	\node [cloud, right=of L1] (L2) {$L_2$};
-	\node [cloud, above right=of L2, fill=blue!20] (I1) {$I_1$};
-	\node [cloud, below right=of L2] (A1) {$A_1$};
-	\node [cloud, right=of I1, fill=blue!20] (I2) {$I_2$};
-	\node [cloud, right=of A1] (A2) {$A_2$};
-	\node [cloud, below right=of I2, fill=blue!20] (RI) {$R_I$};
-	\node [cloud, right=of A2] (RA) {$R_A$};
-	\node [cloud, above right=of I2, fill=blue!20] (D) {$D$};
+	\node [cloud] (S) at (0,0) {$S$};
+	\node [cloud] (L1) at (1\horzskip,0) {$L_1$};
+	\node [cloud] (L2) at (2\horzskip,0) {$L_2$};
+	\node [cloud,fill=blue!20] (I1) at (3\horzskip,-1\vertskip) {$I_1$};
+	\node [cloud] (A1) at (3\horzskip,1\vertskip) {$A_1$};
+	\node [cloud,fill=blue!20] (I2) at (4\horzskip,-1\vertskip) {$I_2$};
+	\node [cloud] (A2) at (4\horzskip,1\vertskip) {$A_2$};
+	\node [cloud,fill=blue!20] (RI) at (5\horzskip,0) {$R_I$};
+	\node [cloud] (RA) at (5\horzskip,1\vertskip) {$R_A$};
+	\node [cloud,, fill=blue!20] (D) at (5\horzskip,-2\vertskip) {$D$};
 	%% Infections
-	\path [line, very thick] (S) to node [midway, above] (TextNode) {$\Phi S$} (L1);
-	\path [line, very thick] (L1) to node [midway, above] (TextNode) {$\varepsilon L_1$} (L2);
-	\path [line, very thick] (L2) to node [midway, right] (TextNode) {$(1-\pi)\varepsilon L_2$} (I1);
-	\path [line, very thick] (L2) to node [midway, right] (TextNode) {$\pi\varepsilon L_2$} (A1);
+	\path [line, very thick] (S) to node [midway,above] (TextNode) {$\Phi S$} (L1);
+	\path [line, very thick] (L1) to node [midway,above] (TextNode) {$\varepsilon L_1$} (L2);
+	\path [line, very thick] (L2) to node [midway,below,sloped] (TextNode) {$(1-\pi)\varepsilon L_2$} (I1);
+	\path [line, very thick] (L2) to node [midway,below,sloped] (TextNode) {$\pi\varepsilon L_2$} (A1);
 	\path [line, very thick] (I1) to node [midway, above] (TextNode) {$\gamma I_1$} (I2);
 	\path [line, very thick] (A1) to node [midway, above] (TextNode) {$\gamma A_1$} (A2);
-	\path [line, very thick] (I2) to node [midway, right] (TextNode) {$(1-\delta)\gamma I_2$} (RI);
+	\path [line, very thick] (I2) to node [midway,above,sloped] (TextNode) {$(1-\delta)\gamma I_2$} (RI);
 	\path [line, very thick] (A2) to node [midway, above] (TextNode) {$\gamma A_2$} (RA);
-	\path [line, very thick] (I2) to node [midway, right] (TextNode) {$\delta\gamma I_2$} (D);
+	\path [line, very thick] (I2) to node [midway,below,sloped] (TextNode) {$\delta\gamma I_2$} (D);
 \end{tikzpicture}
 \end{frame}
 
 
 \begin{frame}{Reinterpreting terms}
+Here $D$ stands for \emph{detected}, $U$ is \emph{undetected}
+\vfill
 \centering
 \includegraphics[width=\textwidth]{FIGS/figure_SLDURM_base_model_with_different_epsilon_and_infectious_compartments}
+\end{frame}
+
+\begin{frame}{Working out when the first COVID-19 case occurred}
+\bbullet Details of emergence and precise timeline before amplification started unknown
+\vfill
+\bbullet Amplification in Wuhan
+\begin{itemize}
+\item Cluster of pneumonia cases mostly related to the Huanan Seafood Market
+\item 27 December 2019: first report to local government
+\item 31 December 2019: publication
+\item 8 January 2020: identification of SARS-CoV-2 as causative agent
+\item $\sim$ 23 January 2020: lockdown Wuhan and Hubei province + face mask mandates
+\end{itemize}
+\vfill
+\bbullet By 2020-01-29, virus in all provinces of mainland CHN
+\end{frame}
+
+
+\begin{frame}{Evidence of earlier spread}
+\bbullet Report to Wuhan authorities on 27 December 2019
+\vfill
+\bbullet First export detections in Thailand and Japan on 13 and 16 January 2020 (with actual importations on 8 and 6 January)
+\vfill
+$\implies$ amplification must have been occuring for a while longer
+\vfill
+\bbullet France: sample taken from 42-year-old male (last foreign travel to Algeria in August 2019) who presented to ICU on 27 December 2019
+\vfill
+\bbullet Retrospective studies in United Kingdom and Italy also showed undetected COVID-19 cases in prepandemic period
+\end{frame}
+
+\begin{frame}{Untangling the first case issue}
+\bbullet Robert, Rossman \& Jaric. Dating first cases of COVID-19. \emph{PLoS Pathogens} (2021)
+
+Find likely timing of first case of COVID-19 in China as November 17 (95\% CI October 4)
+\vfill
+\bbullet Pekar, Worobey, Moshiri, Scheffler \& Wertheim. Timing the SARS-CoV-2 index case in Hubei province. \emph{Science} (2021)
+
+Period between mid-October and mid-November 2019 is plausible interval when the first case of SARS-CoV-2 emerged in Hubei province
+\vfill
+Important when trying to understand global spread, so let me illustrate with the model I used, taking into account model evolution since
+\end{frame}
+
+\begin{frame}{Back-calculating the start of spread (example of China)}
+Cumulative confirmed case counts in China as reported to WHO was $c=547$ cases on $t_c=\textrm{2020-01-22}$
+\vfill
+Let $u$ be a point in parameter space. Solve ODE numerically over $[0,t]$, with $S(0)$ the population of China, $L_1(0)=1$ and other state variables 0. This gives a solution $x(t,t_0=0,u)$
+\vfill
+Extracting $L_2(t,t_0=0,u)$ from this solution, obtain cumulative number of new detections as
+\[
+C(t) = \int_{t_0=0}^{t} p\varepsilon_2 L_2(s,t_0,u)\ ds
+\]
+\vfill
+Let $t^\star$ be s.t. $C(t^\star)=547$; then $t_i=\textrm{2020-01-22}-t^\star$
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[width=\textwidth]{FIGS/start_time_vs_R0_and_p.png}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%
@@ -671,16 +733,6 @@ with $N^\star = b/d$. Also easy to check (exercise!) that
 \[
 \R_0 = \frac{\beta}{d+\gamma}
 \]
-\end{frame}
-
-\begin{frame}{The usual situation}
-\centering
-\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_forward}
-\end{frame}
-
-\begin{frame}{What can happen with vaccination -- Backward bifurcation}
-\centering
-\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_backward}
 \end{frame}
 
 %%%%%%%%%%%%%%
@@ -849,7 +901,7 @@ Write
 L \\
 I
 \end{matrix}
-\right)\pprime
+\right)'
 =\left(
 \begin{matrix}
 f(S,I,N) \\
@@ -870,11 +922,11 @@ f(S,I,N) \\
 \frame{
 Denote
 \[
-f_L^\star:=
+f_L^{\,\star}:=
 \left.\frac{\partial}{\partial L}f
 \right|_{(S,I,R)=\bE_0}
 \quad\quad 
-f_I^\star:=
+f_I^{\,\star}:=
 \left.\frac{\partial}{\partial I}f
 \right|_{(S,I,R)=\bE_0}
 \]
@@ -884,7 +936,7 @@ Compute the Jacobian matrices of vectors $\F$ and $\V$ at the DFE $\bE_0$
 \begin{equation}
 F=\left(
 \begin{matrix}
-f_L^\star & f_I^\star \\
+f_L^{\,\star} & f_I^{\,\star} \\
 0 & 0
 \end{matrix}
 \right)
@@ -910,10 +962,9 @@ d+\gamma & 0 \\
 \right)
 \]
 \vfill
-Also, in the case $N$ is constant, $\partial f/\partial
-L=0$ and thus
+Also, in the case $N$ is constant, $\partial f/\partial L=0$ and thus
 \[
-FV^{-1}=\frac{\frac{\partial\bar f}{\partial I}}
+FV^{-1}=\frac{f_I^{\,\star}}
 {(d+\varepsilon)(d+\gamma)}
 \left(
 \begin{matrix}
@@ -927,7 +978,7 @@ FV^{-1}=\frac{\frac{\partial\bar f}{\partial I}}
 As a consequence,
 \[
 \R_0=\varepsilon
-\frac{\frac{\partial\bar f}{\partial I}}
+\frac{f_I^{\,\star}}
 {(d+\varepsilon)(d+\gamma)}
 \]
 }
@@ -938,7 +989,7 @@ As a consequence,
 Let
 \begin{equation}\label{eq:R0_SEIRS}
 \R_0=
-\frac{\varepsilon\frac{\partial\bar f}{\partial I}}
+\frac{\varepsilon f_I^{\,\star}}
 {(d+\varepsilon)(d+\gamma)}
 \end{equation}
 Then
@@ -960,12 +1011,12 @@ The DFE is
 \begin{itemize}
 \item Mass action incidence (frequency-dependent contacts):
  \[
-\frac{\partial\bar f}{\partial I}=\beta\bar S \Rightarrow\R_0 =
+f_I^{\,\star}=\beta\bar S \Rightarrow\R_0 =
 \frac{\epsilon\beta N}{(\epsilon+d)(\gamma+d)} 
 \]
 \item Standard incidence (proportion-dependent contacts):
 \[
-\frac{\partial\bar f}{\partial I}=\frac{\beta\bar S}{N}
+f_I^{\,\star}=\frac{\beta\bar S}{N}
 \Rightarrow\R_0 = \frac{\epsilon\beta}{(\epsilon+d)(\gamma+d)}
 \]
 \end{itemize}
@@ -1227,6 +1278,16 @@ In the case where immunity is temporary (SLIRS), they find (numerically) a Hopf 
     \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I$} (R);
     \draw [>=latex,->, thick, rounded corners] (R) -- (2\skip,0.75) -- (0,0.75) node[midway,above,sloped] {$\nu R$} -- (S);
   \end{tikzpicture}    
+\end{frame}
+
+\begin{frame}{The usual situation}
+\centering
+\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_forward}
+\end{frame}
+
+\begin{frame}{What can happen with vaccination -- Backward bifurcation}
+\centering
+\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_backward}
 \end{frame}
 
 
@@ -1628,6 +1689,18 @@ I\pprime &= \beta SI-aI-pIC \\
 C\pprime &= cIC-bC
 \end{align}
 \end{subequations}
+\vfill
+Assume $\R_0>1$, i.e., the virus can successfully establish itself
+\vfill
+Then if $(\lambda/a-d/\beta)c<d$, the CTL response fails to become established and the system goes to $(\beta/K,\lambda/K-d/\beta,0)$
+\vfill
+If $(\lambda/a-d/\beta)c>d$, then the system converges to
+\[
+\left(
+\frac{\lambda c}{dc+\beta b},\frac bc,
+\frac{(\beta\lambda-ad)c-ab\beta}{(cd+\beta b)p}
+\right)
+\]
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
@@ -2086,7 +2159,7 @@ shinyApp(ui = ui, server = server)
   \end{equation}
   i.e., $p$ has period $\omega$. So we now consider the incidence
   \begin{equation}
-    \label{eq:incidence_Capasso_periodic}
+    \tag{\ref{eq:incidence_Capasso_periodic}}
     g(t,E)=p(t)h(E)
   \end{equation}
   with $h$ having the properties prescribed earlier.
