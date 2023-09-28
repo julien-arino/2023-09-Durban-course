@@ -41,639 +41,6 @@ library(deSolve)
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-\section{The SLIRS models}
-
-%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%
-\subsection{SIS models}
-
-
-\begin{frame}{Note on demography}
-\bbullet We have already discussed some different possible forms for demography
-\vfill
-\bbullet In the models with demography here, unless otherwise required, we use demography such that for the total population
-\[
-N' = b - dN
-\]
-\end{frame}
-
-
-\begin{frame}{Simplifying the SIRS model}
-\begin{minipage}{0.2\textwidth}
-  \def\skip{*-1.5}
-  \begin{tikzpicture}[scale=1, transform shape]
-    %% Regular nodes
-    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
-    \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
-    %% Fake nodes for arrows
-    \node [above=0.75cm of S] (birth) {};
-    \node [left=0.5cm of S] (dS) {};
-    \node [left=0.5cm of I] (dI) {};
-    %% Flows
-    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
-    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
-    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
-    \path [line, very thick, bend right] (S) to node [midway, left] (TextNode) {$\beta SI$} (I);
-    \path [line, very thick, bend right] (I) to node [midway, right] (TextNode) {$\gamma I$} (S);
-  \end{tikzpicture}    
-\end{minipage}
-\begin{minipage}{0.75\textwidth}
-\bbullet We have already seen the epidemic KMK SIR model and the endemic SIRS model
-\vskip0.5cm
-\bbullet By making some simplifications of the endemic SIRS model, we obtain the SIS model: assume the time spent in the $R$ compartment goes to zero, i.e., $\nu\to\infty$
-\end{minipage}
-\vfill
-The main characteristics of the model are the same as the SIRS
-\end{frame}
-
-\begin{frame}
-\begin{minipage}{0.2\textwidth}
-  \def\skip{*-1.5}
-  \begin{tikzpicture}[scale=1, transform shape]
-    %% Regular nodes
-    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
-    \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
-    %% Fake nodes for arrows
-    \node [above=0.75cm of S] (birth) {};
-    \node [left=0.5cm of S] (dS) {};
-    \node [left=0.5cm of I] (dI) {};
-    %% Flows
-    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
-    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
-    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
-    \path [line, very thick, bend right] (S) to node [midway, left] (TextNode) {$\beta SI$} (I);
-    \path [line, very thick, bend right] (I) to node [midway, right] (TextNode) {$\gamma I$} (S);
-  \end{tikzpicture}    
-\end{minipage}
-\begin{minipage}{0.75\textwidth}
-\begin{subequations}\label{sys:SIS}
-\begin{align}
-S' &= b +\gamma I -dS - \beta SI \label{sys:SIS_dS} \\
-I' &= \beta SI -(d+\gamma) I
-\end{align}
-\end{subequations}
-with initial conditions $S(0)=S_0\geq 0$ and $I(0)=I_0\geq 0$
-\end{minipage}
-\vfill
-Clearly, the DFE is similar as for the SIRS
-\[
-\bE_0:=(S^\star,I^\star)=(N^\star,0)
-\]
-with $N^\star = b/d$. Also easy to check (exercise!) that
-\[
-\R_0 = \frac{\beta}{d+\gamma}
-\]
-\end{frame}
-
-%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%
-\subsection{SLIRS model with constant population}
-
-\frame{\frametitle{Incubation periods}
-\begin{itemize}
-\item SIS and SIR: progression from S to I is instantaneous
-\vfill
-\item Several incubation periods:
-\end{itemize}
-\begin{center}
-\begin{tabular}{l|l}
-Disease & Incubation period \\
-\hline
-Yersinia Pestis & 2-6 days \\
-Ebola haemorrhagic fever (HF) & 2-21 days \\
-Marburg HF & 5-10 days \\
-Lassa fever & 1-3 weeks \\
-Tse-tse & weeks--months \\
-HIV/AIDS & months--years
-\end{tabular}
-\end{center}
-}
-
-\frame{\frametitle{Hypotheses}
-\begin{itemize}
-\item There is demography
-\item New individuals are born at a constant rate $b$
-\item
-There is no vertical transmssion: all ``newborns'' are susceptible
-\item The disease is non lethal, it causes no additional mortality
-\item New infections occur at the rate $f(S,I,N)$
-\item There is a period of incubation for the disease
-\item There is a period of time after recovery during which the disease confers immunity to reinfection (immune period)
-\end{itemize} 
-}
-
-\frame{\frametitle{SLIRS}
-\begin{minipage}{0.2\textwidth}
-  \def\skip{*-1.5}
-  \begin{tikzpicture}[scale=1, transform shape]
-    %% Regular nodes
-    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
-    \node [circle, fill=red!50, text=black] at (0,1\skip) (L) {$L$};
-    \node [circle, fill=red!90, text=black] at (0,2\skip) (I) {$I$};
-    \node [circle, fill=blue!50, text=black] at (0,3\skip) (R) {$R$};
-    %% Fake nodes for arrows
-    \node [above=0.75cm of S] (birth) {};
-    \node [left=0.5cm of S] (dS) {};
-    \node [left=0.5cm of L] (dL) {};
-    \node [left=0.5cm of I] (dI) {};
-    \node [left=0.5cm of R] (dR) {};
-    %% Flows (demography)
-    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
-    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
-    \path [line, very thick] (L) to node [midway, below] (TextNode) {$dL$} (dL);
-    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
-    \path [line, very thick] (R) to node [midway, below] (TextNode) {$dR$} (dR);
-    %% Flows (demography)
-    \path [line, very thick] (S) to node [midway, left] (TextNode) {$f(S,I,N)$} (L);
-    \path [line, very thick] (L) to node [midway, left] (TextNode) {$\varepsilon L$} (I);
-    \path [line, very thick] (I) to node [midway, left] (TextNode) {$\gamma I$} (R);
-    \draw [>=latex,->, thick, rounded corners] (R) -- (0.75,3\skip) -- (0.75,0) node[midway,above,sloped] {$\nu R$} -- (S);
-  \end{tikzpicture}    
-\end{minipage}
-\quad
-\begin{minipage}{0.7\textwidth}
-The model is as follows:
-\begin{subequations}\label{sys:SLIRS}
-\begin{align}
-S' &= b+\nu R-dS-f(S,I,N) \label{sys:SLIRS_dS} \\
-L' &= f(S,I,N) -(d+\varepsilon)L \label{sys:SLIRS_dL} \\
-I' &= \varepsilon L -(d+\gamma)I \label{sys:SLIRS_dI} \\
-R' &= \gamma I-(d+\nu)R \label{sys:SLIRS_dR} 
-\end{align}
-\end{subequations}
-\vfill
-Meaning of the parameters:
-\begin{itemize}
-\item $1/\varepsilon$ average duration of the incubation period
-\item $1/\gamma$ average duration of infectious period
-\item $1/\nu$ average duration of immune period
-\end{itemize}
-\end{minipage}
-}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Computing $\R_0$ more efficiently}
-
-
-\frame{\frametitle{The basic reproduction number $\R_0$}
-Used frequently in epidemiology (not only math epi)
-\begin{definition}[$R_0$]
-The basic reproduction number $\R_0$ is the average number of secondary cases generated by the introduction of an infectious individual in a wholly susceptible population
-\end{definition}
-\begin{itemize}
-\item If $\R_0<1$, then on average, each infectious individual infects less than one other person, so the epidemic has chances of dying out
-\item If $\R_0>1$, then on average, each infectious individual infects more than one other person and the disease can become established in the population (or there will be a major epidemic)
-\end{itemize}
-}
-
-\frame{\frametitle{Computation of $\R_0$}
-Mathematically, $\R_0$ is a bifurcation parameter aggregating some of the model parameters and such that the disease free equilibrium (DFE) loses its local asymptotic stability when $\R_0=1$ is crossed from left to right
-\vfill
-\begin{itemize}
-\item
-As a consequence, $\R_0$ is found by considering the spectrum of the Jacobian matrix of the system evaluated at the DFE
-\vfill
-\item
-The matrix quickly becomes hard to deal with (size and absence of ``pattern'') and the form obtained is not unique, which is annoying when trying to interpret $\R_0$
-\end{itemize}
-}
-
-\frame{\frametitle{The next generation operator}
-Diekmann and Heesterbeek, characterized in the ODE context by van den Driessche and Watmough
-\vfill
-Consider only individuals harbouring the pathogen, in a vector $\I$, and form the vectors
-\begin{itemize}
-\item
-$\F$ of infection fluxes
-\item
-$\V$ of other fluxes (with $-$ sign)
-\end{itemize}
-so that
-\[
-\I'=\F-\V
-\]
-\vfill
-Then compute the Fr\'echet derivatives $D\F$ and $D\V$ with respect to the infected variables $\I$ and evaluate $F=D\F(DFE)$ and $V=D\V(DFE)$. Then
-\[
-\R_0=\rho(FV^{-1})
-\]
-where $\rho$ is the spectral radius
-}
-
-\frame{\frametitle{Short summary of van den Driessche and Watmough}
-\begin{theorem}[van den Driessche and Watmough]\label{th:R0_VdDW}
-Suppose that the DFE exists. Let then $\R_0$ be defined by
-\[
-\R_0=\rho(FV^{-1})
-\]
-with matrices $F$ and $V$ as indicated before. Then,
-\begin{itemize}
-\item if $\R_0<1$, the DFE is LAS,
-\item if $\R_0>1$, the DFE is unstable.
-\end{itemize}
-\end{theorem}
-}
-
-\frame{\frametitle{Example of the SLIRS model \eqref{sys:SLIRS}}
-Variation of the infected variables in \eqref{sys:SLIRS} are described by
-\begin{align*}
-L' &= f(S,I,N)-(\varepsilon+d) L \\
-I' &= \varepsilon L -(d+\gamma) I
-\end{align*}
-Write
-\begin{equation}
-\I' = 
-\left(
-\begin{matrix}
-L \\
-I
-\end{matrix}
-\right)'
-=\left(
-\begin{matrix}
-f(S,I,N) \\
-0
-\end{matrix}
-\right)
--
-\left(
-\begin{matrix}
-(\varepsilon+d) L \\
-(d+\gamma) I-\varepsilon L
-\end{matrix}
-\right)=:\mathcal{F}-\mathcal{V}
-\end{equation}
-}
-
-
-\frame{
-Denote
-\[
-f_L^\star:=
-\left.\frac{\partial}{\partial L}f
-\right|_{(S,I,R)=\bE_0}
-\quad\quad 
-f_I^\star:=
-\left.\frac{\partial}{\partial I}f
-\right|_{(S,I,R)=\bE_0}
-\]
-the values of the partials of the incidence function at the DFE $\bE_0$
-\vfill
-Compute the Jacobian matrices of vectors $\F$ and $\V$ at the DFE $\bE_0$
-\begin{equation}
-F=\left(
-\begin{matrix}
-f_L^\star & f_I^\star \\
-0 & 0
-\end{matrix}
-\right)
-\quad\text{and}\quad
-V=\left(
-\begin{matrix}
-\varepsilon+d & 0 \\
--\varepsilon & d+\gamma
-\end{matrix}
-\right)
-\end{equation}
-}
-
-\frame{
-Thus
-\[
-V^{-1}=\frac{1}{(d+\varepsilon)(d+\gamma)}
-\left(
-\begin{matrix}
-d+\gamma & 0 \\
-\varepsilon & d+\varepsilon
-\end{matrix}
-\right)
-\]
-\vfill
-Also, in the case $N$ is constant, $\partial f/\partial
-L=0$ and thus
-\[
-FV^{-1}=\frac{\frac{\partial\bar f}{\partial I}}
-{(d+\varepsilon)(d+\gamma)}
-\left(
-\begin{matrix}
-\varepsilon 
-& d+\varepsilon  \\
-0 & 0
-\end{matrix}
-\right)
-\]
-\vfill
-As a consequence,
-\[
-\R_0=\varepsilon
-\frac{\frac{\partial\bar f}{\partial I}}
-{(d+\varepsilon)(d+\gamma)}
-\]
-}
-
-
-\frame{
-\begin{theorem}\label{th:R0_SEIRS}
-Let
-\begin{equation}\label{eq:R0_SEIRS}
-\R_0=
-\frac{\varepsilon\frac{\partial\bar f}{\partial I}}
-{(d+\varepsilon)(d+\gamma)}
-\end{equation}
-Then
-\begin{itemize}
-\item if $\R_0<1$, the DFE is LAS
-\item if $\R_0>1$, the DFE is unstable
-\end{itemize}
-\end{theorem}
-\vfill
-It is important here to stress that the result we obtain concerns the \textbf{local} asymptotic stability. We see later that even when $\R_0<1$, there can be several locally asymptotically stable equilibria
-}
-
-
-\frame{\frametitle{Application}
-The DFE is
-\[
-(\bar S,\bar L,\bar I,\bar R)=(N,0,0,0)
-\]
-\begin{itemize}
-\item Mass action incidence (frequency-dependent contacts):
- \[
-\frac{\partial\bar f}{\partial I}=\beta\bar S \Rightarrow\R_0 =
-\frac{\epsilon\beta N}{(\epsilon+d)(\gamma+d)} 
-\]
-\item Standard incidence (proportion-dependent contacts):
-\[
-\frac{\partial\bar f}{\partial I}=\frac{\beta\bar S}{N}
-\Rightarrow\R_0 = \frac{\epsilon\beta}{(\epsilon+d)(\gamma+d)}
-\]
-\end{itemize}
-}
-
-
-\frame{\frametitle{Links between SLIRS-type models}
-{ %\footnotesize
-\begin{align*}
-S'&=b+\nu R-dS-f(S,I,N) \\
-L'&=f(S,I,N)-(d+\varepsilon) L \\
-I'&=\varepsilon L-(d+\gamma)I \\
-R'&=\gamma I-(d+\nu)R
-\end{align*}}
-\begin{center}
-\begin{tabular}{c|l}
-\hline
-SLIR & SLIRS where $\nu=0$ \\
-SLIS & Limit of SLIRS when $\nu\to\infty$ \\
-SLI & SLIR where $\gamma=0$ \\
-SIRS & Limit of SLIRS when $\varepsilon\to\infty$ \\
-SIR & SIRS where $\nu=0$ \\
-SIS & Limit of SIRS when $\nu\to\infty$ \\
-& Limit SLIS when $\varepsilon\to\infty$ \\
-SI & SIS where $\nu=0$ 
-\end{tabular}
-\end{center}
-}
-
-\frame{\frametitle{Values of $\R_0$}
-$(\bar S,\bar I,\bar N)$ values of $S,I$ and $N$ at DFE. Denote $\bar f_I=\partial f/\partial I(\bar S,\bar I,\bar N)$.
-\begin{center}
-\begin{tabular}{c|c}
-\hline
-SLIRS & 
-$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
-SLIR & 
-$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
-SLIS & 
-$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
-SLI & 
-$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
-& \\
-SIRS & 
-$\frac{\varepsilon\bar f_I}{d+\gamma}$ \\
-SIR & $\frac{\bar f_I}{d+\gamma}$ \\
-SIS & $\frac{\bar f_I}{d+\gamma}$ \\
-SI & $ \frac{\bar f_I}{d+\gamma}$ 
-\end{tabular}
-\end{center}
-}
-
-
-%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%
-\subsection{Global properties of the SLIRS model}
-
-\frame{\frametitle{Lyapunov function for SLIR and SLIS}
-(A. Korobeinikov) Consider an SLIR in constant population (normed to 1), with vertical transmission.
-\begin{subequations}\label{sys:SEIR_vert_transmission}
-\begin{align}
-S' &= d-\beta SI -pdI-qdL-dS \\
-L' &= \beta SI +pdI-(\varepsilon+d-qd)L \\
-I' &= \varepsilon L-(\gamma+d)I
-\end{align}
-\end{subequations}
-\vfill
-$p$ proportion of progeny of $I$ that are $I$ at birth, $q$ proportion of progeny of $L$ that are $L$ at birth.
-\vfill
-$R$ does not play a role in the dynamics of \eqref{sys:SEIR_vert_transmission}, it is not shown.
-}
-
-\frame{\frametitle{Equilibria}
-\begin{itemize}
-\item DFE: $\bE_0=(1,0,0)$.
-\item EEP: $\bE_\star=(S^\star,L^\star,I^\star)$ with
-{\footnotesize
-\[
-S^\star=\frac 1{\R_0^v}\quad L^\star=\frac{d}{\varepsilon+d}\left(1-\frac
-  1{\R_0^v}\right) 
-\quad
-I^*=\frac{d\varepsilon}{(\varepsilon+d)(\gamma+d)}\left(1-\frac
-  1{\R_0^v}\right) 
-\]}
-\end{itemize}
-where 
-\[
-\R_0^v=\frac{\beta\varepsilon}
-{(\gamma+d)(\varepsilon+d)-qd(\varepsilon+d)-pd\varepsilon}
-\]
-is the basic reproduction number with vertical transmission
-\vfill
-We have $\R_0=\R_0^v$ $\iff$ $p=q=0$ or $\R_0^v=\R_0=1$
-\vfill
-$\bE_\star$ exists (in a biologically plausible way) only when $\R_0^v>1$
-}
-
-
-\frame{
-Consider the Goh Lyapunov function
-\[
-V=\sum a_i(x_i-x_i^\star \ln x_i)
-\]
-\vfill
-\begin{theorem}
-\begin{itemize}
-\item If $\R_0>1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $\bE_\star$
-\item If $\R_0\leq 1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $\bE_0$, $\bE_\star$ is not biologically plausible
-\end{itemize}
-\end{theorem}
-}
-
-\begin{frame}{Li, Muldowney and van den Driessche} 
-Study an SLIRS model with incidence of the form
-\begin{equation}\label{eq:g_incidence}
-f(S,I,N)=\beta g(I)S
-\end{equation}
-where $g$ is such that $g(0)=0$, $g(I)>0$ for $I\in(0,1]$ and $g\in
-C^1(0,1]$
-\vfill
-They normalise the total population, so that $S+L+I+R=1$
-\vfill
-They make the following asumption about $g$:
-\begin{description}
-\item[(H)]$c=\lim_{I\to 0^+} \frac{g(I)}{I}\leq +\infty$; when
-$0<c<+\infty$, $g(I)\leq cI$ for all sufficiently small $I$
-\end{description}
-\end{frame}
-
-\frame{
-We have 
-\[
-\frac{\partial\bar f}{\partial I}=\beta\frac{\partial\bar g}{\partial I}
-\]
-\vfill
-Since $\dfrac{\partial\bar g}{\partial I}=\lim_{I\to 0^+}
-\dfrac{g(I)}{I}=c$,
-\[
-\R_0=\frac{c\beta\varepsilon}
-{(d+\varepsilon)(d+\gamma)}
-\]
-\vfill
-The LAS results already established hold here, since \eqref{eq:g_incidence} is a special case of the function $f$ with which the results were obtained
-}
-
-
-\frame{
-The system is \defword{uniformly persistent} if there exists $0<\varepsilon_0<1$ s.t. any solution $(S(t),L(t),I(t),R(t))$ of \eqref{sys:SLIRS} with initial condition $(S(0),L(0),I(0),R(0))\in
-\overset{\circ}{\Gamma}$ satisfies
-\begin{equation}\label{eq:SEIRS_persist}
-\begin{array}{c}
-\liminf_{t\to\infty} S(t)\geq \varepsilon_0,\quad 
-\liminf_{t\to\infty} E(t)\geq \varepsilon_0 \\
-\liminf_{t\to\infty} I(t)\geq \varepsilon_0,\quad 
-\liminf_{t\to\infty} R(t)\geq \varepsilon_0
-\end{array}
-\end{equation}
-\vfill
-\begin{theorem}\label{th:persist_SEIRS}
-If $g(I)$ satisfies hypothesis (\textbf{H}), then \eqref{sys:SLIRS} with incidence \eqref{eq:g_incidence} is uniformly persistent iff $\R_0>1$
-\end{theorem}
-}
-
-
-\frame{
-\begin{theorem}\label{th:gas_SEIRS}
-Suppose that incidence \eqref{eq:g_incidence} satisfies (\textbf{H}) and that
-\begin{equation}\label{eq:gI}
-|g'(I)|I\leq g(I) \textrm{ for }I\in(0,1]
-\end{equation}
-Suppose additionally that $\R_0>1$ and that one of the following conditions holds
-\begin{gather*}
-\gamma\nu<\epsilon_0(\beta\eta_0+\gamma+d)(\beta\eta_0+\nu+d) \\
-\varepsilon-\gamma-d<\nu
-\end{gather*}
-where
-\[
-\eta_0=\min_{I\in[\varepsilon_0,1]}g(I)>0
-\]
-and $\varepsilon_0$ is defined by \eqref{eq:SEIRS_persist}
-\vfill
-Then there are no closed rectifiable curve that is invariant under \eqref{sys:SLIRS}. Furthermore, every semi-trajectory of \eqref{sys:SLIRS} in $\Gamma$ converges to an EP
-\end{theorem}
-}
-
-
-
-
-%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%
-\subsection{SLIRS in variable population}
-
-
-\begin{frame}{Liu, Levin et Iwasa}
-SIRS of the form
-\begin{subequations}\label{sys:SIRS_LLI}
-\begin{align}
-S' &= B(N)-dS-f(S,I)I+\nu R \\
-I' &= f(S,I)I-(d+\gamma)I \\
-R' &= \gamma I-(d+\nu)R
-\end{align}
-\end{subequations}
-\vfill
-Authors discuss the general case of $f$ differentiable and s.t. $f(0,I)=0$ for all $I$ and $\partial f/\partial S>0$
-\vfill
-They assume that the demographic component of the model, ruled by 
-\[
-N'=B(N)-dN
-\]
-admits a stable EP
-\end{frame}
-
-\begin{frame}
-Using the fact that $N$ has a stable EP, they reduce the system
-\vfill
-After establishing generic conditions leading to the existence of a Hopf bifurcation, they study the system in more detail when incidence takes the form
-\[
-f(S,I)=\beta I^{p-1}S^q
-\]
-\end{frame}
-
-\begin{frame}{Liu \& van den Driessche}
-Liu and van den Driessche consider an SLIS model and an SLIRS model in which the population is not constant and where the latent period depends on the number of infected individuals in the population
-\vfill
-In the case of the SLIS model, the behaviour is not modified by this function
-\vfill
-In the case where immunity is temporary (SLIRS), they find (numerically) a Hopf bifurcation
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{A better vaccination model}
-\begin{frame}{SLIRS with vaccination}
-\centering
-  \def\skip{*2.5}
-  \begin{tikzpicture}[scale=1.5, transform shape]
-    %% Regular nodes
-    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
-    \node [circle, fill=red!90, text=black] at (1\skip,0) (I) {$I$};
-    \node [circle, fill=blue!50, text=black] at (2\skip,0) (R) {$R$};
-    \node [circle, fill=red!50, text=black] at (0.5\skip,-1\skip) (V) {$V$};
-    %% Fake nodes for arrows
-    \node [left=0.75cm of S] (birth) {};
-    \node [below=0.5cm of S] (dS) {};
-    \node [below=0.5cm of I] (dI) {};
-    \node [below=0.5cm of R] (dR) {};
-    \node [below=0.5cm of V] (dV) {};
-    %% Flows (demography)
-    \path [line, very thick] (birth) to node [midway, above] (TextNode) {$b$} (S);
-    \path [line, very thick] (S) to node [midway, left] (TextNode) {$dS$} (dS);
-    \path [line, very thick] (I) to node [midway, right] (TextNode) {$dI$} (dI);
-    \path [line, very thick] (R) to node [midway, left] (TextNode) {$dR$} (dR);
-    \path [line, very thick] (V) to node [midway, left] (TextNode) {$dV$} (dV);
-    %% Flows
-    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta SI/N$} (I);
-    \path [line, very thick, bend left=10] (S) to node [near start, right] (TextNode) {$\phi S$} (V);
-    \path [line, very thick, bend left=10] (V) to node [near start, left] (TextNode) {$\varphi V$} (S);
-    \path [line, very thick] (V) to node [midway, above, sloped] (TextNode) {$\sigma\beta SI/N$} (I);
-    \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I$} (R);
-    \draw [>=latex,->, thick, rounded corners] (R) -- (2\skip,0.75) -- (0,0.75) node[midway,above,sloped] {$\nu R$} -- (S);
-  \end{tikzpicture}    
-\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -695,7 +62,7 @@ SIR is a little too simple for many diseases:
 \vfill
 $\implies$ model with SIR but also L(atent) and (A)symptomatic individuals, in which I are now symptomatic individuals
 \vfill
-Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic} (2006)
+Arino, Brauer, PvdD, Watmough \& Wu, \href{http://dx.doi.org/10.1098/rsif.2006.0112}{Simple models for containment of a pandemic}, \emph{Journal of the Royal Society Interface} (2006)
 \end{frame}
 
 
@@ -725,14 +92,14 @@ Arino, Brauer, PvdD, Watmough \& Wu. \href{http://dx.doi.org/10.1098/rsif.2006.0
 }
 \end{frame}
 
-\begin{frame}{Basic reproduction number}
+\begin{frame}{Basic reproduction number \& Final size}
 We find the basic reproduction number
 \begin{equation}
-\mathcal{R}_0=S_0\beta
+\mathcal{R}_0=\beta
 \left(
 \frac{p}{\alpha}+\frac{\delta(1-p)}{\eta}
-\right)
-=\frac{S_0\beta\rho}{\alpha}
+\right)S_0
+=\frac{\beta\rho}{\alpha}S_0
 \end{equation}
 where 
 \[
@@ -741,10 +108,8 @@ where
 \frac{p}{\alpha}+\frac{\delta(1-p)}{\eta}
 \right)
 \]
-\end{frame}
-
-
-\begin{frame}{Final size relation}
+\vfill
+The final size relation takes the form
 \begin{equation}
 S_0(\ln S_0-\ln S_\infty) =
 \mathcal{R}_0(S_0-S_\infty)+\frac{\mathcal{R}_0I_0}{\rho}
@@ -771,9 +136,9 @@ S_0(\ln S_0-\ln S_\infty) =
 Suppose system can be written in the form
 \begin{subequations}\label{sys:SIR_general}
 \begin{align}
-\bS' &= \mathbf{b}(\bS,\bI,\bR)-\bD\bS\beta(\bS,\bI,\bR)\bh\bI \label{sys:SIR_general_dS} \\
-\bI' &= \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI \label{sys:SIR_general_dI} \\
-\bR' &= \mathbf{f}(\bS,\bI,\bR)+\mathbf{W}\bI \label{sys:SIR_general_dR}
+\bS\pprime &= \mathbf{b}(\bS,\bI,\bR)-\bD\bS\beta(\bS,\bI,\bR)\bh\bI \label{sys:SIR_general_dS} \\
+\bI\pprime &= \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI \label{sys:SIR_general_dI} \\
+\bR\pprime &= \mathbf{f}(\bS,\bI,\bR)+\mathbf{W}\bI \label{sys:SIR_general_dR}
 \end{align}
 \end{subequations}
 \vfill
@@ -785,7 +150,7 @@ IC are $\geq 0$ with at least one of the components of $\bI(0)$ positive
 
 \begin{frame}
 \begin{equation}\tag{\ref{sys:SIR_general_dS}}
-\bS' = \mathbf{b}(\bS,\bI,\bR)-\bD\bS\beta(\bS,\bI,\bR)\bh\bI
+\bS\pprime = \mathbf{b}(\bS,\bI,\bR)-\bD\bS\beta(\bS,\bI,\bR)\bh\bI
 \end{equation}
 \begin{itemize}
 \item $\mathbf{b}:\IR_+^m\times\IR_+^n\times\IR_+^k\to\IR^m$ continuous function encoding recruitment and death of uninfected individuals
@@ -798,7 +163,7 @@ IC are $\geq 0$ with at least one of the components of $\bI(0)$ positive
 
 \begin{frame}
 \begin{equation}\tag{\ref{sys:SIR_general_dI}}
-\bI' = \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI
+\bI\pprime = \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI
 \end{equation}
 \begin{itemize}
 \item $\bPi\in\IR^{n\times m}$ has $(i,j)$ entry the fraction of individuals in $j^{\textrm{th}}$ susceptible compartment that enter $i^{\textrm{th}}$ infected compartment upon infection
@@ -812,7 +177,7 @@ IC are $\geq 0$ with at least one of the components of $\bI(0)$ positive
 
 \begin{frame}
 \begin{equation}\tag{\ref{sys:SIR_general_dR}}
-\bR' = \mathbf{f}(\bS,\bI,\bR)+\mathbf{W}\bI
+\bR\pprime = \mathbf{f}(\bS,\bI,\bR)+\mathbf{W}\bI
 \end{equation}
 \begin{itemize}
 \item $\mathbf{f}:\IR_+^m\times\IR_+^n\times\IR_+^k\to \IR^k$ continuous function encoding flows into and out of removed compartments because of immunisation or similar processes
@@ -825,8 +190,8 @@ IC are $\geq 0$ with at least one of the components of $\bI(0)$ positive
 \begin{frame}
 Suppose $\bE_0$ is a locally stable disease-free equilibrium (DFE) of the system without disease, i.e., an EP of
 \begin{align*}
-\bS' &= \mathbf{b}(\bS,\b0,\bR) \\
-\bR' &= \mathbf{f}(\bS,\b0,\bR) \\
+\bS\pprime &= \mathbf{b}(\bS,\b0,\bR) \\
+\bR\pprime &= \mathbf{f}(\bS,\b0,\bR) \\
 \end{align*}
 
 \begin{theorem}
@@ -854,10 +219,10 @@ If no demography (epidemic model), then just $\R_0$, of course
 Assume no demography, then system should be writeable as
 \begin{subequations}
 \begin{align}
-\bS' &= -\bD\bS\beta(\bS,\bI,\bR)\bh\bI  \label{sys:SIR_epi_dS} \\
-\bI' &= \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI 
+\bS\pprime &= -\bD\bS\beta(\bS,\bI,\bR)\bh\bI  \label{sys:SIR_epi_dS} \\
+\bI\pprime &= \bPi\bD\bS\beta(\bS,\bI,\bR)\bh\bI-\mathbf{V}\bI 
 \label{sys:SIR_epi_dI} \\
-\bR' &= \mathbf{W}\bI
+\bR\pprime &= \mathbf{W}\bI
 \label{sys:SIR_epi_dR} 
 \end{align}
 \end{subequations}
@@ -1035,13 +400,13 @@ If $\bI_0=(L_0,I_0,A_0)$, then
 Fraction $\gamma$ of $S_0$ are vaccinated before the epidemic; vaccination reduces probability and duration of infection, infectiousness and reduces mortality
 \begin{subequations}
 \begin{align}
-S_U' &= -\beta S_U[I_U+\sigma_II_V] \\
-S_V' &= -\sigma_S\beta S_V[I_U+\sigma_II_V] \\
-L_U' &= \beta S_U[I_U+\sigma_II_V]-\kappa_UL_U\\
-L_V' &= \sigma_S\beta S_V[I_U+\sigma_II_V]-\kappa_VL_V \\
-I_U' &= \kappa_UL_U-\alpha_UI_U \\
-I_V' &= \kappa_VL_V-\alpha_VI_V \\
-R' &= f_U\alpha_UI_I+f_V\alpha_VI_V
+S_U\pprime &= -\beta S_U[I_U+\sigma_II_V] \\
+S_V\pprime &= -\sigma_S\beta S_V[I_U+\sigma_II_V] \\
+L_U\pprime &= \beta S_U[I_U+\sigma_II_V]-\kappa_UL_U\\
+L_V\pprime &= \sigma_S\beta S_V[I_U+\sigma_II_V]-\kappa_VL_V \\
+I_U\pprime &= \kappa_UL_U-\alpha_UI_U \\
+I_V\pprime &= \kappa_VL_V-\alpha_VI_V \\
+R\pprime &= f_U\alpha_UI_I+f_V\alpha_VI_V
 \end{align}
 \end{subequations}
 with $S_U(0)=(1-\gamma)S_0$ and $S_V(0)=\gamma S_0$
@@ -1175,6 +540,685 @@ Problem: we have antivirals to use against influenza, either prophylactically or
 \centering
 \includegraphics[height=\textheight]{FIGS/ABM-heatmaps}
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\subsection{A COVID-19 model}
+
+\begin{frame}
+Arino \& Portet, \href{http://dx.doi.org/10.1016/j.idm.2020.04.002}{A simple model for COVID-19}, \emph{Infectious Disease Modelling} (2020)
+\vfill
+Extends the SLIAR model to take into account non-exponentially distributed stage durations (see lecture on Stochastic systems)
+\end{frame}
+
+\begin{frame}{The original model}
+\centering
+\begin{tikzpicture}[auto, %node distance = 2cm, auto,
+	cloud/.style={minimum width={width("N-1")+2pt},
+		draw, ellipse,fill=red!20}]
+	\node [cloud] (S) {$S$};
+	\node [cloud, right=of S] (L1) {$L_1$};
+	\node [cloud, right=of L1] (L2) {$L_2$};
+	\node [cloud, above right=of L2, fill=blue!20] (I1) {$I_1$};
+	\node [cloud, below right=of L2] (A1) {$A_1$};
+	\node [cloud, right=of I1, fill=blue!20] (I2) {$I_2$};
+	\node [cloud, right=of A1] (A2) {$A_2$};
+	\node [cloud, below right=of I2, fill=blue!20] (RI) {$R_I$};
+	\node [cloud, right=of A2] (RA) {$R_A$};
+	\node [cloud, above right=of I2, fill=blue!20] (D) {$D$};
+	%% Infections
+	\path [line, very thick] (S) to node [midway, above] (TextNode) {$\Phi S$} (L1);
+	\path [line, very thick] (L1) to node [midway, above] (TextNode) {$\varepsilon L_1$} (L2);
+	\path [line, very thick] (L2) to node [midway, right] (TextNode) {$(1-\pi)\varepsilon L_2$} (I1);
+	\path [line, very thick] (L2) to node [midway, right] (TextNode) {$\pi\varepsilon L_2$} (A1);
+	\path [line, very thick] (I1) to node [midway, above] (TextNode) {$\gamma I_1$} (I2);
+	\path [line, very thick] (A1) to node [midway, above] (TextNode) {$\gamma A_1$} (A2);
+	\path [line, very thick] (I2) to node [midway, right] (TextNode) {$(1-\delta)\gamma I_2$} (RI);
+	\path [line, very thick] (A2) to node [midway, above] (TextNode) {$\gamma A_2$} (RA);
+	\path [line, very thick] (I2) to node [midway, right] (TextNode) {$\delta\gamma I_2$} (D);
+\end{tikzpicture}
+\end{frame}
+
+
+\begin{frame}{Reinterpreting terms}
+\centering
+\includegraphics[width=\textwidth]{FIGS/figure_SLDURM_base_model_with_different_epsilon_and_infectious_compartments}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\section{The SLIRS models and friends}
+
+%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+\subsection{SIS models}
+
+
+\begin{frame}{Note on demography}
+\bbullet We have already discussed some different possible forms for demography
+\vfill
+\bbullet In the models with demography here, unless otherwise required, we use demography such that for the total population
+\[
+N\pprime = b - dN
+\]
+\end{frame}
+
+
+\begin{frame}{Simplifying the SIRS model}
+\begin{minipage}{0.2\textwidth}
+  \def\skip{*-1.5}
+  \begin{tikzpicture}[scale=1, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
+    %% Fake nodes for arrows
+    \node [above=0.75cm of S] (birth) {};
+    \node [left=0.5cm of S] (dS) {};
+    \node [left=0.5cm of I] (dI) {};
+    %% Flows
+    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
+    \path [line, very thick, bend right] (S) to node [midway, left] (TextNode) {$\beta SI$} (I);
+    \path [line, very thick, bend right] (I) to node [midway, right] (TextNode) {$\gamma I$} (S);
+  \end{tikzpicture}    
+\end{minipage}
+\begin{minipage}{0.75\textwidth}
+\bbullet We have already seen the epidemic KMK SIR model and the endemic SIRS model
+\vskip0.5cm
+\bbullet By making some simplifications of the endemic SIRS model, we obtain the SIS model: assume the time spent in the $R$ compartment goes to zero, i.e., $\nu\to\infty$
+\end{minipage}
+\vfill
+The main characteristics of the model are the same as the SIRS
+\end{frame}
+
+\begin{frame}
+\begin{minipage}{0.2\textwidth}
+  \def\skip{*-1.5}
+  \begin{tikzpicture}[scale=1, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!90, text=black] at (0,1\skip) (I) {$I$};
+    %% Fake nodes for arrows
+    \node [above=0.75cm of S] (birth) {};
+    \node [left=0.5cm of S] (dS) {};
+    \node [left=0.5cm of I] (dI) {};
+    %% Flows
+    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
+    \path [line, very thick, bend right] (S) to node [midway, left] (TextNode) {$\beta SI$} (I);
+    \path [line, very thick, bend right] (I) to node [midway, right] (TextNode) {$\gamma I$} (S);
+  \end{tikzpicture}    
+\end{minipage}
+\begin{minipage}{0.75\textwidth}
+\begin{subequations}\label{sys:SIS}
+\begin{align}
+S\pprime &= b +\gamma I -dS - \beta SI \label{sys:SIS_dS} \\
+I\pprime &= \beta SI -(d+\gamma) I
+\end{align}
+\end{subequations}
+with initial conditions $S(0)=S_0\geq 0$ and $I(0)=I_0\geq 0$
+\end{minipage}
+\vfill
+Clearly, the DFE is similar as for the SIRS
+\[
+\bE_0:=(S^\star,I^\star)=(N^\star,0)
+\]
+with $N^\star = b/d$. Also easy to check (exercise!) that
+\[
+\R_0 = \frac{\beta}{d+\gamma}
+\]
+\end{frame}
+
+%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%
+\subsection{SLIRS model with constant population}
+
+\frame{\frametitle{Incubation periods}
+\begin{itemize}
+\item SIS and SIR: progression from S to I is instantaneous
+\vfill
+\item Several incubation periods:
+\end{itemize}
+\begin{center}
+\begin{tabular}{l|l}
+Disease & Incubation period \\
+\hline
+Yersinia Pestis & 2-6 days \\
+Ebola haemorrhagic fever (HF) & 2-21 days \\
+Marburg HF & 5-10 days \\
+Lassa fever & 1-3 weeks \\
+Tse-tse & weeks--months \\
+HIV/AIDS & months--years
+\end{tabular}
+\end{center}
+}
+
+\frame{\frametitle{Hypotheses}
+\begin{itemize}
+\item There is demography
+\item New individuals are born at a constant rate $b$
+\item
+There is no vertical transmssion: all ``newborns'' are susceptible
+\item The disease is non lethal, it causes no additional mortality
+\item New infections occur at the rate $f(S,I,N)$
+\item There is a period of incubation for the disease
+\item There is a period of time after recovery during which the disease confers immunity to reinfection (immune period)
+\end{itemize} 
+}
+
+\frame{\frametitle{SLIRS}
+\begin{minipage}{0.2\textwidth}
+  \def\skip{*-1.5}
+  \begin{tikzpicture}[scale=1, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!50, text=black] at (0,1\skip) (L) {$L$};
+    \node [circle, fill=red!90, text=black] at (0,2\skip) (I) {$I$};
+    \node [circle, fill=blue!50, text=black] at (0,3\skip) (R) {$R$};
+    %% Fake nodes for arrows
+    \node [above=0.75cm of S] (birth) {};
+    \node [left=0.5cm of S] (dS) {};
+    \node [left=0.5cm of L] (dL) {};
+    \node [left=0.5cm of I] (dI) {};
+    \node [left=0.5cm of R] (dR) {};
+    %% Flows (demography)
+    \path [line, very thick] (birth) to node [midway, left] (TextNode) {$b$} (S);
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (L) to node [midway, below] (TextNode) {$dL$} (dL);
+    \path [line, very thick] (I) to node [midway, below] (TextNode) {$dI$} (dI);
+    \path [line, very thick] (R) to node [midway, below] (TextNode) {$dR$} (dR);
+    %% Flows (demography)
+    \path [line, very thick] (S) to node [midway, left] (TextNode) {$f(S,I,N)$} (L);
+    \path [line, very thick] (L) to node [midway, left] (TextNode) {$\varepsilon L$} (I);
+    \path [line, very thick] (I) to node [midway, left] (TextNode) {$\gamma I$} (R);
+    \draw [>=latex,->, thick, rounded corners] (R) -- (0.75,3\skip) -- (0.75,0) node[midway,above,sloped] {$\nu R$} -- (S);
+  \end{tikzpicture}    
+\end{minipage}
+\quad
+\begin{minipage}{0.7\textwidth}
+The model is as follows:
+\begin{subequations}\label{sys:SLIRS}
+\begin{align}
+S\pprime &= b+\nu R-dS-f(S,I,N) \label{sys:SLIRS_dS} \\
+L\pprime &= f(S,I,N) -(d+\varepsilon)L \label{sys:SLIRS_dL} \\
+I\pprime &= \varepsilon L -(d+\gamma)I \label{sys:SLIRS_dI} \\
+R\pprime &= \gamma I-(d+\nu)R \label{sys:SLIRS_dR} 
+\end{align}
+\end{subequations}
+\vfill
+Meaning of the parameters:
+\begin{itemize}
+\item $1/\varepsilon$ average duration of the incubation period
+\item $1/\gamma$ average duration of infectious period
+\item $1/\nu$ average duration of immune period
+\end{itemize}
+\end{minipage}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Computing $\R_0$ more efficiently}
+
+
+\frame{\frametitle{The basic reproduction number $\R_0$}
+Used frequently in epidemiology (not only math epi)
+\begin{definition}[$R_0$]
+The basic reproduction number $\R_0$ is the average number of secondary cases generated by the introduction of an infectious individual in a wholly susceptible population
+\end{definition}
+\begin{itemize}
+\item If $\R_0<1$, then on average, each infectious individual infects less than one other person, so the epidemic has chances of dying out
+\item If $\R_0>1$, then on average, each infectious individual infects more than one other person and the disease can become established in the population (or there will be a major epidemic)
+\end{itemize}
+}
+
+\frame{\frametitle{Computation of $\R_0$}
+Mathematically, $\R_0$ is a bifurcation parameter aggregating some of the model parameters and such that the disease free equilibrium (DFE) loses its local asymptotic stability when $\R_0=1$ is crossed from left to right
+\vfill
+\begin{itemize}
+\item
+As a consequence, $\R_0$ is found by considering the spectrum of the Jacobian matrix of the system evaluated at the DFE
+\vfill
+\item
+The matrix quickly becomes hard to deal with (size and absence of ``pattern'') and the form obtained is not unique, which is annoying when trying to interpret $\R_0$
+\end{itemize}
+}
+
+\frame{\frametitle{The next generation operator}
+Diekmann and Heesterbeek, characterized in the ODE context by van den Driessche and Watmough
+\vfill
+Consider only individuals harbouring the pathogen, in a vector $\I$, and form the vectors
+\begin{itemize}
+\item
+$\F$ of infection fluxes
+\item
+$\V$ of other fluxes (with $-$ sign)
+\end{itemize}
+so that
+\[
+\I\pprime=\F-\V
+\]
+\vfill
+Then compute the Fr\'echet derivatives $D\F$ and $D\V$ with respect to the infected variables $\I$ and evaluate $F=D\F(DFE)$ and $V=D\V(DFE)$. Then
+\[
+\R_0=\rho(FV^{-1})
+\]
+where $\rho$ is the spectral radius
+}
+
+\frame{\frametitle{Short summary of van den Driessche and Watmough}
+\begin{theorem}[van den Driessche and Watmough]\label{th:R0_VdDW}
+Suppose that the DFE exists. Let then $\R_0$ be defined by
+\[
+\R_0=\rho(FV^{-1})
+\]
+with matrices $F$ and $V$ as indicated before. Then,
+\begin{itemize}
+\item if $\R_0<1$, the DFE is LAS,
+\item if $\R_0>1$, the DFE is unstable.
+\end{itemize}
+\end{theorem}
+}
+
+\frame{\frametitle{Example of the SLIRS model \eqref{sys:SLIRS}}
+Variation of the infected variables in \eqref{sys:SLIRS} are described by
+\begin{align*}
+L\pprime &= f(S,I,N)-(\varepsilon+d) L \\
+I\pprime &= \varepsilon L -(d+\gamma) I
+\end{align*}
+Write
+\begin{equation}
+\I\pprime = 
+\left(
+\begin{matrix}
+L \\
+I
+\end{matrix}
+\right)\pprime
+=\left(
+\begin{matrix}
+f(S,I,N) \\
+0
+\end{matrix}
+\right)
+-
+\left(
+\begin{matrix}
+(\varepsilon+d) L \\
+(d+\gamma) I-\varepsilon L
+\end{matrix}
+\right)=:\mathcal{F}-\mathcal{V}
+\end{equation}
+}
+
+
+\frame{
+Denote
+\[
+f_L^\star:=
+\left.\frac{\partial}{\partial L}f
+\right|_{(S,I,R)=\bE_0}
+\quad\quad 
+f_I^\star:=
+\left.\frac{\partial}{\partial I}f
+\right|_{(S,I,R)=\bE_0}
+\]
+the values of the partials of the incidence function at the DFE $\bE_0$
+\vfill
+Compute the Jacobian matrices of vectors $\F$ and $\V$ at the DFE $\bE_0$
+\begin{equation}
+F=\left(
+\begin{matrix}
+f_L^\star & f_I^\star \\
+0 & 0
+\end{matrix}
+\right)
+\quad\text{and}\quad
+V=\left(
+\begin{matrix}
+\varepsilon+d & 0 \\
+-\varepsilon & d+\gamma
+\end{matrix}
+\right)
+\end{equation}
+}
+
+\frame{
+Thus
+\[
+V^{-1}=\frac{1}{(d+\varepsilon)(d+\gamma)}
+\left(
+\begin{matrix}
+d+\gamma & 0 \\
+\varepsilon & d+\varepsilon
+\end{matrix}
+\right)
+\]
+\vfill
+Also, in the case $N$ is constant, $\partial f/\partial
+L=0$ and thus
+\[
+FV^{-1}=\frac{\frac{\partial\bar f}{\partial I}}
+{(d+\varepsilon)(d+\gamma)}
+\left(
+\begin{matrix}
+\varepsilon 
+& d+\varepsilon  \\
+0 & 0
+\end{matrix}
+\right)
+\]
+\vfill
+As a consequence,
+\[
+\R_0=\varepsilon
+\frac{\frac{\partial\bar f}{\partial I}}
+{(d+\varepsilon)(d+\gamma)}
+\]
+}
+
+
+\frame{
+\begin{theorem}\label{th:R0_SEIRS}
+Let
+\begin{equation}\label{eq:R0_SEIRS}
+\R_0=
+\frac{\varepsilon\frac{\partial\bar f}{\partial I}}
+{(d+\varepsilon)(d+\gamma)}
+\end{equation}
+Then
+\begin{itemize}
+\item if $\R_0<1$, the DFE is LAS
+\item if $\R_0>1$, the DFE is unstable
+\end{itemize}
+\end{theorem}
+\vfill
+It is important here to stress that the result we obtain concerns the \textbf{local} asymptotic stability. We see later that even when $\R_0<1$, there can be several locally asymptotically stable equilibria
+}
+
+
+\frame{\frametitle{Application}
+The DFE is
+\[
+(\bar S,\bar L,\bar I,\bar R)=(N,0,0,0)
+\]
+\begin{itemize}
+\item Mass action incidence (frequency-dependent contacts):
+ \[
+\frac{\partial\bar f}{\partial I}=\beta\bar S \Rightarrow\R_0 =
+\frac{\epsilon\beta N}{(\epsilon+d)(\gamma+d)} 
+\]
+\item Standard incidence (proportion-dependent contacts):
+\[
+\frac{\partial\bar f}{\partial I}=\frac{\beta\bar S}{N}
+\Rightarrow\R_0 = \frac{\epsilon\beta}{(\epsilon+d)(\gamma+d)}
+\]
+\end{itemize}
+}
+
+
+\frame{\frametitle{Links between SLIRS-type models}
+{ %\footnotesize
+\begin{align*}
+S\pprime&=b+\nu R-dS-f(S,I,N) \\
+L\pprime&=f(S,I,N)-(d+\varepsilon) L \\
+I\pprime&=\varepsilon L-(d+\gamma)I \\
+R\pprime&=\gamma I-(d+\nu)R
+\end{align*}}
+\begin{center}
+\begin{tabular}{c|l}
+\hline
+SLIR & SLIRS where $\nu=0$ \\
+SLIS & Limit of SLIRS when $\nu\to\infty$ \\
+SLI & SLIR where $\gamma=0$ \\
+SIRS & Limit of SLIRS when $\varepsilon\to\infty$ \\
+SIR & SIRS where $\nu=0$ \\
+SIS & Limit of SIRS when $\nu\to\infty$ \\
+& Limit SLIS when $\varepsilon\to\infty$ \\
+SI & SIS where $\nu=0$ 
+\end{tabular}
+\end{center}
+}
+
+\frame{\frametitle{Values of $\R_0$}
+$(\bar S,\bar I,\bar N)$ values of $S,I$ and $N$ at DFE. Denote $\bar f_I=\partial f/\partial I(\bar S,\bar I,\bar N)$.
+\begin{center}
+\begin{tabular}{c|c}
+\hline
+SLIRS & 
+$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
+SLIR & 
+$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
+SLIS & 
+$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
+SLI & 
+$\frac{\varepsilon\bar f_I}{(d+\varepsilon)(d+\gamma)}$ \\
+& \\
+SIRS & 
+$\frac{\varepsilon\bar f_I}{d+\gamma}$ \\
+SIR & $\frac{\bar f_I}{d+\gamma}$ \\
+SIS & $\frac{\bar f_I}{d+\gamma}$ \\
+SI & $ \frac{\bar f_I}{d+\gamma}$ 
+\end{tabular}
+\end{center}
+}
+
+
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\subsection{Global properties of the SLIRS model}
+
+\frame{\frametitle{Lyapunov function for SLIR and SLIS}
+(A. Korobeinikov) Consider an SLIR in constant population (normed to 1), with vertical transmission.
+\begin{subequations}\label{sys:SEIR_vert_transmission}
+\begin{align}
+S\pprime &= d-\beta SI -pdI-qdL-dS \\
+L\pprime &= \beta SI +pdI-(\varepsilon+d-qd)L \\
+I\pprime &= \varepsilon L-(\gamma+d)I
+\end{align}
+\end{subequations}
+\vfill
+$p$ proportion of progeny of $I$ that are $I$ at birth, $q$ proportion of progeny of $L$ that are $L$ at birth.
+\vfill
+$R$ does not play a role in the dynamics of \eqref{sys:SEIR_vert_transmission}, it is not shown.
+}
+
+\frame{\frametitle{Equilibria}
+\begin{itemize}
+\item DFE: $\bE_0=(1,0,0)$.
+\item EEP: $\bE_\star=(S^\star,L^\star,I^\star)$ with
+{\footnotesize
+\[
+S^\star=\frac 1{\R_0^v}\quad L^\star=\frac{d}{\varepsilon+d}\left(1-\frac
+  1{\R_0^v}\right) 
+\quad
+I^*=\frac{d\varepsilon}{(\varepsilon+d)(\gamma+d)}\left(1-\frac
+  1{\R_0^v}\right) 
+\]}
+\end{itemize}
+where 
+\[
+\R_0^v=\frac{\beta\varepsilon}
+{(\gamma+d)(\varepsilon+d)-qd(\varepsilon+d)-pd\varepsilon}
+\]
+is the basic reproduction number with vertical transmission
+\vfill
+We have $\R_0=\R_0^v$ $\iff$ $p=q=0$ or $\R_0^v=\R_0=1$
+\vfill
+$\bE_\star$ exists (in a biologically plausible way) only when $\R_0^v>1$
+}
+
+
+\frame{
+Consider the Goh Lyapunov function
+\[
+V=\sum a_i(x_i-x_i^\star \ln x_i)
+\]
+\vfill
+\begin{theorem}
+\begin{itemize}
+\item If $\R_0>1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $\bE_\star$
+\item If $\R_0\leq 1$, then \eqref{sys:SEIR_vert_transmission} has the globally asymptotically stable equilibrium $\bE_0$, $\bE_\star$ is not biologically plausible
+\end{itemize}
+\end{theorem}
+}
+
+\begin{frame}{Li, Muldowney and van den Driessche} 
+Study an SLIRS model with incidence of the form
+\begin{equation}\label{eq:g_incidence}
+f(S,I,N)=\beta g(I)S
+\end{equation}
+where $g$ is such that $g(0)=0$, $g(I)>0$ for $I\in(0,1]$ and $g\in
+C^1(0,1]$
+\vfill
+They normalise the total population, so that $S+L+I+R=1$
+\vfill
+They make the following asumption about $g$:
+\begin{description}
+\item[(H)]$c=\lim_{I\to 0^+} \frac{g(I)}{I}\leq +\infty$; when
+$0<c<+\infty$, $g(I)\leq cI$ for all sufficiently small $I$
+\end{description}
+\end{frame}
+
+\frame{
+We have 
+\[
+\frac{\partial\bar f}{\partial I}=\beta\frac{\partial\bar g}{\partial I}
+\]
+\vfill
+Since $\dfrac{\partial\bar g}{\partial I}=\lim_{I\to 0^+}
+\dfrac{g(I)}{I}=c$,
+\[
+\R_0=\frac{c\beta\varepsilon}
+{(d+\varepsilon)(d+\gamma)}
+\]
+\vfill
+The LAS results already established hold here, since \eqref{eq:g_incidence} is a special case of the function $f$ with which the results were obtained
+}
+
+
+\frame{
+The system is \defword{uniformly persistent} if there exists $0<\varepsilon_0<1$ s.t. any solution $(S(t),L(t),I(t),R(t))$ of \eqref{sys:SLIRS} with initial condition $(S(0),L(0),I(0),R(0))\in
+\overset{\circ}{\Gamma}$ satisfies
+\begin{equation}\label{eq:SEIRS_persist}
+\begin{array}{c}
+\liminf_{t\to\infty} S(t)\geq \varepsilon_0,\quad 
+\liminf_{t\to\infty} E(t)\geq \varepsilon_0 \\
+\liminf_{t\to\infty} I(t)\geq \varepsilon_0,\quad 
+\liminf_{t\to\infty} R(t)\geq \varepsilon_0
+\end{array}
+\end{equation}
+\vfill
+\begin{theorem}\label{th:persist_SEIRS}
+If $g(I)$ satisfies hypothesis (\textbf{H}), then \eqref{sys:SLIRS} with incidence \eqref{eq:g_incidence} is uniformly persistent iff $\R_0>1$
+\end{theorem}
+}
+
+
+\frame{
+\begin{theorem}\label{th:gas_SEIRS}
+Suppose that incidence \eqref{eq:g_incidence} satisfies (\textbf{H}) and that
+\begin{equation}\label{eq:gI}
+|g'(I)|I\leq g(I) \textrm{ for }I\in(0,1]
+\end{equation}
+Suppose additionally that $\R_0>1$ and that one of the following conditions holds
+\begin{gather*}
+\gamma\nu<\epsilon_0(\beta\eta_0+\gamma+d)(\beta\eta_0+\nu+d) \\
+\varepsilon-\gamma-d<\nu
+\end{gather*}
+where
+\[
+\eta_0=\min_{I\in[\varepsilon_0,1]}g(I)>0
+\]
+and $\varepsilon_0$ is defined by \eqref{eq:SEIRS_persist}
+\vfill
+Then there are no closed rectifiable curve that is invariant under \eqref{sys:SLIRS}. Furthermore, every semi-trajectory of \eqref{sys:SLIRS} in $\Gamma$ converges to an EP
+\end{theorem}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+\subsection{SLIRS in variable population}
+
+
+\begin{frame}{Liu, Levin et Iwasa}
+SIRS of the form
+\begin{subequations}\label{sys:SIRS_LLI}
+\begin{align}
+S\pprime &= B(N)-dS-f(S,I)I+\nu R \\
+I\pprime &= f(S,I)I-(d+\gamma)I \\
+R\pprime &= \gamma I-(d+\nu)R
+\end{align}
+\end{subequations}
+\vfill
+Authors discuss the general case of $f$ differentiable and s.t. $f(0,I)=0$ for all $I$ and $\partial f/\partial S>0$
+\vfill
+They assume that the demographic component of the model, ruled by 
+\[
+N\pprime=B(N)-dN
+\]
+admits a stable EP
+\end{frame}
+
+\begin{frame}
+Using the fact that $N$ has a stable EP, they reduce the system
+\vfill
+After establishing generic conditions leading to the existence of a Hopf bifurcation, they study the system in more detail when incidence takes the form
+\[
+f(S,I)=\beta I^{p-1}S^q
+\]
+\end{frame}
+
+\begin{frame}{Liu \& van den Driessche}
+Liu and van den Driessche consider an SLIS model and an SLIRS model in which the population is not constant and where the latent period depends on the number of infected individuals in the population
+\vfill
+In the case of the SLIS model, the behaviour is not modified by this function
+\vfill
+In the case where immunity is temporary (SLIRS), they find (numerically) a Hopf bifurcation
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{A better vaccination model}
+\begin{frame}{SLIRS with vaccination}
+\centering
+  \def\skip{*2.5}
+  \begin{tikzpicture}[scale=1.5, transform shape]
+    %% Regular nodes
+    \node [circle, fill=green!50, text=black] at (0,0) (S) {$S$};
+    \node [circle, fill=red!90, text=black] at (1\skip,0) (I) {$I$};
+    \node [circle, fill=blue!50, text=black] at (2\skip,0) (R) {$R$};
+    \node [circle, fill=red!50, text=black] at (0.5\skip,-1\skip) (V) {$V$};
+    %% Fake nodes for arrows
+    \node [left=0.75cm of S] (birth) {};
+    \node [below=0.5cm of S] (dS) {};
+    \node [below=0.5cm of I] (dI) {};
+    \node [below=0.5cm of R] (dR) {};
+    \node [below=0.5cm of V] (dV) {};
+    %% Flows (demography)
+    \path [line, very thick] (birth) to node [midway, above] (TextNode) {$b$} (S);
+    \path [line, very thick] (S) to node [midway, left] (TextNode) {$dS$} (dS);
+    \path [line, very thick] (I) to node [midway, right] (TextNode) {$dI$} (dI);
+    \path [line, very thick] (R) to node [midway, left] (TextNode) {$dR$} (dR);
+    \path [line, very thick] (V) to node [midway, left] (TextNode) {$dV$} (dV);
+    %% Flows
+    \path [line, very thick] (S) to node [midway, above] (TextNode) {$\beta SI/N$} (I);
+    \path [line, very thick, bend left=10] (S) to node [near start, right] (TextNode) {$\phi S$} (V);
+    \path [line, very thick, bend left=10] (V) to node [near start, left] (TextNode) {$\varphi V$} (S);
+    \path [line, very thick] (V) to node [midway, above, sloped] (TextNode) {$\sigma\beta SI/N$} (I);
+    \path [line, very thick] (I) to node [midway, above] (TextNode) {$\gamma I$} (R);
+    \draw [>=latex,->, thick, rounded corners] (R) -- (2\skip,0.75) -- (0,0.75) node[midway,above,sloped] {$\nu R$} -- (S);
+  \end{tikzpicture}    
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
@@ -1396,13 +1440,13 @@ are the fractions of latent individuals (of type $X=\{V,H\}$) who survive the la
     \node [below=0.25\verskip of SV] (dSV) {};
     \node [below=0.25\verskip of IV] (dIV) {};
     %%
-    \path [line, very thick] (SH) to node [midway,above,sloped] (TextNode) {$\beta_HI_V\frac{S_H}{H}$} (IH);
+    \path [line, very thick] (SH) to node [midway,above,sloped] (TextNode) {$\Phi_H$} (IH);
     \path [line, very thick] (IH) to node [midway,above,sloped] (TextNode) {$\gamma_H I_H$} (RH);
-    \path [line, very thick] (SV) to node [midway,below,sloped] (TextNode) {$\beta_VS_V\frac{I_H}{H}$} (IV);
+    \path [line, very thick] (SV) to node [midway,below,sloped] (TextNode) {$\Phi_V$} (IV);
     \path [line, dotted, very thick] (IV) to node [midway,below,sloped] (TextNode) {} (SH);
     \path [line, dotted, very thick] (IH) to node [midway,above,sloped] (TextNode) {} (SV);
-    \draw [>=latex,->, thick, rounded corners] (IH) -- (1\horskip,0.75) -- (0,0.75) node[midway,above,sloped] {$\nu R$} -- (SH);
-    \draw [>=latex,->, thick, rounded corners] (RH) -- (2\horskip,1.5) -- (-0.35,1.5) node[midway,above,sloped] {$\nu R$} -- (SH.north west);
+    \draw [>=latex,->, thick, rounded corners] (IH) -- (1\horskip,0.75) -- (0,0.75) node[midway,above,sloped] {$\rho_H I_H$} -- (SH);
+    \draw [>=latex,->, thick, rounded corners] (RH) -- (2\horskip,1.5) -- (-0.35,1.5) node[midway,above,sloped] {$\nu_H R_H$} -- (SH.north west);
     %% Demography
     \path [line, very thick] (birthH) to node [midway,above] (TextNode) {$b_H$} (SH);
     \path [line, very thick] (birthV) to node [midway,above] (TextNode) {$b_V$} (SV);
@@ -1415,12 +1459,132 @@ are the fractions of latent individuals (of type $X=\{V,H\}$) who survive the la
 }
 \end{frame}
 
+\begin{frame}
+Arino, Ducrot \& Zongo, \href{https://julien-arino.github.io/assets/pdf/papers/2012_ArinoDucrotZongo-JMB64.pdf}{A metapopulation model for malaria with transmission-blocking partial immunity in hosts}, Journal of Mathematical Biology (2012)
+\vfill
+Incidence functions take the form
+\[
+\Phi_H = b_H(H,V)\sigma_{VH}\frac{I_V}{V}
+\]
+and 
+\[
+\Phi_V = b_V(H,V)\left(\sigma_{HV}\frac{I_H}{H}+\hat\sigma_{HV}\frac{R_H}{H}\right)
+\]
+where $b_{H}$ and $b_V$ are numbers per unit time of mosquito bites a human has and the number of humans a mosquito bites, respectively
+\end{frame}
+
+\begin{frame}{Parameters of the incidence function}
+\begin{itemize}
+\item $\sigma_{HV}$ probability of transmission of the parasite (in gametocyte form) from
+an infectious human to a susceptible mosquito
+\item $\hat\sigma_{HV}$ probability of transmission of the parasite (in gametocyte form) from
+a semi-immune human to a susceptible mosquito
+\item $\sigma_{VH}$ probability of transmission of the parasite (in sporozoite form) from
+an infectious mosquito to a susceptible human
+\end{itemize}
+\vfill
+Additional parameter that can be factored in (all per unit time)
+\begin{itemize}
+\item $a_H$ maximum number of mosquito bites a human can receive
+\item $a_V$ number of times one mosquito would ``want to'' bite humans
+\item $a$ average number of bites given to humans by each mosquito
+\end{itemize}
+\end{frame}
+
+\begin{frame}{People to read for malaria models (IMOBO)}
+See also the work of 
+\vfill
+\begin{itemize}
+\item \href{https://scholar.google.com/citations?user=AwKMfZ8AAAAJ&hl=en}{Gideon Ngwa} at the University of Buea
+\vfill
+\item \href{https://scholar.google.ch/citations?user=BMiKO0UAAAAJ&hl=en}{Nakul Chitnis} at the Swiss Tropical and Public Health Institute
+\end{itemize}
+\vfill
+Many others...
+\end{frame}
+
+
+\begin{frame}{More complex models may be needed for malaria}
+Timing of processes is critical in malaria
+\vfill
+Plasmodium life cycle in the mosquito is commensurate with mosquito lifetime
+\vfill
+Need models that are able to account for that, because ODEs are not really good at this (see beginning of Stochastic systems lecture)
+\vfill
+Mathematics becomes more complicated
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 \section{Immunology}
+
+\begin{frame}{Caveat}
+I don't know much about this, this past year and a bit is the first time I have worked on this...
+\vfill
+I recommend reading, e.g., Eftimie, Gillard \& Cantrell, \href{https://doi.org/10.1007/s11538-016-0214-9}{Mathematical Models for Immunology: Current State of the Art and Future Research Directions}, \emph{Bulletin of Mathematical Biology} (2016)
+\vfill
+Look also at the work of \href{https://scholar.google.com/citations?user=ARpn4H0AAAAJ&hl=en}{Alan Perelson} or read Wodarz's \href{https://doi.org/10.1007/978-0-387-68733-9}{Killer Cell Dynamics} (\href{http://ndl.ethernet.edu.et/bitstream/123456789/23447/1/Dominik\%20Wodarz.pdf}{or here})
+\end{frame}
+
+\begin{frame}{A simple model}
+State variables
+\begin{itemize}
+\item susceptible uninfected cells $x$
+\item infected cells $y$
+\item free virus $v$
+\end{itemize}
+\vfill
+\begin{align*}
+x\pprime &= \lambda -dx-\beta xv \\
+y\pprime &= \beta xv-ay \\
+v\pprime &= ky-uv
+\end{align*}
+\end{frame}
+
+
+\begin{frame}{Side note (a.k.a. little rank) -- IMOBO don't do that}
+There is a tradition, typically stemming from the British modelling school, to use ``random'' letters for state variables
+\vfill
+\begin{minipage}{0.45\textwidth}
+\begin{align*}
+x\pprime &= \lambda -dx-\beta xv \\
+y\pprime &= \beta xv-ay \\
+v\pprime &= ky-uv
+\end{align*}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{align*}
+S\pprime &= \lambda -dS-\beta SV \\
+I\pprime &= \beta SV-aI \\
+V\pprime &= kI-uV
+\end{align*}
+\end{minipage}
+\vfill
+Modelling is hard enough without needing to recall what $x$, $y$, $z$, etc., stand for
+\end{frame}
+
+\begin{frame}
+\begin{subequations}
+\begin{align}
+S\pprime &= \lambda -dS-\beta SV \\
+I\pprime &= \beta SV-aI \\
+V\pprime &= kI-uV
+\end{align}
+\end{subequations}
+\vfill
+Virus-free equilibrium (VFE) $\bE_0=(\lambda/d,0,0)$ and establishment of infection
+\[
+\bE_\star = \left(\frac{au}{\beta k},\frac{\lambda\beta k-dau}{a\beta k},
+\frac{\lambda\beta k-dau}{a\beta u}\right)
+\]
+\vfill
+\[
+\R_0 = \frac{\lambda\beta k}{dau}
+\]
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
@@ -1485,8 +1649,8 @@ are the fractions of latent individuals (of type $X=\{V,H\}$) who survive the la
   \begin{subequations}
     \label{sys:capasso_EH}
     \begin{align}
-      E' &= c_HH-d_EE \label{sys:capasso_EH_dE} \\
-      H' &= g(E)-\gamma_HH \label{sys:capasso_EH_dH}
+      E\pprime &= c_HH-d_EE \label{sys:capasso_EH_dE} \\
+      H\pprime &= g(E)-\gamma_HH \label{sys:capasso_EH_dH}
     \end{align}
   \end{subequations}
   \begin{center}
@@ -1509,7 +1673,7 @@ are the fractions of latent individuals (of type $X=\{V,H\}$) who survive the la
     \end{tikzpicture}    
   \end{center}
   \vfill
-  Pay attention to the flows..! $E'$ does not have a $-g(E)$ and $H'$ does not have $-c_HH$. Why?
+  Pay attention to the flows..! $E\pprime$ does not have a $-g(E)$ and $H\pprime$ does not have $-c_HH$. Why?
 \end{frame}
 
 \begin{frame}
@@ -1939,10 +2103,9 @@ R0 = function(params) {
 \subsection{A model for zoonotic transmission of waterborne disease}
 
 \begin{frame}{Zoonotic transmission of waterborne disease}
-  Waters, Hamilton, Sidhu, Sidhu, Dunbar. \href{https://doi-org.uml.idm.oclc.org/10.1007/s11538-015-0136-y}{Zoonotic transmission of waterborne disease: a mathematical model}. 
-  \emph{Bull Math Biol}  (2016)
-
-  Used for instance to model Giardia transmission from possums to humans
+Waters, Hamilton, Sidhu, Sidhu \& Dunbar, \href{https://doi-org.uml.idm.oclc.org/10.1007/s11538-015-0136-y}{Zoonotic transmission of waterborne disease: a mathematical model},  \emph{Bull Math Biol}  (2016)
+\vfill
+Used for instance to model Giardia transmission from possums to humans
 \end{frame}
 
 \begin{frame}
@@ -1998,11 +2161,11 @@ R0 = function(params) {
   \begin{subequations}
     \label{sys:WaterHamilton_etal}
     \begin{align}
-      S_A' &= -\beta_AS_AI_A+\gamma_AI_A \\
-      I_A' &= \beta_AS_AI_A-\gamma_AI_A \\
-      W' &= \alpha I_A-\eta W(S_H+I_H)-\mu W \\
-      S_H' &= -\rho\eta WS_H-\beta_HS_HI_H+\gamma_HI_H \\
-      I_H' &= \rho\eta WS_H+\beta_HS_HI_H-\gamma_HI_H 
+      S_A\pprime &= -\beta_AS_AI_A+\gamma_AI_A \\
+      I_A\pprime &= \beta_AS_AI_A-\gamma_AI_A \\
+      W\pprime &= \alpha I_A-\eta W(S_H+I_H)-\mu W \\
+      S_H\pprime &= -\rho\eta WS_H-\beta_HS_HI_H+\gamma_HI_H \\
+      I_H\pprime &= \rho\eta WS_H+\beta_HS_HI_H-\gamma_HI_H 
     \end{align}
   \end{subequations}
   \vfill
@@ -2014,9 +2177,9 @@ R0 = function(params) {
   \begin{subequations}
     \label{sys:WaterHamilton_etal_simplified}
     \begin{align}
-      I_A' &= \beta_AN_AI_A-\gamma_AI_A-\beta_AI_A^2 \\
-      W' &= \alpha I_A-\eta WN_H-\mu W \\
-      I_H' &= \rho\eta W(N_H-I_H)+\beta_HN_HI_H-\gamma_HI_H-\beta_HI_H^2 
+      I_A\pprime &= \beta_AN_AI_A-\gamma_AI_A-\beta_AI_A^2 \\
+      W\pprime &= \alpha I_A-\eta WN_H-\mu W \\
+      I_H\pprime &= \rho\eta W(N_H-I_H)+\beta_HN_HI_H-\gamma_HI_H-\beta_HI_H^2 
     \end{align}
   \end{subequations}
   \vfill
@@ -2061,8 +2224,8 @@ R0 = function(params) {
   \begin{subequations}
     \label{sys:Woolhouse}
     \begin{align}
-      i_H' &= \alpha Ni_S-\gamma i_H \\
-      i_S' &= \beta Hi_H(1-i_S)-\mu_2 i_S
+      i_H\pprime &= \alpha Ni_S-\gamma i_H \\
+      i_S\pprime &= \beta Hi_H(1-i_S)-\mu_2 i_S
     \end{align}
   \end{subequations}
   \begin{itemize}
@@ -2095,9 +2258,9 @@ R0 = function(params) {
   \begin{subequations}
     \label{sys:Woolhouse2}
     \begin{align}
-      i_H' &= \alpha Ni_S-\gamma i_H \\
-      \ell_S' &= \beta Hi_H(1-\ell_S-i_S)-\sigma\ell_S-\mu_1\ell_S \\
-      i_S' &= \sigma\ell_S-\mu_2 i_S
+      i_H\pprime &= \alpha Ni_S-\gamma i_H \\
+      \ell_S\pprime &= \beta Hi_H(1-\ell_S-i_S)-\sigma\ell_S-\mu_1\ell_S \\
+      i_S\pprime &= \sigma\ell_S-\mu_2 i_S
     \end{align}
   \end{subequations}
   \begin{itemize}
@@ -2297,7 +2460,7 @@ R0 = function(params) {
   \]
   often written omitting dependence on $t$, i.e.,
   \begin{equation}\label{eq:ODE}
-    x' = f(x)
+    x\pprime = f(x)
   \end{equation}
   where $x\in\IR^n$ and $f:\IR^n\to\IR^n$. The system is considered together with an initial condition $x(t_0)=x_0\in\IR^n$.
   \vfill
@@ -2320,7 +2483,7 @@ R0 = function(params) {
   \begin{center}
     \renewcommand{\arraystretch}{1.5}
     \begin{tabular}{cc}
-      $x'=f(x), x(t_0)=x_0, x\in\IR^n$
+      $x\pprime=f(x), x(t_0)=x_0, x\in\IR^n$
       &
       $x(t+\Delta t)=f(x(t)), x(t_0)=x_0, x\in\IR^n$ \\
       Equilibria (EP) $x^\star$ s.t. $f(x^\star)=0_{\IR^n}$ 
