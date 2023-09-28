@@ -1595,6 +1595,40 @@ Virus-free equilibrium (VFE) $\bE_0=(\lambda/d,0,0)$ and establishment of infect
 \R_0 = \frac{\lambda\beta k}{dau}
 \]
 \end{frame}
+
+\begin{frame}{Simplification}
+Free virus population has much faster dynamics that cells, so we can assume virus population is at a quasi-steady state $V=kI/u$ 
+\vfill
+Mode becomes
+\begin{subequations}
+\begin{align}
+S\pprime &= \lambda -dS-\tilde\beta SI \\
+I\pprime &= \tilde\beta SI-aI \\
+\end{align}
+where
+\[
+\tilde\beta = \frac{\beta k}{u}
+\]
+\vfill
+Drop the tilde on $\beta$, then 
+\[
+\R_0=\frac{\beta k}{da}
+\]
+\end{subequations}
+\end{frame}
+
+
+\begin{frame}{Incorporating CTL dynamics}
+CTL proliferate when stimulated by viral antigen
+\vfill
+\begin{subequations}
+\begin{align}
+S\pprime &= \lambda-dS-\beta SI \\
+I\pprime &= \beta SI-aI-pIC \\
+C\pprime &= cIC-bC
+\end{align}
+\end{subequations}
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
