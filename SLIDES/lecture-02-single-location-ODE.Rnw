@@ -1282,12 +1282,12 @@ In the case where immunity is temporary (SLIRS), they find (numerically) a Hopf 
 
 \begin{frame}{The usual situation}
 \centering
-\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_forward}
+\includegraphics[width=0.7\textwidth]{FIGS/SIRV_bif_forward}
 \end{frame}
 
 \begin{frame}{What can happen with vaccination -- Backward bifurcation}
 \centering
-\includegraphics[width=0.95\textwidth]{FIGS/SIRV_bif_backward}
+\includegraphics[width=0.7\textwidth]{FIGS/SIRV_bif_backward}
 \end{frame}
 
 
@@ -1485,7 +1485,7 @@ are the fractions of latent individuals (of type $X=\{V,H\}$) who survive the la
 
 \begin{frame}{Let us add a few arrows}
 \centering
-\resizebox{\textwidth}{!}{
+\resizebox{0.8\textwidth}{!}{
   \def\horskip{*2}
   \def\verskip{*2}
   \begin{tikzpicture}[%transform canvas={scale=1.3},
