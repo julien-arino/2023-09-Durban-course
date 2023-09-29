@@ -1,0 +1,113 @@
+---
+title: "Our Friday morning adventure"
+author: "Julien Arino and those in attendance"
+date: "Friday 29 September 2023"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+header-includes:
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{shapes,arrows}
+- \usetikzlibrary{positioning}
+- \usetikzlibrary{shapes.symbols,shapes.callouts,patterns}
+- \usetikzlibrary{calc,fit}
+- \usetikzlibrary{backgrounds}
+- \usetikzlibrary{decorations.pathmorphing,fit,petri}
+- \usetikzlibrary{automata}
+- \usetikzlibrary{fadings}
+- \usetikzlibrary{patterns,hobby}
+- \usetikzlibrary{backgrounds,fit,petri}
+- \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=0.87cm, minimum height=2em]
+- "\\tikzstyle{line} = [draw, -latex']"
+---
+
+```{r setup, include=FALSE}
+# This is a code chunk. It starts and ends with ```. This is true for all code
+# chunks in Markdown, so to tell R this contains some R code, we add, at the very
+# least, {r} to the opening three quotes: ```{r}
+# The first argument following the r statement is the chunk name. This is useful
+# when running RMarkdown, because if you have an error, it will say the name of 
+# the chunk, so try to remember to use a name.
+#
+# This first chunk is used to set all options, both in terms of rendering (knitr)
+# and the libraries we use, as well as some variables we may want the whole code 
+# to know about.
+knitr::opts_chunk$set(echo = TRUE)
+library(deSolve)
+library(ABM)
+```
+
+
+# Documentary resources
+
+- [NIH on coinfection](https://hivinfo.nih.gov/understanding-hiv/fact-sheets/hiv-and-tuberculosis-tb#:~:text=What%20is%20the%20connection%20between,TB%20in%20people%20with%20HIV.)
+- [CDC on TB](https://www.cdc.gov/tb/default.htm)
+- [CDC on HIV](https://www.cdc.gov/hiv/default.html)
+- [CDC on HIV-TB coinfection](https://www.cdc.gov/tb/topic/basics/tbhivcoinfection.htm)
+
+# Data resources
+
+- [High level overview from UNAIDS](https://www.unaids.org/sites/default/files/media_asset/20220324_TB_FactSheet_en.pdf)
+- [TB data from WHO](https://www.who.int/tb/country/data/download/en/)
+- [HIV data from WHO](https://www.who.int/data/gho/data/themes/hiv-aids)
+- [South Africa HIV data from WHO](https://www.who.int/data/gho/data/countries/country-details/GHO/south-africa?countryProfileId=9e1a9b0e-6e2b-4e1b-9f5d-5a1d9b3f0f1e)
+- [South Africa TB data from WHO](https://www.who.int/data/gho/data/countries/country-details/GHO/south-africa?countryProfileId=9e1a9b0e-6e2b-4e1b-9f5d-5a1d9b3f0f1e)
+- [South Africa First National Report on TB Prevalence (2018)](https://www.nicd.ac.za/wp-content/uploads/2021/02/TB-Prevalence-survey-report_A4_SA_TPS-Short_Feb-2021.pdf)
+- [Open Data South Africa Toolkit](https://opendataza.gitbook.io/toolkit/)
+- [Stats SA](https://www.statssa.gov.za/)
+- [Open Data for Africa 2011 population data for SA](https://southafrica.opendataforafrica.org/qrglcbb/population-statistics-of-south-africa-2011)
+
+# ABM simulation
+
+[Junling Ma's ABM](https://cran.r-project.org/web/packages/ABM/index.html). See in particular the [help](https://cran.r-project.org/web/packages/ABM/ABM.pdf).
+
+\newpage
+
+# The model flow diagram
+
+I am storing this here so we have a template to edit.
+
+\begin{center}
+\def\horskip{*2}
+\def\verskip{*2}
+\begin{tikzpicture}[%transform canvas={scale=1.3},
+auto,
+cloud/.style={minimum width={width("N-1")+2pt},
+draw, 
+ellipse,
+fill=gray!20}]
+%% Hosts
+\node [cloud, fill=green!50] at (0,0) (SH) {$S_H$};
+\node [cloud, fill=red!50] at (1\horskip,0) (IH) {$I_H$};
+\node [cloud, fill=blue!50] at (2\horskip,0) (RH) {$R_H$};
+%% Vectors
+\node [cloud, fill=green!50] at (0,-1\verskip) (SV) {$S_V$};
+\node [cloud, fill=red!50] at (1\horskip,-1\verskip) (IV) {$I_V$};
+%% Births
+\node [left=0.75cm of SH] (birthH) {};
+\node [left=0.75cm of SV] (birthV) {};
+%% Deaths
+\node [below=0.25\verskip of SH] (dSH) {};
+\node [below=0.25\verskip of IH] (dIH) {};
+\node [below=0.25\verskip of RH] (dRH) {};
+\node [below=0.25\verskip of SV] (dSV) {};
+\node [below=0.25\verskip of IV] (dIV) {};
+%%
+\path [line, very thick] (SH) to node [midway,above,sloped] (TextNode) {$\beta_HI_V\frac{S_H}{H}$} (IH);
+\path [line, very thick] (IH) to node [midway,above,sloped] (TextNode) {$\gamma_H I_H$} (RH);
+\path [line, very thick] (SV) to node [midway,below,sloped] (TextNode) {$\beta_VS_V\frac{I_H}{H}$} (IV);
+\path [line, dotted, very thick] (IV) to node [midway,below,sloped] (TextNode) {} (SH);
+\path [line, dotted, very thick] (IH) to node [midway,above,sloped] (TextNode) {} (SV);
+%% Demography
+\path [line, very thick] (birthH) to node [midway,above] (TextNode) {$b_H$} (SH);
+\path [line, very thick] (birthV) to node [midway,above] (TextNode) {$b_V$} (SV);
+\path [line, very thick] (SH) to node [near end,left] (TextNode) {$d_HS_H$} (dSH);
+\path [line, very thick] (IH) to node [near end,right] (TextNode) {$d_HI_H$} (dIH);
+\path [line, very thick] (RH) to node [near end,right] (TextNode) {$d_HR_H$} (dRH);
+\path [line, very thick] (SV) to node [near end,left] (TextNode) {$d_VS_V$} (dSV);
+\path [line, very thick] (IV) to node [near end,right] (TextNode) {$d_VI_V$} (dIV);
+\end{tikzpicture}
+\end{center}
+
