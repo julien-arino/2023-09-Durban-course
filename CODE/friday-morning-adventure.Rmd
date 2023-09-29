@@ -121,7 +121,7 @@ RHS_our_pretty_simple_model = function(t, x, p) {
   with(as.list(c(x, p)), {
     inf_from_HIV = I_H + I_HL + I_HIL + T_H + T_2
     inf_from_TB = I_T + alpha_T * T_T + alpha_2 * T_2
-    N = S + I_H + T_H + A_H + A_HT + L_T + I_T + T_T + I_HT + T_2 + I_HIL +
+    N = S + I_H + T_H + A_H + A_HT + L_T + I_T + T_T + T_2 + I_HIL +
       I_HL + L_H
     dS = d*(N-S) - beta_H*S*inf_from_HIV - beta_T*S*inf_from_TB
     dI_H = beta_H*S*inf_from_HIV-d*I_H-pi_H*I_H
@@ -148,11 +148,11 @@ params = list(
     alpha_T = 0.2,
     alpha_2 = 0.1,
     d = 1/(70*365.25),
-    beta_H = 1e-3,
-    beta_T = 1e-3,
-    beta_AH = 1e-3,
-    beta_IT = 1e-3,
-    beta_HIL = 1e-3,
+    beta_H = 1e-9,
+    beta_T = 1e-10,
+    beta_AH = 1e-10,
+    beta_IT = 1e-10,
+    beta_HIL = 1e-10,
     beta_IH = 1,
     pi_H = 0.1,
     tau_H = 0.1,
@@ -177,4 +177,10 @@ sol_ODE = ode(y = IC,
               func =RHS_our_pretty_simple_model,
               times = tspan,
               parms = params)
+t = sol_ODE[,"time"]
+I_H = sol_ODE[,"I_H"]
+y_max = max(c(max(sol_ODE[,"T_T"]),max(sol_ODE[,"I_H"]), max(sol_ODE[,"I_T"])))
+plot(t,sol_ODE[,"T_T"], type = "l", ylim = c(0,y_max))
+lines(t,sol_ODE[,"I_H"], type = "l", col = "red")
+lines(t,sol_ODE[,"I_T"], type = "l", col = "blue")
 ```

@@ -31,6 +31,7 @@ sol <- ssa(
     params = params,
     method = ssa_exact(),
     final_time = t_f,
+    log_firings = TRUE
 )
 
 # Prepare y-axis for human readable form
