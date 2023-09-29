@@ -35,8 +35,10 @@ header-includes:
 # and the libraries we use, as well as some variables we may want the whole code 
 # to know about.
 knitr::opts_chunk$set(echo = TRUE)
-library(deSolve)
-library(ABM)
+library(deSolve) # To solve ODEs
+library(GillespieSSA2) # To solve CTMCs
+library(ABM) # To simulate an ABM
+library(latex2exp) # To be able to use latex commands in plots
 ```
 
 
@@ -67,12 +69,13 @@ library(ABM)
 
 # The model flow diagram
 
-I am storing this here so we have a template to edit.
+I am storing this here so we have a template to edit. If using this flow diagram, you *must* have a \LaTeX distribution installed. Actually, to render as `pdf`, you must do too anyway.
 
 \begin{center}
+\resizebox{\textwidth}{!}{
 \def\horskip{*2}
 \def\verskip{*2}
-\begin{tikzpicture}[%transform canvas={scale=1.3},
+\begin{tikzpicture}[%transform canvas={scale=2},
 auto,
 cloud/.style={minimum width={width("N-1")+2pt},
 draw, 
@@ -108,6 +111,70 @@ fill=gray!20}]
 \path [line, very thick] (RH) to node [near end,right] (TextNode) {$d_HR_H$} (dRH);
 \path [line, very thick] (SV) to node [near end,left] (TextNode) {$d_VS_V$} (dSV);
 \path [line, very thick] (IV) to node [near end,right] (TextNode) {$d_VI_V$} (dIV);
-\end{tikzpicture}
+\end{tikzpicture}}
 \end{center}
 
+
+```{r a few function}
+  # The right hand side of the ODE
+RHS_our_pretty_simple_model = function(t, x, p) {
+  with(as.list(c(x, p)), {
+    inf_from_HIV = I_H + I_HL + I_HIL + T_H + T_2
+    inf_from_TB = I_T + alpha_T * T_T + alpha_2 * T_2
+    N = S + I_H + T_H + A_H + A_HT + L_T + I_T + T_T + I_HT + T_2 + I_HIL +
+      I_HL + L_H
+    dS = d*(N-S) - beta_H*S*inf_from_HIV - beta_T*S*inf_from_TB
+    dI_H = beta_H*S*inf_from_HIV-d*I_H-pi_H*I_H
+    dT_H = tau_H*I_H-(pi_H+sigma_H+d)*T_H
+    dA_H = tau_H*I_H+sigma_H*T_H-(d+delta_A)*A_H
+    dA_HT = beta_AH*A_H*inf_from_TB-(d+delta_AH)*A_H
+    dL_T = beta_T*S*inf_from_TB+gamma_T*T_T+gamma_I*I_T-
+      (epsilon_T+tau_T+d)*L_T
+    dI_T = epsilon_T*L_T+eta_T*T_T-(gamma_I+tau_T+d)*I_T-
+      beta_HIL*I_T*inf_from_HIV
+    dT_T = tau_T*I_T+tau_T*L_T-d*T_T-eta_T*T_T-gamma_T*T_T -
+      beta_T*T_T*inf_from_HIV
+    dT_2 = beta_H *T_H*(I_HIL+I_T+T_T+T_2)+tau_HT*I_HIL+
+      beta_T * T_T*(I_H+T_H+T_2+I_HL+I_HIL)-d*T_2-gamma_T*T_2
+    dI_HIL = epsilon_HL*I_HL+beta_IT*I_T*(I_H+T_H+T_2+I_HL+I_HIL) 
+    -d *I_HIL
+    dI_HL = beta_IH*I_H*(I_HIL+T_2+I_T+T_T)-d*I_HL-epsilon_HL*I_HL
+    dL_H = gamma_T*T_2 - phi_LH*L_H-d*L_H
+    return(list(c(dS, dI_H, dT_H, dA_H, dA_HT, dL_T, dI_T, 
+                  dT_T, dT_2, dI_HIL, dI_HL, dL_H)))
+  })
+}
+params = list(
+    alpha_T = 0.2,
+    alpha_2 = 0.1,
+    d = 1/(70*365.25),
+    beta_H = 1e-3,
+    beta_T = 1e-3,
+    beta_AH = 1e-3,
+    beta_IT = 1e-3,
+    beta_HIL = 1e-3,
+    beta_IH = 1,
+    pi_H = 0.1,
+    tau_H = 0.1,
+    tau_T = 0.1,
+    tau_HT = 0.1,
+    sigma_H = 0.1,
+    delta_A = 0.1,
+    delta_AH = 0.2,
+    gamma_T = 1/100,
+    gamma_I = 1/100,
+    epsilon_T = 1/1000,
+    epsilon_HL = 1/500,
+    eta_T = 0.1,
+    phi_LH = 0.1
+)
+IC = c(S = 1e6, I_H = 1, T_H = 0, A_H = 0, 
+       A_HT = 0, L_T = 0, I_T = 1, 
+       T_T = 0, T_2 = 0, I_HIL = 0,
+       I_HL = 0, L_H = 0)
+tspan = seq(from = 0, to = 100, by = 0.1)
+sol_ODE = ode(y = IC,
+              func =RHS_our_pretty_simple_model,
+              times = tspan,
+              parms = params)
+```
