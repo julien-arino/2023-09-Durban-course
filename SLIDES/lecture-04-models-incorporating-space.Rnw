@@ -405,7 +405,7 @@ $\mathcal{M}_c$ describes
 \end{frame}
 
 \begin{frame}{Properties of the movement matrix $\M$}
-	First, remark $-\M_c$ is a Lagrangian matrix (cf. Michael's course)
+	First, remark $-\M_c$ is a Laplacian matrix, i.e., the adjacency matrix minus the degree matrix
 	\vfill
 	\begin{lemma}\label{lemma:behaviour_Mc}
 		\begin{enumerate}
